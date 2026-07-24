@@ -17,7 +17,7 @@ export default function ContactBanner() {
             Let’s build something<br />
             <em style={{ fontWeight: 300, color: '#b386d9' }}>meaningful together.</em>
           </h2>
-          <p>Khung preview này đã chừa sẵn vị trí để nhúng YouTube, Vimeo hoặc video tự host.</p>
+          <p>Dù là một chiến dịch mới hay một ý tưởng đang ấp ủ — hãy cùng CREU biến nó thành trải nghiệm thị giác ấn tượng.</p>
           <a className="primary" href="mailto:hello@creu.vn">
             <span>hello@creu.vn</span>
             <span>↗</span>
