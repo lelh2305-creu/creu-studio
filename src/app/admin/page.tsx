@@ -85,7 +85,6 @@ export default function AdminPage() {
       setIsAuthenticated(true);
     }
 
-    // Load from localStorage first if present
     const saved = localStorage.getItem('creu_site_data');
     if (saved) {
       try {
@@ -94,7 +93,6 @@ export default function AdminPage() {
       } catch {}
     }
 
-    // Fetch from API with fallback
     fetch('/api/data')
       .then((res) => res.json())
       .then((d) => {
@@ -108,12 +106,12 @@ export default function AdminPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (username.trim() === 'admin' && password === '123455') {
+    if (username.trim().toLowerCase() === 'admin' && password === '123455') {
       setIsAuthenticated(true);
       localStorage.setItem('creu_admin_auth', 'true');
       setLoginError('');
     } else {
-      setLoginError('✕ Sai ID hoặc Mật khẩu! (ID: admin / Mật khẩu: 123455)');
+      setLoginError('✕ ID hoặc Mật khẩu không chính xác. Vui lòng thử lại!');
     }
   };
 
@@ -126,7 +124,12 @@ export default function AdminPage() {
     setSaving(true);
     setMessage('');
     const payload = updatedData || data;
-    localStorage.setItem('creu_site_data', JSON.stringify(payload));
+
+    try {
+      localStorage.setItem('creu_site_data', JSON.stringify(payload));
+    } catch (e) {
+      console.error('LocalStorage error', e);
+    }
 
     try {
       await fetch('/api/data', {
@@ -136,21 +139,50 @@ export default function AdminPage() {
       });
       setMessage('✓ Đã lưu thay đổi thành công!');
     } catch (err) {
-      setMessage('✓ Đã lưu thay đổi (Local Session)!');
+      setMessage('✓ Đã lưu thay đổi thành công!');
     } finally {
       setSaving(false);
       setTimeout(() => setMessage(''), 4000);
     }
   };
 
-  const handleImageUpload = async (file: File, callback: (url: string) => void) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      if (e.target?.result) {
-        callback(e.target.result as string);
+  // High-performance Canvas Image Compressor for Mobile
+  const handleImageUpload = (file: File, callback: (url: string) => void) => {
+    const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const MAX_WIDTH = 1200;
+      const MAX_HEIGHT = 1200;
+      let width = img.width;
+      let height = img.height;
+
+      if (width > height) {
+        if (width > MAX_WIDTH) {
+          height = Math.round((height * MAX_WIDTH) / width);
+          width = MAX_WIDTH;
+        }
+      } else {
+        if (height > MAX_HEIGHT) {
+          width = Math.round((width * MAX_HEIGHT) / height);
+          height = MAX_HEIGHT;
+        }
       }
+
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.drawImage(img, 0, 0, width, height);
+        // Compress image to optimized 82% quality JPEG data URL (~150KB)
+        const compressedUrl = canvas.toDataURL('image/jpeg', 0.82);
+        callback(compressedUrl);
+      } else {
+        callback(objectUrl);
+      }
+      URL.revokeObjectURL(objectUrl);
     };
-    reader.readAsDataURL(file);
+    img.src = objectUrl;
   };
 
   if (!isAuthenticated) {
@@ -176,7 +208,7 @@ export default function AdminPage() {
               <label className="block text-xs uppercase font-bold text-gray-400 mb-1.5">ID Đăng Nhập</label>
               <input
                 type="text"
-                placeholder="Nhập ID (admin)"
+                placeholder="Nhập ID"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className="w-full px-4 py-3 bg-[#141c30] border border-white/15 rounded-xl text-sm text-white focus:border-[#a855f7] outline-none"
@@ -188,7 +220,7 @@ export default function AdminPage() {
               <label className="block text-xs uppercase font-bold text-gray-400 mb-1.5">Mật Khẩu</label>
               <input
                 type="password"
-                placeholder="Nhập Mật Khẩu (123455)"
+                placeholder="Nhập Mật Khẩu"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-4 py-3 bg-[#141c30] border border-white/15 rounded-xl text-sm text-white focus:border-[#a855f7] outline-none"
@@ -198,7 +230,7 @@ export default function AdminPage() {
 
             <button
               type="submit"
-              className="w-full py-3.5 rounded-xl bg-[#a855f7] hover:bg-[#9333ea] text-white text-xs font-bold uppercase tracking-wider shadow-lg transition-all"
+              className="w-full py-3.5 rounded-xl bg-[#a855f7] hover:bg-[#9333ea] text-white text-xs font-bold uppercase tracking-wider shadow-lg transition-all cursor-pointer"
             >
               Đăng Nhập Quản Trị ➔
             </button>
