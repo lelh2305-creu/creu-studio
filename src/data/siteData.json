@@ -3,7 +3,7 @@
     "title": "CREU Studio — Creative Studio & Digital Experiences",
     "heroTitle": "Ideas become visuals.",
     "heroDesc": "CREU biến chiến lược thương hiệu thành hình ảnh, video và trải nghiệm thị giác giàu cảm xúc — từ ý tưởng đến sản phẩm hoàn chỉnh.",
-    "showreelUrl": "https://www.youtube.com/watch?v=xubKh9u0uDY&list=RDxubKh9u0uDY&start_radio=1",
+    "showreelUrl": "https://www.youtube.com/watch?v=3IVmlhOHKCQ&list=RD3IVmlhOHKCQ&start_radio=1",
     "email": "hello@creu.vn",
     "location": "Thủ Đức, TP. Hồ Chí Minh",
     "workingHours": "Thứ Hai – Thứ Sáu, 9:00 – 18:00",
@@ -21,7 +21,7 @@
         "video"
       ],
       "image": "",
-      "videoUrl": "https://www.youtube.com/watch?v=xubKh9u0uDY&list=RDxubKh9u0uDY&start_radio=1",
+      "videoUrl": "https://www.youtube.com/watch?v=3IVmlhOHKCQ&list=RD3IVmlhOHKCQ&start_radio=1",
       "bgClass": "b1",
       "isWide": true,
       "description": "Dự án hình ảnh kiến trúc nhà ở hiện đại kết hợp thiên nhiên."
@@ -100,7 +100,7 @@
       "plan": "Gói 01",
       "title": "Graphic Care",
       "copy": "Giải pháp thiết kế chuyên nghiệp & linh hoạt.",
-      "price": "2.000.000",
+      "price": "5.000.000",
       "per": "VND / tháng",
       "features": [
         "Thiết kế không giới hạn hợp lý",
@@ -115,7 +115,7 @@
       "plan": "Gói 02",
       "title": "Creative Care",
       "copy": "Sản xuất nội dung sáng tạo toàn diện mỗi tháng.",
-      "price": "5.000.000",
+      "price": "7.000.000",
       "per": "VND / tháng",
       "features": [
         "Toàn bộ Graphic Care",
@@ -146,8 +146,8 @@
     {
       "id": 1,
       "name": "Hoàng Lê",
-      "role": "Founder",
-      "bio": "Với 5 năm kinh nghiệm trong visual storytelling, Hoàng dẫn dắt vision sáng tạo và đảm bảo mỗi dự án đều có chiều sâu và bản sắc.",
+      "role": "Founder - CEO",
+      "bio": "Với 5 năm kinh nghiệm trong visual storytelling, dẫn dắt vision sáng tạo và đảm bảo mỗi dự án đều có chiều sâu và bản sắc.",
       "image": "",
       "bgClass": "b3"
     },
@@ -162,7 +162,7 @@
     {
       "id": 3,
       "name": "Gia Nghi",
-      "role": "Marketing",
+      "role": "Marketing Leader",
       "bio": "Quản lý chiến lược truyền thông và nội dung đa kênh, giúp câu chuyện thương hiệu tiếp cận đúng đối tượng mục tiêu.",
       "image": "",
       "bgClass": "b5"
