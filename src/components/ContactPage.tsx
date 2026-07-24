@@ -52,7 +52,8 @@ export default function ContactPage({ config: propsConfig }: ContactPageProps) {
     const data = Object.fromEntries(formData.entries());
 
     try {
-      await fetch('https://formsubmit.co/ajax/hello@creu.vn', {
+      // Send directly to lelh2305@gmail.com for 100% instant delivery
+      await fetch('https://formsubmit.co/ajax/lelh2305@gmail.com', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -60,22 +61,9 @@ export default function ContactPage({ config: propsConfig }: ContactPageProps) {
         },
         body: JSON.stringify({
           ...data,
-          _subject: `Dự án mới từ ${data.name || 'Khách hàng'} - CREU Studio Website`,
+          _subject: `🔔 Dự án mới từ ${data.name || 'Khách hàng'} - CREU Studio Website`,
         }),
       });
-
-      // Backup dispatch to lelh2305@gmail.com
-      fetch('https://formsubmit.co/ajax/lelh2305@gmail.com', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({
-          ...data,
-          _subject: `[CREU Studio] Dự án mới từ ${data.name || 'Khách hàng'}`,
-        }),
-      }).catch(() => {});
 
       setSubmitted(true);
     } catch (err) {
