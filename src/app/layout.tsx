@@ -4,8 +4,20 @@ import LenisScroll from '@/components/LenisScroll';
 import CursorGlow from '@/components/CursorGlow';
 
 export const metadata: Metadata = {
-  title: 'CREU Studio — Motion Preview & Creative Agency',
-  description: 'We create stories that move people. Creative Studio based in Thu Duc, TP.HCM.',
+  title: 'CREU Studio — Creative Studio & Digital Experiences',
+  description: 'Every brand has a story. We shape it through design, motion and digital experiences that leave a lasting impression.',
+  openGraph: {
+    title: 'CREU Studio — Creative Studio & Digital Experiences',
+    description: 'Every brand has a story. We shape it through design, motion and digital experiences that leave a lasting impression.',
+    url: 'https://creu.vn',
+    siteName: 'CREU Studio',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'CREU Studio — Creative Studio & Digital Experiences',
+    description: 'Every brand has a story. We shape it through design, motion and digital experiences that leave a lasting impression.',
+  },
 };
 
 export default function RootLayout({
