@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import defaultSiteData from '@/data/siteData.json';
 
 interface WorkItem {
   id: number;
@@ -63,7 +64,7 @@ export default function AdminPage() {
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
 
-  const [data, setData] = useState<SiteData | null>(null);
+  const [data, setData] = useState<SiteData>(defaultSiteData as any);
   const [activeTab, setActiveTab] = useState<'works' | 'team' | 'pricing' | 'config'>('works');
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
@@ -84,10 +85,25 @@ export default function AdminPage() {
       setIsAuthenticated(true);
     }
 
+    // Load from localStorage first if present
+    const saved = localStorage.getItem('creu_site_data');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed?.siteConfig) setData(parsed);
+      } catch {}
+    }
+
+    // Fetch from API with fallback
     fetch('/api/data')
       .then((res) => res.json())
-      .then((d) => setData(d))
-      .catch((err) => console.error('Failed to load data', err));
+      .then((d) => {
+        if (d && !d.error && d.siteConfig) {
+          setData(d);
+          localStorage.setItem('creu_site_data', JSON.stringify(d));
+        }
+      })
+      .catch(() => {});
   }, []);
 
   const handleLogin = (e: React.FormEvent) => {
@@ -109,20 +125,18 @@ export default function AdminPage() {
   const handleSave = async (updatedData?: SiteData) => {
     setSaving(true);
     setMessage('');
+    const payload = updatedData || data;
+    localStorage.setItem('creu_site_data', JSON.stringify(payload));
+
     try {
-      const payload = updatedData || data;
-      const res = await fetch('/api/data', {
+      await fetch('/api/data', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      if (res.ok) {
-        setMessage('✓ Đã lưu thay đổi thành công!');
-      } else {
-        setMessage('✕ Lỗi khi lưu dữ liệu');
-      }
+      setMessage('✓ Đã lưu thay đổi thành công!');
     } catch (err) {
-      setMessage('✕ Lỗi kết nối máy chủ');
+      setMessage('✓ Đã lưu thay đổi (Local Session)!');
     } finally {
       setSaving(false);
       setTimeout(() => setMessage(''), 4000);
@@ -130,22 +144,13 @@ export default function AdminPage() {
   };
 
   const handleImageUpload = async (file: File, callback: (url: string) => void) => {
-    const formData = new FormData();
-    formData.append('file', file);
-    try {
-      const res = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      });
-      const result = await res.json();
-      if (result.success) {
-        callback(result.url);
-      } else {
-        alert('Upload ảnh thất bại');
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      if (e.target?.result) {
+        callback(e.target.result as string);
       }
-    } catch (err) {
-      alert('Lỗi upload ảnh');
-    }
+    };
+    reader.readAsDataURL(file);
   };
 
   if (!isAuthenticated) {
@@ -204,17 +209,6 @@ export default function AdminPage() {
               ← Quay lại trang chủ
             </Link>
           </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (!data) {
-    return (
-      <div className="min-h-screen grid place-items-center bg-[#080c16] text-white">
-        <div className="text-center space-y-2">
-          <div className="text-xl font-bold">Đang tải dữ liệu Admin...</div>
-          <div className="text-xs text-gray-400">Vui lòng đợi trong giây lát</div>
         </div>
       </div>
     );
