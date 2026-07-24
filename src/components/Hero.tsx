@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { motion, Variants } from 'framer-motion';
 
 interface HeroProps {
@@ -11,24 +10,6 @@ interface HeroProps {
 }
 
 export default function Hero({ onPlayShowreel, onNavigate, heroTitle, heroDesc }: HeroProps) {
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    if (!rect.width || !rect.height) return;
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-
-    // Strictly clamp tilt to max +-4 degrees to guarantee card never flips or spins
-    const clampedX = Math.max(-4, Math.min(4, -y * 8));
-    const clampedY = Math.max(-4, Math.min(4, x * 10));
-    setTilt({ x: clampedX, y: clampedY });
-  };
-
-  const handleMouseLeave = () => {
-    setTilt({ x: 0, y: 0 });
-  };
-
   const containerVars: Variants = {
     hidden: { opacity: 0 },
     show: {
@@ -92,12 +73,10 @@ export default function Hero({ onPlayShowreel, onNavigate, heroTitle, heroDesc }
             </motion.div>
           </motion.div>
 
-          {/* Right Column: 3D Card Container */}
+          {/* Right Column: Hero Video Card Container (Rock-solid 100% Stable) */}
           <motion.div
             className="video-wrap cursor-pointer"
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-            initial={{ opacity: 0, scale: 0.92, y: 20 }}
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.25, ease: 'easeOut' }}
           >
@@ -108,13 +87,9 @@ export default function Hero({ onPlayShowreel, onNavigate, heroTitle, heroDesc }
             <motion.div
               className="video-card"
               onClick={onPlayShowreel}
-              animate={{
-                rotateX: tilt.x,
-                rotateY: tilt.y,
-                y: tilt.x !== 0 ? -6 : 0,
-              }}
-              whileHover={{ scale: 1.02 }}
-              transition={{ type: 'spring', damping: 25, stiffness: 180 }}
+              whileHover={{ scale: 1.025, y: -6 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
             >
               <div className="video-visual" />
               <div className="video-shine" />
