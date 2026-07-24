@@ -15,10 +15,14 @@ export default function Hero({ onPlayShowreel, onNavigate, heroTitle, heroDesc }
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
-    // Controlled, smooth tilt values to prevent jitter/spinning
-    setTilt({ x: -y * 6, y: x * 8 });
+
+    // Strictly clamp tilt to max +-4 degrees to guarantee card never flips or spins
+    const clampedX = Math.max(-4, Math.min(4, -y * 8));
+    const clampedY = Math.max(-4, Math.min(4, x * 10));
+    setTilt({ x: clampedX, y: clampedY });
   };
 
   const handleMouseLeave = () => {
@@ -107,9 +111,10 @@ export default function Hero({ onPlayShowreel, onNavigate, heroTitle, heroDesc }
               animate={{
                 rotateX: tilt.x,
                 rotateY: tilt.y,
-                translateY: tilt.x !== 0 ? -4 : 0,
+                y: tilt.x !== 0 ? -6 : 0,
               }}
-              transition={{ type: 'spring', damping: 25, stiffness: 140 }}
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 180 }}
             >
               <div className="video-visual" />
               <div className="video-shine" />
