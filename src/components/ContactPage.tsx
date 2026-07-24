@@ -3,9 +3,13 @@
 import { useState, useEffect } from 'react';
 import Footer from './Footer';
 
-export default function ContactPage() {
+interface ContactPageProps {
+  config?: any;
+}
+
+export default function ContactPage({ config: propsConfig }: ContactPageProps) {
   const [submitted, setSubmitted] = useState(false);
-  const [config, setConfig] = useState<any>({
+  const [config, setConfig] = useState<any>(propsConfig || {
     email: 'hello@creu.vn',
     location: 'Thủ Đức, TP. Hồ Chí Minh',
     workingHours: 'Thứ Hai – Thứ Sáu, 9:00 – 18:00',
@@ -15,13 +19,29 @@ export default function ContactPage() {
   });
 
   useEffect(() => {
+    if (propsConfig) {
+      setConfig(propsConfig);
+      return;
+    }
+
+    const saved = localStorage.getItem('creu_site_data');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed?.siteConfig) {
+          setConfig(parsed.siteConfig);
+          return;
+        }
+      } catch {}
+    }
+
     fetch('/api/data')
       .then((res) => res.json())
       .then((data) => {
         if (data.siteConfig) setConfig(data.siteConfig);
       })
       .catch(() => {});
-  }, []);
+  }, [propsConfig]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

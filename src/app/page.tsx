@@ -14,10 +14,11 @@ import WorkPage from '@/components/WorkPage';
 import ServicesPage from '@/components/ServicesPage';
 import AboutPage from '@/components/AboutPage';
 import ContactPage from '@/components/ContactPage';
+import defaultSiteData from '@/data/siteData.json';
 
 export default function Home() {
   const [currentTab, setCurrentTab] = useState('home');
-  const [isDark, setIsDark] = useState(false); // Default to Light Mode (Giao diện ban ngày)
+  const [isDark, setIsDark] = useState(false);
 
   // Video Modal State
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
@@ -25,18 +26,47 @@ export default function Home() {
   const [activeVideoTitle, setActiveVideoTitle] = useState('');
 
   // Site Data State
-  const [siteData, setSiteData] = useState<any>(null);
+  const [siteData, setSiteData] = useState<any>(defaultSiteData);
 
-  useEffect(() => {
+  const loadSiteData = () => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('creu_site_data');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (parsed?.siteConfig) {
+            setSiteData(parsed);
+            return;
+          }
+        } catch {}
+      }
+    }
+
     fetch('/api/data')
       .then((res) => res.json())
-      .then((d) => setSiteData(d))
+      .then((d) => {
+        if (d && !d.error && d.siteConfig) {
+          setSiteData(d);
+          localStorage.setItem('creu_site_data', JSON.stringify(d));
+        }
+      })
       .catch(() => {});
+  };
+
+  useEffect(() => {
+    loadSiteData();
 
     const savedTheme = localStorage.getItem('creu_theme');
     if (savedTheme === 'dark') {
       setIsDark(true);
     }
+
+    const handleStorageChange = () => {
+      loadSiteData();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   useEffect(() => {
@@ -52,6 +82,8 @@ export default function Home() {
   const handleTabChange = (tab: string) => {
     setCurrentTab(tab);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Re-check site data when navigating tabs
+    loadSiteData();
   };
 
   const handlePlayVideo = (url?: string, title?: string) => {
@@ -93,9 +125,13 @@ export default function Home() {
             <SelectedWorks
               onNavigate={handleTabChange}
               onPlayVideo={(url, title) => handlePlayVideo(url, title)}
+              works={siteData?.works}
             />
 
-            <PartnershipPricing onNavigate={handleTabChange} />
+            <PartnershipPricing
+              onNavigate={handleTabChange}
+              pricing={siteData?.pricing}
+            />
 
             <ContactBanner />
           </motion.div>
@@ -109,7 +145,10 @@ export default function Home() {
             exit={{ opacity: 0, y: -15 }}
             transition={{ duration: 0.4 }}
           >
-            <WorkPage onPlayVideo={(url, title) => handlePlayVideo(url, title)} />
+            <WorkPage
+              onPlayVideo={(url, title) => handlePlayVideo(url, title)}
+              works={siteData?.works}
+            />
           </motion.div>
         )}
 
@@ -133,7 +172,7 @@ export default function Home() {
             exit={{ opacity: 0, y: -15 }}
             transition={{ duration: 0.4 }}
           >
-            <AboutPage />
+            <AboutPage team={siteData?.team} />
           </motion.div>
         )}
 
@@ -145,7 +184,7 @@ export default function Home() {
             exit={{ opacity: 0, y: -15 }}
             transition={{ duration: 0.4 }}
           >
-            <ContactPage />
+            <ContactPage config={siteData?.siteConfig} />
           </motion.div>
         )}
       </AnimatePresence>

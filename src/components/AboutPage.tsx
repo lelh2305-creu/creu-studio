@@ -3,18 +3,39 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Footer from './Footer';
+import defaultSiteData from '@/data/siteData.json';
 
-export default function AboutPage() {
-  const [team, setTeam] = useState<any[]>([]);
+interface AboutPageProps {
+  team?: any[];
+}
+
+export default function AboutPage({ team: propsTeam }: AboutPageProps) {
+  const [team, setTeam] = useState<any[]>(propsTeam || []);
 
   useEffect(() => {
+    if (propsTeam && propsTeam.length > 0) {
+      setTeam(propsTeam);
+      return;
+    }
+
+    const saved = localStorage.getItem('creu_site_data');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed?.team) {
+          setTeam(parsed.team);
+          return;
+        }
+      } catch {}
+    }
+
     fetch('/api/data')
       .then((res) => res.json())
       .then((data) => {
         if (data.team) setTeam(data.team);
       })
-      .catch(() => {});
-  }, []);
+      .catch(() => setTeam(defaultSiteData.team));
+  }, [propsTeam]);
 
   const stats = [
     { num: '50', em: '+', label: 'Dự án hoàn thành' },
@@ -23,31 +44,7 @@ export default function AboutPage() {
     { num: '5', em: '★', label: 'Đánh giá khách hàng' },
   ];
 
-  const defaultTeam = [
-    {
-      id: 1,
-      name: 'Hoàng Lê',
-      role: 'Founder',
-      bgClass: 'b3',
-      bio: 'Với 5 năm kinh nghiệm trong visual storytelling, Hoàng dẫn dắt vision sáng tạo và đảm bảo mỗi dự án đều có chiều sâu và bản sắc.',
-    },
-    {
-      id: 2,
-      name: 'Trung Hiếu',
-      role: 'Co Founder',
-      bgClass: 'b1',
-      bio: 'Đồng hành chiến lược và điều hành sản xuất, Hiếu đảm bảo tiến độ và trải nghiệm hợp tác mượt mà cho mọi thương hiệu.',
-    },
-    {
-      id: 3,
-      name: 'Gia Khi',
-      role: 'Marketing',
-      bgClass: 'b5',
-      bio: 'Quản lý chiến lược truyền thông và nội dung đa kênh, giúp câu chuyện thương hiệu tiếp cận đúng đối tượng mục tiêu.',
-    },
-  ];
-
-  const teamList = team.length > 0 ? team : defaultTeam;
+  const teamList = team && team.length > 0 ? team : defaultSiteData.team;
 
   const values = [
     { icon: '✦', title: 'Craft First', desc: 'Chúng tôi không bao giờ thỏa hiệp với chất lượng. Mỗi chi tiết nhỏ đều được chú ý và chăm chút — vì đó là thứ tạo nên sự khác biệt.' },

@@ -3,34 +3,43 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Footer from './Footer';
+import defaultSiteData from '@/data/siteData.json';
 
 interface WorkPageProps {
   onPlayVideo?: (url: string, title: string) => void;
+  works?: any[];
 }
 
-export default function WorkPage({ onPlayVideo }: WorkPageProps) {
+export default function WorkPage({ onPlayVideo, works: propsWorks }: WorkPageProps) {
   const [filter, setFilter] = useState('all');
-  const [workItems, setWorkItems] = useState<any[]>([]);
+  const [workItems, setWorkItems] = useState<any[]>(propsWorks || []);
 
   useEffect(() => {
+    if (propsWorks && propsWorks.length > 0) {
+      setWorkItems(propsWorks);
+      return;
+    }
+
+    const saved = localStorage.getItem('creu_site_data');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed?.works) {
+          setWorkItems(parsed.works);
+          return;
+        }
+      } catch {}
+    }
+
     fetch('/api/data')
       .then((res) => res.json())
       .then((data) => {
         if (data.works) setWorkItems(data.works);
       })
-      .catch(() => {});
-  }, []);
+      .catch(() => setWorkItems(defaultSiteData.works));
+  }, [propsWorks]);
 
-  const defaultItems = [
-    { id: 1, title: 'Riverside Villa', categoryText: 'Video · Photo — 2026', categories: ['video', 'photo'], videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ', bgClass: 'b1', isWide: true },
-    { id: 2, title: 'Moc Coffee', categoryText: 'Branding — 2026', categories: ['brand'], bgClass: 'b2' },
-    { id: 3, title: 'Le Hoi Thu Duc', categoryText: 'Video · Design — 2025', categories: ['video', 'design'], videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ', bgClass: 'b3' },
-    { id: 4, title: 'Atelier Home', categoryText: 'Photography — 2025', categories: ['photo'], bgClass: 'b4' },
-    { id: 5, title: 'Atelier Home Brand Identity', categoryText: 'Brand Identity — 2025', categories: ['brand', 'design'], bgClass: 'b5', isWide: true },
-    { id: 6, title: 'Coastal Brand Co.', categoryText: 'Branding — 2025', categories: ['brand'], bgClass: 'b7' },
-  ];
-
-  const displayList = workItems.length > 0 ? workItems : defaultItems;
+  const displayList = workItems.length > 0 ? workItems : defaultSiteData.works;
 
   const filteredItems = displayList.filter(
     (item) => filter === 'all' || (item.categories && item.categories.includes(filter))

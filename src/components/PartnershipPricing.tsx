@@ -1,48 +1,43 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import defaultSiteData from '@/data/siteData.json';
 
 interface PartnershipPricingProps {
   onNavigate: (tab: string) => void;
+  pricing?: any[];
 }
 
-export default function PartnershipPricing({ onNavigate }: PartnershipPricingProps) {
-  const cards = [
-    {
-      id: 1,
-      plan: 'Gói 01',
-      title: 'Graphic Care',
-      copy: 'Giải pháp thiết kế chuyên nghiệp & linh hoạt.',
-      price: '2.000.000',
-      per: 'VND / tháng',
-      features: ['Thiết kế không giới hạn hợp lý', '03 Poster / tháng', '02 Lần chỉnh sửa', 'Phản hồi trong 24h'],
-      btnText: 'Chọn gói này',
-      popular: false,
-    },
-    {
-      id: 2,
-      plan: 'Gói 02',
-      title: 'Creative Care',
-      copy: 'Sản xuất nội dung sáng tạo toàn diện mỗi tháng.',
-      price: '5.000.000',
-      per: 'VND / tháng',
-      features: ['Toàn bộ Graphic Care', '05 Production Days / tháng', '10 Bài viết Facebook', 'Dựng Reel / Motion Graphic'],
-      btnText: 'Chọn gói này',
-      popular: true,
-      badge: 'Phổ biến nhất',
-    },
-    {
-      id: 3,
-      plan: 'Gói 03',
-      title: 'Communication Partner',
-      copy: 'Đối tác chiến lược truyền thông dài hạn cho doanh nghiệp.',
-      price: '10.000.000+',
-      per: 'VND / tháng',
-      features: ['10 Production Days / tháng', 'Chiến lược nội dung', 'Báo cáo hiệu quả', 'Hỗ trợ 1–1 cùng Account Lead'],
-      btnText: 'Liên hệ tư vấn',
-      popular: false,
-    },
-  ];
+export default function PartnershipPricing({ onNavigate, pricing: propsPricing }: PartnershipPricingProps) {
+  const [pricingList, setPricingList] = useState<any[]>(propsPricing || []);
+
+  useEffect(() => {
+    if (propsPricing && propsPricing.length > 0) {
+      setPricingList(propsPricing);
+      return;
+    }
+
+    const saved = localStorage.getItem('creu_site_data');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed?.pricing) {
+          setPricingList(parsed.pricing);
+          return;
+        }
+      } catch {}
+    }
+
+    fetch('/api/data')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.pricing) setPricingList(data.pricing);
+      })
+      .catch(() => setPricingList(defaultSiteData.pricing));
+  }, [propsPricing]);
+
+  const cardsToRender = pricingList.length > 0 ? pricingList : defaultSiteData.pricing;
 
   return (
     <section className="pricing" id="pricing">
@@ -62,7 +57,7 @@ export default function PartnershipPricing({ onNavigate }: PartnershipPricingPro
         </motion.div>
 
         <div className="cards">
-          {cards.map((c, idx) => (
+          {cardsToRender.map((c, idx) => (
             <motion.article
               key={c.id || idx}
               className={`card ${c.popular ? 'popular' : ''}`}
@@ -77,14 +72,14 @@ export default function PartnershipPricing({ onNavigate }: PartnershipPricingPro
               <h3>{c.title}</h3>
               <div className="copy">{c.copy}</div>
               <div className="price">{c.price}</div>
-              <div className="per">{c.per}</div>
+              <div className="per">{c.per || 'VND / tháng'}</div>
               <ul className="features">
-                {c.features.map((f, fIdx) => (
+                {(c.features || []).map((f: string, fIdx: number) => (
                   <li key={fIdx}>{f}</li>
                 ))}
               </ul>
               <a className="choose" onClick={() => onNavigate('contact')} style={{ cursor: 'pointer' }}>
-                <b>→</b>{c.btnText}
+                <b>→</b>{c.btnText || 'Chọn gói này'}
               </a>
             </motion.article>
           ))}
