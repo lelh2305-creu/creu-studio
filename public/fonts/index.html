@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>CREU Studio — Creative Agency</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Cấu hình font local UTM Avo */
+@font-face {
+  font-family: 'UTM Avo';
+  src: url('./UTM Avo.ttf') format('truetype'),
+       url('./UTM Avo.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'UTM Avo';
+  src: url('./UTM AvoBold.ttf') format('truetype'),
+       url('./UTM Avo Bold.ttf') format('truetype'),
+       url('./UTM AvoBold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-main: 'UTM Avo', 'DM Sans', sans-serif;
+  --font-title: 'UTM Avo', 'Manrope', sans-serif;
+  --font-hero: 'Playfair Display', Georgia, serif;
+  --ink:#18233b; --muted:#657087; --white:#fff;
+  --line:rgba(73,92,137,.14); --glass:rgba(255,255,255,.48);
+  --shadow:0 28px 80px rgba(78,88,140,.16);
+
+  /* Subpages color variables */
+  --pk:#e8a5c8; --ac:#c97ab2; --tx:#1a1a1a; --txm:#555; --txl:#999;
+  --bd:#e5e5e5; --wh:#fff;
+}
+
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;color:var(--ink);font-family:var(--font-main);background:#f7f8ff;overflow-x:hidden}
+button,a,input,select,textarea{font-family:var(--font-main)}a{color:inherit;text-decoration:none}.shell{width:min(1440px,calc(100% - 64px));margin:auto}
+
+/* LỚP STROKE TỰ NHIÊN DÙNG FONT UTM AVO REGULAR NẸP ĐƯỜNG NÉT THANH THỎA */
+.stroke-med, .logo, nav, .talk, .eyebrow, .link, .video-meta, .service strong,
+.section-head h2, .section-head a, .work-info strong, .center h2,
+.badge, .plan, .card h3, .price, .choose, .fb, .btn-pill, .btn-link, .btn-ul,
+.ft-logo, .ft-em, .ft-soc a, .wi-nm, .sc2-t, .stag, .ps-t, .stl, .tmn, .tmr,
+.vt2, .ct-lb, .cs-btn, .cf-t, .ff label, .fs {
+  font-weight: 400 !important;
+  -webkit-text-stroke: 0.35px currentColor;
+}
+
+/* PAGE SWITCHING SYSTEM */
+.page{display:none;min-height:100vh;animation:fadeIn .4s ease both}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* BACKGROUND & GLOW */
+.bg{position:fixed;inset:0;z-index:-3;background:
+ radial-gradient(circle at 8% 12%,rgba(174,210,255,.78),transparent 27%),
+ radial-gradient(circle at 84% 14%,rgba(255,197,231,.64),transparent 30%),
+ radial-gradient(circle at 65% 70%,rgba(199,191,255,.48),transparent 34%),
+ linear-gradient(135deg,#fff9fb 0%,#edf5ff 46%,#f7efff 73%,#fff 100%)}
+.bg:after{content:"";position:absolute;inset:0;opacity:.35;mix-blend-mode:soft-light;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.16'/%3E%3C/svg%3E")}
+.cursor-glow{position:fixed;width:520px;height:520px;border-radius:50%;pointer-events:none;z-index:-2;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(255,255,255,.42),rgba(179,197,255,.14) 38%,transparent 70%);filter:blur(12px);transition:opacity .3s}
+
+/* NAVIGATION */
+nav{position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:50;width:min(1440px,calc(100% - 36px));height:66px;padding:0 22px 0 28px;display:flex;align-items:center;justify-content:space-between;border:1px solid rgba(255,255,255,.72);background:rgba(255,255,255,.46);backdrop-filter:blur(24px) saturate(150%);border-radius:22px;box-shadow:0 12px 38px rgba(86,101,158,.1);transition:.35s;font-family:var(--font-main)}
+nav.scrolled{top:10px;background:rgba(255,255,255,.72);box-shadow:0 18px 50px rgba(73,83,135,.16)}
+.logo{letter-spacing:.08em;cursor:pointer}.logo b{font-size:18px}.logo i{font-style:normal;color:#788dde}
+.navlinks{display:flex;gap:34px;font-size:13px}.navlinks a{position:relative;cursor:pointer;transition:color .25s}.navlinks a:after{content:"";position:absolute;height:1px;left:0;right:0;bottom:-7px;background:var(--ink);transform:scaleX(0);transition:.25s}
+.navlinks a:hover:after,.navlinks a.on::after{transform:scaleX(1)}
+.navlinks a.on{color:#788dde}
+.talk{border:0;border-radius:999px;padding:13px 19px;background:rgba(255,255,255,.8);box-shadow:0 10px 28px rgba(50,70,130,.12);cursor:pointer;transition:.25s;font-family:var(--font-main)}.talk:hover{transform:translateY(-2px)}
+
+/* HOME PAGE STYLES */
+.hero{min-height:100vh;padding:124px 0 44px;position:relative;display:flex;align-items:center}.hero-grid{display:grid;grid-template-columns:.84fr 1.36fr;align-items:center;gap:54px}.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.22em;color:#7385b6;margin-bottom:22px;font-family:var(--font-main)}
+.hero h1{font-family:var(--font-hero);font-weight:400;letter-spacing:-.03em;font-size:clamp(62px,7.2vw,112px);line-height:.95;margin:0;-webkit-text-stroke:0}
+.hero h1 em{font-style:italic;font-weight:400;background:linear-gradient(90deg,#8ca7ff,#c29bf3,#ff9cc9);-webkit-background-clip:text;color:transparent;-webkit-text-stroke:0}
+.desc{font-size:15px;color:var(--muted);line-height:1.8;max-width:430px;margin:32px 0;font-family:var(--font-main)}
+.actions{display:flex;align-items:center;gap:20px}.primary{display:inline-flex;align-items:center;gap:14px;padding:10px 11px 10px 20px;border:1px solid rgba(78,91,137,.16);border-radius:999px;background:rgba(255,255,255,.54);backdrop-filter:blur(14px);cursor:pointer;box-shadow:0 14px 32px rgba(92,102,154,.11);transition:.3s;font-family:var(--font-main)}.primary:hover{transform:translateY(-4px);box-shadow:0 20px 40px rgba(92,102,154,.17)}.primary span:last-child{width:38px;height:38px;display:grid;place-items:center;border-radius:50%;background:var(--ink);color:white}.link{font-size:12px;text-transform:uppercase;letter-spacing:.13em;color:#657087;font-family:var(--font-main)}
+.video-wrap{position:relative;perspective:1100px}.video-card{position:relative;aspect-ratio:16/10;border-radius:32px;overflow:hidden;border:1px solid rgba(255,255,255,.9);box-shadow:0 35px 90px rgba(79,91,151,.24),inset 0 1px 0 white;background:#c7d2ee;transform-style:preserve-3d;transition:transform .12s linear}.video-visual{position:absolute;inset:-4%;background:
+ radial-gradient(circle at 58% 24%,rgba(255,222,229,.9),transparent 26%),
+ linear-gradient(180deg,rgba(24,34,68,.05),rgba(16,22,44,.8)),
+ linear-gradient(145deg,#5d6380 0%,#d3a6aa 48%,#6f6d86 100%);animation:breath 12s ease-in-out infinite alternate;transform:scale(1.04)}
+.video-visual:before{content:"";position:absolute;inset:34% -5% -4%;clip-path:polygon(0 48%,14% 30%,29% 43%,43% 18%,58% 43%,70% 25%,87% 42%,100% 28%,100% 100%,0 100%);background:linear-gradient(180deg,#2e344d,#101521);opacity:.78}.video-visual:after{content:"";position:absolute;left:18%;right:18%;bottom:0;height:48%;background:linear-gradient(180deg,rgba(255,190,180,.4),rgba(15,22,42,.24));clip-path:polygon(42% 0,58% 0,100% 100%,0 100%);filter:blur(1px)}
+@keyframes breath{to{transform:scale(1.095) translate3d(-1%,1%,0)}}
+.video-shine{position:absolute;inset:0;background:linear-gradient(115deg,transparent 25%,rgba(255,255,255,.27) 42%,transparent 58%);transform:translateX(-120%);animation:shine 8s 2s infinite}@keyframes shine{0%,70%{transform:translateX(-120%)}90%,100%{transform:translateX(120%)}}
+.video-meta{position:absolute;left:25px;right:25px;bottom:22px;display:flex;justify-content:space-between;color:white;font-size:11px;letter-spacing:.13em;text-transform:uppercase;font-family:var(--font-main)}.play{position:absolute;inset:0;margin:auto;width:84px;height:84px;border-radius:50%;border:1px solid rgba(255,255,255,.72);background:rgba(255,255,255,.22);backdrop-filter:blur(16px);display:grid;place-items:center;cursor:pointer;transition:.3s;box-shadow:0 14px 35px rgba(0,0,0,.15)}.play:after{content:"";margin-left:6px;border-left:18px solid white;border-top:11px solid transparent;border-bottom:11px solid transparent}.play:hover{transform:scale(1.12);background:rgba(255,255,255,.34)}
+.orb{position:absolute;border-radius:50%;pointer-events:none;border:1px solid rgba(255,255,255,.72);box-shadow:inset -22px -24px 40px rgba(117,127,214,.15),inset 16px 18px 32px rgba(255,255,255,.8),0 24px 55px rgba(101,111,176,.16);backdrop-filter:blur(5px);background:radial-gradient(circle at 32% 27%,rgba(255,255,255,.96),rgba(169,210,255,.55) 33%,rgba(208,163,255,.36) 64%,rgba(255,164,216,.2));animation:float 7s ease-in-out infinite}.o1{width:128px;height:128px;right:-38px;top:-42px}.o2{width:76px;height:76px;left:-30px;bottom:8%;animation-delay:-2s}.o3{width:44px;height:44px;right:12%;bottom:-19px;animation-delay:-4s}@keyframes float{50%{transform:translateY(-16px) rotate(8deg)}}
+.services-bar{margin-top:34px;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;padding:12px;border-radius:24px;border:1px solid rgba(255,255,255,.8);background:rgba(255,255,255,.42);backdrop-filter:blur(22px);box-shadow:0 20px 58px rgba(89,99,150,.13);font-family:var(--font-main)}.service{padding:17px 18px;display:flex;gap:12px;border-right:1px solid rgba(76,95,140,.1)}.service:last-child{border:0}.service .icon{width:35px;height:35px;flex:0 0 auto;border-radius:12px;background:linear-gradient(135deg,rgba(255,255,255,.9),rgba(207,219,255,.7));display:grid;place-items:center;color:#778be3}.service strong{font-size:12px;display:block;margin-bottom:4px;font-family:var(--font-title)}.service small{color:var(--muted);line-height:1.45;font-size:10px}
+section{padding:100px 0}.section-head{display:flex;align-items:end;justify-content:space-between;margin-bottom:30px}.section-head h2{font-family:var(--font-title);font-size:48px;letter-spacing:-.04em;margin:0}.section-head a{font-family:var(--font-main);font-size:12px;text-transform:uppercase;letter-spacing:.13em}.workgrid{display:grid;grid-template-columns:1.35fr 1fr 1fr;grid-template-rows:260px 260px;gap:14px}.work{position:relative;border-radius:24px;overflow:hidden;min-height:0;border:1px solid rgba(255,255,255,.72);box-shadow:0 18px 42px rgba(66,76,125,.12);cursor:pointer;font-family:var(--font-main)}.work:first-child{grid-row:span 2}.work:nth-child(4){grid-column:span 2}.art{position:absolute;inset:0;transition:transform .7s cubic-bezier(.2,.7,.2,1)}.a1{background:linear-gradient(150deg,#c8d4c5,#637365)}.a2{background:linear-gradient(150deg,#d8c8ad,#8b7158)}.a3{background:linear-gradient(150deg,#d3c6e7,#8374a3)}.a4{background:linear-gradient(150deg,#e1d9cb,#9d8877)}.work:hover .art{transform:scale(1.07)}.work:after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 45%,rgba(17,23,42,.72))}.work-info{position:absolute;z-index:2;left:22px;right:22px;bottom:19px;color:white;display:flex;align-items:end;justify-content:space-between}.work-info strong{font-family:var(--font-title);font-size:15px}.work-info small{display:block;margin-top:4px;opacity:.7;font-weight:400}.arrow{width:38px;height:38px;border-radius:50%;background:white;color:#25304a;display:grid;place-items:center;transition:.3s}.work:hover .arrow{transform:rotate(45deg)}
+.pricing{position:relative}.pricing:before{content:"";position:absolute;inset:0 -20vw;background:radial-gradient(circle at 20% 25%,rgba(194,211,255,.54),transparent 30%),radial-gradient(circle at 84% 30%,rgba(255,199,231,.43),transparent 30%);z-index:-1}.center{text-align:center;max-width:730px;margin:0 auto 54px}.center h2{font-family:var(--font-title);font-size:clamp(44px,5vw,72px);letter-spacing:-.05em;line-height:1.03;margin:15px 0}.center p{font-family:var(--font-main);color:var(--muted);line-height:1.7}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{position:relative;min-height:490px;padding:34px;border-radius:28px;border:1px solid rgba(255,255,255,.88);background:linear-gradient(145deg,rgba(255,255,255,.53),rgba(243,246,255,.32));backdrop-filter:blur(28px) saturate(140%);box-shadow:0 24px 65px rgba(81,91,147,.13),inset 0 1px 0 white;transition:.35s;overflow:hidden;font-family:var(--font-main)}.card:before{content:"";position:absolute;width:180px;height:180px;border-radius:50%;right:-80px;top:-80px;background:rgba(255,255,255,.55);filter:blur(8px)}.card:hover{transform:translateY(-12px);box-shadow:0 35px 90px rgba(81,91,147,.2),inset 0 1px 0 white}.popular{border-color:rgba(231,137,197,.66);transform:translateY(-12px)}.badge{position:absolute;top:0;left:50%;transform:translateX(-50%);padding:8px 22px;border-radius:0 0 15px 15px;color:white;font-size:10px;text-transform:uppercase;letter-spacing:.13em;background:linear-gradient(90deg,#ee8ac6,#a798ef)}.plan{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#7d93d8}.card h3{font-family:var(--font-title);font-size:25px;margin:14px 0 8px}.card .copy{font-size:12px;color:var(--muted);min-height:46px;line-height:1.55}.price{font-family:var(--font-title);font-size:37px;letter-spacing:.03em;margin:26px 0 3px}.per{font-size:11px;color:#8891a5}.features{list-style:none;padding:24px 0 0;margin:24px 0 0;border-top:1px solid rgba(74,93,137,.1)}.features li{font-size:12px;color:#59647a;margin:12px 0}.features li:before{content:"✓";color:#7ba6ec;margin-right:11px}.choose{position:absolute;left:34px;bottom:30px;display:flex;align-items:center;gap:12px;font-size:11px;text-transform:uppercase;letter-spacing:.11em}.choose b{width:34px;height:34px;border:1px solid rgba(70,86,128,.16);border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.56)}
+.modal{position:fixed;inset:0;z-index:100;background:rgba(15,20,38,.74);backdrop-filter:blur(18px);display:grid;place-items:center;opacity:0;pointer-events:none;transition:.35s}.modal.open{opacity:1;pointer-events:auto}.modal-box{width:min(1100px,90vw);aspect-ratio:16/9;border-radius:28px;overflow:hidden;background:#111;box-shadow:0 40px 100px rgba(0,0,0,.4);transform:scale(.88);transition:.4s}.modal.open .modal-box{transform:scale(1)}.modal-close{position:absolute;right:30px;top:24px;color:#fff;border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.12);width:44px;height:44px;border-radius:50%;font-size:20px;cursor:pointer}.placeholder{width:100%;height:100%;display:grid;place-items:center;text-align:center;color:white;background:radial-gradient(circle at 55% 30%,#6d6389,#23283f 56%,#0f1321)}.placeholder b{font-size:28px}.placeholder span{display:block;margin-top:10px;opacity:.6;font-size:13px}.reveal{opacity:0;transform:translateY(34px);transition:opacity .8s,transform .8s}.reveal.show{opacity:1;transform:none}
+
+/* SUBPAGES UTILITIES & STYLES */
+.serif{font-family:var(--font-hero);font-weight:400;-webkit-text-stroke:0}
+.ey{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--txl);font-family:var(--font-main)}
+.pk{color:var(--ac);font-style:italic;-webkit-text-stroke:0}
+
+.btn-pill{
+  display:inline-flex;align-items:center;gap:12px;font-size:11px;
+  letter-spacing:.1em;text-transform:uppercase;
+  border:1px solid rgba(0,0,0,.18);border-radius:100px;
+  padding:13px 22px 13px 14px;color:var(--tx);
+  transition:all .25s;cursor:pointer;background:none;font-family:var(--font-main);
+}
+.btn-pill:hover{background:var(--tx);color:#fff}
+.btn-pill .ic{width:26px;height:26px;background:var(--tx);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background .25s;flex-shrink:0}
+.btn-pill:hover .ic{background:#fff}
+.btn-link{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ac);text-decoration:none;border-bottom:1px solid var(--ac);padding-bottom:2px;transition:opacity .2s;cursor:pointer;display:inline-block;font-family:var(--font-main)}
+.btn-link:hover{opacity:.65}
+.btn-ul{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--tx);text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:2px;transition:opacity .2s;cursor:pointer;font-family:var(--font-main)}
+.btn-ul:hover{opacity:.55}
+
+.rv{opacity:0;transform:translateY(20px);transition:opacity .55s ease,transform .55s ease}
+.rv.vis{opacity:1;transform:translateY(0)}
+
+/* FOOTER CHO SUBPAGES */
+.ft{padding:28px 64px;border-top:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;background:rgba(255,255,255,.6);backdrop-filter:blur(10px);font-family:var(--font-main)}
+.ft-logo{font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.ft-copy{font-size:10px;color:var(--txl);margin-top:3px}
+.ft-em{font-size:12px;color:var(--tx);text-decoration:none;transition:color .2s}
+.ft-em:hover{color:var(--ac)}
+.ft-loc{font-size:12px;color:var(--txm)}
+.ft-soc{display:flex;gap:24px}
+.ft-soc a{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--tx);text-decoration:none;transition:color .2s}
+.ft-soc a:hover{color:var(--ac)}
+
+/* WORK PAGE */
+.pg-h{
+  padding:140px 64px 72px;
+  background:linear-gradient(135deg,rgba(255,255,255,.9) 0%,#fce8f5 50%,#ede8ff 100%);
+  position:relative;overflow:hidden;
+}
+.pg-h::before{content:"";position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(232,165,200,.25) 0%,transparent 70%);top:-100px;right:-60px;pointer-events:none}
+.pg-t{font-size:clamp(48px,6vw,80px);line-height:1.05;font-weight:400;margin:16px 0 0;position:relative;z-index:1;font-family:var(--font-hero);-webkit-text-stroke:0}
+.pg-s{color:var(--txm);font-size:14px;margin-top:16px;max-width:420px;line-height:1.7;position:relative;z-index:1;font-family:var(--font-main)}
+
+.wf{padding:32px 64px 0;display:flex;gap:8px;flex-wrap:wrap}
+.fb{border:1px solid var(--bd);border-radius:100px;padding:8px 18px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;background:#fff;color:var(--txm);transition:all .2s;font-family:var(--font-main)}
+.fb:hover,.fb.on{background:var(--tx);color:#fff;border-color:var(--tx)}
+.wfg{padding:32px 64px 80px;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.wfi{position:relative;overflow:hidden;cursor:pointer;aspect-ratio:4/3;font-family:var(--font-main)}
+.wfi .wb{width:100%;height:100%;transition:transform .55s ease}
+.wfi:hover .wb{transform:scale(1.06)}
+.wfi .wo{opacity:0;transition:opacity .3s}
+.wfi:hover .wo{opacity:1}
+.wfi .wi-inf{padding:20px}
+.wfb{grid-column:span 2;aspect-ratio:unset;min-height:360px}
+.wb{width:100%;height:100%;transition:transform .6s ease}
+.b1{background:linear-gradient(155deg,#c8d5c0,#8fa888,#6b7f64)}
+.b2{background:linear-gradient(155deg,#d4c4a0,#b8a07a,#8c7252)}
+.b3{background:linear-gradient(155deg,#d0c8dc,#b0a8cc,#9080b4)}
+.b4{background:linear-gradient(155deg,#c8c4bc,#a8a49c,#88847c)}
+.b5{background:linear-gradient(155deg,#d8d4cc,#b8b4ac,#989490)}
+.b6{background:linear-gradient(155deg,#c4b89c,#a49078,#8c7860)}
+.b7{background:linear-gradient(155deg,#b8d0e0,#90b4c8,#6890aa)}
+.b8{background:linear-gradient(155deg,#e0c8b8,#c0a090,#a07860)}
+.b9{background:linear-gradient(155deg,#c8b8e0,#a898c8,#8878b0)}
+.wo{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.62) 0%,transparent 55%);opacity:0;transition:opacity .3s}
+.wi-inf{position:absolute;bottom:0;left:0;right:0;padding:16px;font-family:var(--font-main)}
+.wi-nm{color:#fff;font-size:11px;letter-spacing:.05em;text-transform:uppercase;line-height:1.3}
+.wi-tp{color:rgba(255,255,255,.55);font-size:9px;letter-spacing:.12em;text-transform:uppercase;margin-top:2px}
+
+/* SERVICES PAGE */
+.sdl{padding:60px 64px 80px;display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--bd);font-family:var(--font-main)}
+.sc2{background:#fff;padding:52px 48px;position:relative;overflow:hidden;transition:background .3s;cursor:pointer}
+.sc2:hover{background:#faf8ff}
+.sc2-n{font-size:11px;color:var(--txl);letter-spacing:.12em;margin-bottom:24px}
+.sc2-t{font-size:clamp(26px,2.4vw,36px);margin-bottom:16px;line-height:1.15;font-family:var(--font-main)}
+.sc2-d{font-size:13px;color:var(--txm);line-height:1.7;margin-bottom:28px;max-width:340px;font-family:var(--font-main)}
+.sc2-tags{display:flex;flex-wrap:wrap;gap:8px}
+.stag{border:1px solid var(--bd);border-radius:100px;padding:5px 12px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--txm);font-family:var(--font-main)}
+.sc2-ar{position:absolute;top:48px;right:48px;width:36px;height:36px;border:1px solid var(--bd);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all .25s}
+.sc2:hover .sc2-ar{background:var(--tx);border-color:var(--tx)}
+.sc2:hover .sc2-ar svg path{stroke:#fff}
+
+.spr{padding:72px 64px;background:linear-gradient(135deg,#fff 0%,#fce8f5 60%,#ede8ff 100%)}
+.spg{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;margin-top:48px}
+.pst{padding:32px;border:1px solid rgba(201,122,178,.2);border-radius:12px;background:rgba(255,255,255,.7);backdrop-filter:blur(8px);font-family:var(--font-main)}
+.ps-n{font-size:40px;color:var(--pk);margin-bottom:16px;line-height:1;font-family:var(--font-main)}
+.ps-t{font-size:14px;margin-bottom:10px;font-family:var(--font-main)}
+.ps-d{font-size:12px;color:var(--txm);line-height:1.65;font-family:var(--font-main)}
+
+/* ABOUT PAGE */
+.ab-h{
+  padding:140px 64px 0;min-height:70vh;
+  display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:end;
+  background:linear-gradient(160deg,#fff 0%,#fce8f5 50%,#ede8ff 100%);
+  position:relative;overflow:hidden;
+}
+.ab-h::before{content:"";position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(232,165,200,.22) 0%,transparent 70%);bottom:-100px;right:-80px;pointer-events:none}
+.ab-tg{font-size:clamp(40px,5.5vw,72px);line-height:1.06;font-weight:400;margin:20px 0 48px;position:relative;z-index:1;font-family:var(--font-hero);-webkit-text-stroke:0}
+.ab-r{padding-bottom:72px;position:relative;z-index:1}
+.ab-in{font-size:15px;line-height:1.8;color:var(--txm);margin-bottom:32px;font-family:var(--font-main)}
+.ab-st{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.stat{padding:24px;border:1px solid rgba(201,122,178,.2);border-radius:10px;background:rgba(255,255,255,.6);backdrop-filter:blur(8px);font-family:var(--font-main)}
+.stn{font-size:36px;font-family:var(--font-main)}
+.stn em{color:var(--ac);font-style:normal}
+.stl{font-size:11px;color:var(--txl);letter-spacing:.1em;text-transform:uppercase;margin-top:4px;font-family:var(--font-main)}
+
+.ab-tm{padding:72px 64px}
+.tmg{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
+.tmc{border-radius:12px;overflow:hidden;cursor:pointer;font-family:var(--font-main)}
+.tmp{height:320px;position:relative;overflow:hidden}
+.tmp .wb{transition:transform .5s ease}
+.tmc:hover .tmp .wb{transform:scale(1.05)}
+.tmpo{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.55) 0%,transparent 55%);opacity:0;transition:opacity .3s}
+.tmc:hover .tmpo{opacity:1}
+.tmi{padding:20px 0 0;font-family:var(--font-main)}
+.tmn{font-size:20px;font-family:var(--font-main)}
+.tmr{font-size:11px;color:var(--txl);letter-spacing:.1em;text-transform:uppercase;margin-top:4px;font-family:var(--font-main)}
+.tmb{font-size:12px;color:var(--txm);line-height:1.65;margin-top:10px;font-family:var(--font-main)}
+
+.ab-vl{padding:72px 64px;background:linear-gradient(135deg,#fff 0%,#fce8f5 60%,#ede8ff 100%)}
+.vlg{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(201,122,178,.15);margin-top:40px;border-radius:12px;overflow:hidden}
+.vc2{background:#fff;padding:40px 36px;font-family:var(--font-main)}
+.vi2{font-size:28px;margin-bottom:20px}
+.vt2{font-size:22px;margin-bottom:12px;font-family:var(--font-main)}
+.vd2{font-size:13px;color:var(--txm);line-height:1.7;font-family:var(--font-main)}
+
+/* CONTACT PAGE */
+.ct-pg{padding:140px 64px 80px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;font-family:var(--font-main)}
+.ct-pgt{font-size:clamp(40px,5vw,62px);line-height:1.07;font-weight:400;margin:16px 0 24px;font-family:var(--font-hero);-webkit-text-stroke:0}
+.ct-pgd{font-size:14px;color:var(--txm);line-height:1.75;margin-bottom:44px;max-width:380px;font-family:var(--font-main)}
+.ct-inf{display:flex;flex-direction:column;gap:28px;margin-bottom:44px}
+.ct-row{display:flex;gap:14px;align-items:flex-start}
+.ct-ic{width:36px;height:36px;border:1px solid var(--bd);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.ct-lb{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--txl);margin-bottom:3px;font-family:var(--font-main)}
+.ct-vl{font-size:13px;color:var(--tx);font-family:var(--font-main)}
+.ct-soc{display:flex;gap:14px;flex-wrap:wrap}
+.cs-btn{border:1px solid var(--bd);border-radius:100px;padding:8px 16px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--tx);text-decoration:none;transition:all .2s;font-family:var(--font-main)}
+.cs-btn:hover{background:var(--tx);color:#fff;border-color:var(--tx)}
+.cf{background:#fafafa;border:1px solid var(--bd);border-radius:16px;padding:44px 40px;font-family:var(--font-main)}
+.cf-t{font-size:22px;margin-bottom:30px;font-family:var(--font-main)}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.ff{display:flex;flex-direction:column;gap:6px}
+.ff label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--txl);font-family:var(--font-main)}
+.ff input,.ff textarea,.ff select{
+  border:1px solid var(--bd);border-radius:8px;padding:12px 14px;font-size:13px;
+  font-family:var(--font-main);color:var(--tx);background:#fff;outline:none;transition:border-color .2s;
+  -webkit-appearance:none;
+}
+.ff input:focus,.ff textarea:focus,.ff select:focus{border-color:var(--ac)}
+.ff textarea{resize:vertical;min-height:100px}
+.ff.full{grid-column:1/-1}
+.fs{
+  width:100%;padding:15px;background:var(--tx);color:#fff;
+  border:none;border-radius:8px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+  font-family:var(--font-main);cursor:pointer;transition:background .25s;margin-top:8px;
+}
+.fs:hover{background:var(--ac)}
+
+/* MEDIA QUERIES FOR RESPONSIVE */
+@media(max-width:980px){
+  .shell{width:min(100% - 36px,760px)}.navlinks{gap:16px;font-size:11px}
+  .hero{padding-top:120px}.hero-grid{grid-template-columns:1fr}.hero h1{font-size:68px}.video-wrap{margin-top:22px}.services-bar{grid-template-columns:1fr 1fr}.workgrid{grid-template-columns:1fr 1fr;grid-template-rows:300px 220px 220px}.work:first-child{grid-column:span 2;grid-row:auto}.work:nth-child(4){grid-column:auto}.cards{grid-template-columns:1fr}.popular{transform:none}.card{min-height:440px}
+  .hw,.hsv,.hpr,.hco,.pg-h,.wf,.wfg,.sdl,.spr,.ab-h,.ab-tm,.ab-vl,.ct-pg{padding-left:24px;padding-right:24px}
+  .hsv,.ab-h,.ct-pg{grid-template-columns:1fr}
+  .pg2,.spg,.vlg,.sdl{grid-template-columns:1fr}
+  .tmg{grid-template-columns:1fr 1fr}
+  .wfg{grid-template-columns:1fr 1fr}
+  .wfb{grid-column:span 1;min-height:200px}
+  .ft{padding:28px 24px}
+  .fr{grid-template-columns:1fr}
+  .hco{grid-template-columns:1fr}
+}
+@media(max-width:600px){.shell{width:calc(100% - 24px)}nav{height:58px;padding:0 14px}.logo b{font-size:15px}.navlinks{display:none}.talk{padding:10px 14px}.hero h1{font-size:50px}.desc{font-size:14px}.actions{align-items:flex-start;flex-direction:column}.services-bar{grid-template-columns:1fr}.service{border-right:0;border-bottom:1px solid rgba(76,95,140,.1)}.workgrid{display:flex;overflow:auto;scroll-snap-type:x mandatory}.work{min-width:84vw;height:400px;scroll-snap-align:center}.section-head h2{font-size:38px}.center h2{font-size:44px}.orb{display:none}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="bg"></div><div class="cursor-glow"></div>
+
+<nav>
+  <a class="logo" onclick="go('home')"><b>CREU</b><i>✱</i></a>
+  <div class="navlinks">
+    <a onclick="go('home')" id="nl-home" class="on">Home</a>
+    <a onclick="go('work')" id="nl-work">Work</a>
+    <a onclick="go('services')" id="nl-services">Services</a>
+    <a onclick="go('about')" id="nl-about">About</a>
+    <a onclick="go('contact')" id="nl-contact">Contact</a>
+  </div>
+  <button class="talk" onclick="go('contact')">Let's talk ↗</button>
+</nav>
+
+<!-- ====== PAGE 1: HOME ====== -->
+<div class="page active" id="pg-home">
+<main id="top">
+<section class="hero"><div class="shell"><div class="hero-grid"><div class="hero-copy reveal"><div class="eyebrow">CREATIVE STUDIO · THỦ ĐỨC</div><h1>Ideas<br>become<br><em>visuals.</em></h1><p class="desc">CREU biến chiến lược thương hiệu thành hình ảnh, video và trải nghiệm thị giác giàu cảm xúc — từ ý tưởng đến sản phẩm hoàn chỉnh.</p><div class="actions"><button class="primary" id="heroPlay"><span>Play showreel</span><span>↗</span></button><a class="link" onclick="go('work')" style="cursor:pointer">Explore our work ↓</a></div></div><div class="video-wrap reveal"><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div><div class="video-card" id="videoCard"><div class="video-visual"></div><div class="video-shine"></div><button class="play" aria-label="Play showreel"></button><div class="video-meta"><span>Showreel 2026</span><span>01 / 04</span></div></div></div></div><div class="services-bar reveal" id="services"><div class="service"><div class="icon">◌</div><div><strong>Video Production</strong><small>Concept, filming & post-production.</small></div></div><div class="service"><div class="icon">✦</div><div><strong>Photography</strong><small>Architecture, product & people.</small></div></div><div class="service"><div class="icon">⌁</div><div><strong>Creative Direction</strong><small>Branding, visual systems & campaigns.</small></div></div><div class="service"><div class="icon">◎</div><div><strong>Project Management</strong><small>Clear process, smooth delivery.</small></div></div></div></div></section>
+<section id="work"><div class="shell"><div class="section-head reveal"><h2>Selected works</h2><a onclick="go('work')" style="cursor:pointer">View all projects ↗</a></div><div class="workgrid"><article class="work reveal"><div class="art a1"></div><div class="work-info"><div><strong>Serenity House</strong><small>Residential · 2026</small></div><span class="arrow">↗</span></div></article><article class="work reveal"><div class="art a2"></div><div class="work-info"><div><strong>Mộc Coffee</strong><small>Brand identity · 2026</small></div><span class="arrow">↗</span></div></article><article class="work reveal"><div class="art a3"></div><div class="work-info"><div><strong>Lễ hội Thủ Đức</strong><small>Film · Campaign</small></div><span class="arrow">↗</span></div></article><article class="work reveal"><div class="art a4"></div><div class="work-info"><div><strong>Atelier Home</strong><small>Photography · 2025</small></div><span class="arrow">↗</span></div></article></div></div></section>
+<section class="pricing" id="pricing"><div class="shell"><div class="center reveal"><div class="eyebrow">Monthly partnership</div><h2>Đồng hành dài hạn.<br>Tạo ra giá trị thật.</h2><p>Ba gói dịch vụ linh hoạt, đồng hành cùng mục tiêu và ngân sách của bạn.</p></div><div class="cards"><article class="card reveal"><span class="plan">Gói 01</span><h3>Graphic Care</h3><div class="copy">Giải pháp thiết kế chuyên nghiệp & linh hoạt.</div><div class="price">2.000.000</div><div class="per">VND / tháng</div><ul class="features"><li>Thiết kế không giới hạn hợp lý</li><li>03 Poster / tháng</li><li>02 Lần chỉnh sửa</li><li>Phản hồi trong 24h</li></ul><a class="choose" onclick="go('contact')" style="cursor:pointer"><b>→</b>Chọn gói này</a></article><article class="card popular reveal"><span class="badge">Phổ biến nhất</span><span class="plan">Gói 02</span><h3>Creative Care</h3><div class="copy">Sản xuất nội dung sáng tạo toàn diện mỗi tháng.</div><div class="price">5.000.000</div><div class="per">VND / tháng</div><ul class="features"><li>Toàn bộ Graphic Care</li><li>05 Production Days / tháng</li><li>10 Bài viết Facebook</li><li>Dựng Reel / Motion Graphic</li></ul><a class="choose" onclick="go('contact')" style="cursor:pointer"><b>→</b>Chọn gói này</a></article><article class="card reveal"><span class="plan">Gói 03</span><h3>Communication Partner</h3><div class="copy">Đối tác chiến lược truyền thông dài hạn cho doanh nghiệp.</div><div class="price">10.000.000<small>+</small></div><div class="per">VND / tháng</div><ul class="features"><li>10 Production Days / tháng</li><li>Chiến lược nội dung</li><li>Báo cáo hiệu quả</li><li>Hỗ trợ 1–1 cùng Account Lead</li></ul><a class="choose" onclick="go('contact')" style="cursor:pointer"><b>→</b>Liên hệ tư vấn</a></article></div></div></section>
+<section id="contact"><div class="shell center reveal"><div class="eyebrow">Let's talk</div><h2>Let’s build something<br><em style="font-weight:300;color:#b386d9">meaningful together.</em></h2><p>Khung preview này đã chừa sẵn vị trí để nhúng YouTube, Vimeo hoặc video tự host.</p><a class="primary" href="mailto:hello@creu.vn"><span>hello@creu.vn</span><span>↗</span></a></div></section>
+</main>
+</div>
+
+<!-- ====== PAGE 2: WORK ====== -->
+<div class="page" id="pg-work">
+<div class="pg-h">
+  <span class="ey" style="position:relative;z-index:1">Work</span>
+  <h1 class="serif pg-t">Every frame<br>tells a <span class="pk">story.</span></h1>
+  <p class="pg-s">A curated collection of campaigns, identity systems, and visual narratives built for brands that dare to stand out.</p>
+</div>
+<div class="wf">
+  <button class="fb on" onclick="filt(this,'all')">All</button>
+  <button class="fb" onclick="filt(this,'video')">Video</button>
+  <button class="fb" onclick="filt(this,'photo')">Photography</button>
+  <button class="fb" onclick="filt(this,'design')">Design</button>
+  <button class="fb" onclick="filt(this,'brand')">Branding</button>
+</div>
+<div class="wfg">
+  <div class="wfi wfb" data-c="video photo"><div class="wb b1" style="height:100%"></div><div class="wo"></div><div class="wi-inf"><div class="wi-nm">Riverside Villa</div><div class="wi-tp">Video · Photo &mdash; 2024</div></div></div>
+  <div class="wfi" data-c="brand"><div class="wb b2" style="height:100%"></div><div class="wo"></div><div class="wi-inf"><div class="wi-nm">Moc Coffee</div><div class="wi-tp">Branding &mdash; 2024</div></div></div>
+  <div class="wfi" data-c="video design"><div class="wb b3" style="height:100%"></div><div class="wo"></div><div class="wi-inf"><div class="wi-nm">Le Hoi Thu Duc</div><div class="wi-tp">Video &middot; Design &mdash; 2023</div></div></div>
+  <div class="wfi" data-c="photo"><div class="wb b4" style="height:100%"></div><div class="wo"></div><div class="wi-inf"><div class="wi-nm">Atelier Home</div><div class="wi-tp">Photography &mdash; 2024</div></div></div>
+  <div class="wfi wfb" data-c="brand design"><div class="wb b5" style="height:100%"></div><div class="wo"></div><div class="wi-inf"><div class="wi-nm">Atelier Home Brand Identity</div><div class="wi-tp">Brand Identity &mdash; 2023</div></div></div>
+  <div class="wfi" data-c="photo video"><div class="wb b6" style="height:100%"></div><div class="wo"></div><div class="wi-inf"><div class="wi-nm">Moc Coffee</div><div class="wi-tp">Photo &middot; Video &mdash; 2024</div></div></div>
+  <div class="wfi" data-c="brand"><div class="wb b7" style="height:100%"></div><div class="wo"></div><div class="wi-inf"><div class="wi-nm">Coastal Brand Co.</div><div class="wi-tp">Branding &mdash; 2023</div></div></div>
+  <div class="wfi" data-c="video"><div class="wb b8" style="height:100%"></div><div class="wo"></div><div class="wi-inf"><div class="wi-nm">Harvest Festival</div><div class="wi-tp">Video &mdash; 2023</div></div></div>
+  <div class="wfi" data-c="design"><div class="wb b9" style="height:100%"></div><div class="wo"></div><div class="wi-inf"><div class="wi-nm">Urban Studio</div><div class="wi-tp">Graphic Design &mdash; 2024</div></div></div>
+</div>
+<footer class="ft"><div><div class="ft-logo">CREU Studio</div><div class="ft-copy">&copy; 2026</div></div><a href="mailto:hello@creu.vn" class="ft-em">hello@creu.vn</a><div class="ft-loc">Thu Duc, TP.HCM</div><div class="ft-soc"><a href="#">Instagram</a><a href="#">Behance</a><a href="#">Facebook</a></div></footer>
+</div>
+
+<!-- ====== PAGE 3: SERVICES ====== -->
+<div class="page" id="pg-services">
+<div class="pg-h">
+  <span class="ey" style="position:relative;z-index:1">Services</span>
+  <h1 class="serif pg-t">We craft<br><span class="pk">experiences</span><br>that resonate.</h1>
+  <p class="pg-s">Từ một campaign đơn lẻ đến một hệ sinh thái thương hiệu toàn diện - chúng tôi đem đúng craft cho từng điểm chạm.</p>
+</div>
+<div class="sdl">
+  <div class="sc2 rv"><div class="sc2-n">01</div><div class="sc2-ar"><svg viewBox="0 0 12 12" fill="none" width="12"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="sc2-t">Video Production</div><div class="sc2-d">Từ concept đến post-production, chúng tôi sản xuất video thương hiệu, TVC, Reels và documentary với chất lượng điện ảnh.</div><div class="sc2-tags"><span class="stag">TVC</span><span class="stag">Brand Film</span><span class="stag">Reels</span><span class="stag">Documentary</span></div></div>
+  <div class="sc2 rv" style="transition-delay:.08s"><div class="sc2-n">02</div><div class="sc2-ar"><svg viewBox="0 0 12 12" fill="none" width="12"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="sc2-t">Photography</div><div class="sc2-d">Chụp ảnh sản phẩm, không gian, chân dung và sự kiện &mdash; mỗi bức ảnh là một câu chuyện được kể qua ánh sáng.</div><div class="sc2-tags"><span class="stag">Product</span><span class="stag">Architecture</span><span class="stag">Portrait</span><span class="stag">Event</span></div></div>
+  <div class="sc2 rv" style="transition-delay:.16s"><div class="sc2-n">03</div><div class="sc2-ar"><svg viewBox="0 0 12 12" fill="none" width="12"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="sc2-t">Graphic Design</div><div class="sc2-d">Thiết kế poster, banner, key visual và tất cả collateral cần thiết &mdash; đẹp, đúng brand, và đúng deadline.</div><div class="sc2-tags"><span class="stag">Poster</span><span class="stag">Key Visual</span><span class="stag">Infographic</span></div></div>
+  <div class="sc2 rv" style="transition-delay:.24s"><div class="sc2-n">04</div><div class="sc2-ar"><svg viewBox="0 0 12 12" fill="none" width="12"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="sc2-t">Brand Identity</div><div class="sc2-d">Xây dựng hệ thống nhận diện thương hiệu toàn diện: logo, typography, màu sắc, voice &mdash; tất cả thành một ngôn ngữ nhất quán.</div><div class="sc2-tags"><span class="stag">Logo</span><span class="stag">Brand System</span><span class="stag">Guideline</span></div></div>
+  <div class="sc2 rv" style="transition-delay:.32s"><div class="sc2-n">05</div><div class="sc2-ar"><svg viewBox="0 0 12 12" fill="none" width="12"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="sc2-t">Marketing Content</div><div class="sc2-d">Nội dung Social Media, bài viết, caption và chiến lược content giúp thương hiệu nói đúng điệu, đúng lúc, đúng người.</div><div class="sc2-tags"><span class="stag">Social Media</span><span class="stag">Content Strategy</span><span class="stag">Copywriting</span></div></div>
+  <div class="sc2 rv" style="transition-delay:.4s;background:linear-gradient(135deg,#fce8f5,#ede8ff);cursor:default">
+    <div style="height:100%;display:flex;flex-direction:column;justify-content:center">
+      <div class="serif" style="font-size:28px;font-weight:400;margin-bottom:16px;line-height:1.2;font-family:var(--font-hero)">Not sure<br>what you<br><span class="pk">need?</span></div>
+      <p style="font-size:13px;color:var(--txm);line-height:1.7;margin-bottom:28px;font-family:var(--font-main)">Nói chuyện với mình &mdash; chúng tôi sẽ giúp bạn tìm ra hướng đi phù hợp nhất.</p>
+      <span class="btn-link" onclick="go('contact')">Let's Talk &rarr;</span>
+    </div>
+  </div>
+</div>
+<div class="spr">
+  <span class="ey" style="display:block">How We Work</span>
+  <h2 class="serif" style="font-size:clamp(30px,3.5vw,44px);font-weight:400;margin-top:16px;line-height:1.15;font-family:var(--font-hero)">From brief to<br><span class="pk">beautiful.</span></h2>
+  <div class="spg">
+    <div class="pst rv"><div class="ps-n">01</div><div class="ps-t">Discovery</div><div class="ps-d">Hiểu thương hiệu, mục tiêu và đối tượng mục tiêu &mdash; trước khi bắt đầu bất cứ điều gì.</div></div>
+    <div class="pst rv" style="transition-delay:.1s"><div class="ps-n">02</div><div class="ps-t">Concept</div><div class="ps-d">Phát triển ý tưởng sáng tạo, mood board và hướng visual phù hợp với brand.</div></div>
+    <div class="pst rv" style="transition-delay:.2s"><div class="ps-n">03</div><div class="ps-t">Production</div><div class="ps-d">Thực hiện với đội ngũ chuyên nghiệp &mdash; quay phim, chụp ảnh, thiết kế.</div></div>
+    <div class="pst rv" style="transition-delay:.3s"><div class="ps-n">04</div><div class="ps-t">Delivery</div><div class="ps-d">Bàn giao file đúng định dạng, đúng deadline, kèm hỗ trợ sau dự án.</div></div>
+  </div>
+</div>
+<footer class="ft"><div><div class="ft-logo">CREU Studio</div><div class="ft-copy">&copy; 2026</div></div><a href="mailto:hello@creu.vn" class="ft-em">hello@creu.vn</a><div class="ft-loc">Thu Duc, TP.HCM</div><div class="ft-soc"><a href="#">Instagram</a><a href="#">Behance</a><a href="#">Facebook</a></div></footer>
+</div>
+
+<!-- ====== PAGE 4: ABOUT ====== -->
+<div class="page" id="pg-about">
+<section class="ab-h">
+  <div style="position:relative;z-index:1">
+    <span class="ey" style="display:block">Who We Are</span>
+    <h1 class="serif ab-tg">We're the<br>studio behind<br>the <span class="pk">story.</span></h1>
+  </div>
+  <div class="ab-r">
+    <p class="ab-in">CREU Studio là một creative studio đặt tại Thủ Đức, TP.HCM &mdash; chuyên biến ý tưởng thành hình ảnh và câu chuyện thương hiệu có chiều sâu. Chúng tôi tin rằng mỗi thương hiệu đều có một câu chuyện xứng đáng được kể theo cách đẹp nhất.</p>
+    <div class="ab-st">
+      <div class="stat rv"><div class="stn">50<em>+</em></div><div class="stl">Dự án hoàn thành</div></div>
+      <div class="stat rv" style="transition-delay:.1s"><div class="stn">3<em>+</em></div><div class="stl">Năm kinh nghiệm</div></div>
+      <div class="stat rv" style="transition-delay:.2s"><div class="stn">30<em>+</em></div><div class="stl">Thương hiệu tin tưởng</div></div>
+      <div class="stat rv" style="transition-delay:.3s"><div class="stn">5<em>&#9733;</em></div><div class="stl">Đánh giá khách hàng</div></div>
+    </div>
+  </div>
+</section>
+<section class="ab-tm">
+  <span class="ey" style="display:block">The Team</span>
+  <h2 class="serif" style="font-size:clamp(28px,3.2vw,42px);font-weight:400;margin-top:14px;line-height:1.15;font-family:var(--font-hero)">People behind<br><span class="pk">the lens.</span></h2>
+  <div class="tmg">
+    <div class="tmc rv"><div class="tmp"><div class="wb b3" style="height:100%"></div><div class="tmpo"></div></div><div class="tmi"><div class="tmn">Hoàng Lê</div><div class="tmr">Founder</div><div class="tmb">Với 5 năm kinh nghiệm trong visual storytelling, Hoàng dẫn dắt vision sáng tạo và đảm bảo mỗi dự án đều có chiều sâu và bản sắc.</div></div></div>
+    <div class="tmc rv" style="transition-delay:.1s"><div class="tmp"><div class="wb b1" style="height:100%"></div><div class="tmpo"></div></div><div class="tmi"><div class="tmn">Trung Hiếu</div><div class="tmr">Co Founder</div><div class="tmb">Đồng hành chiến lược và điều hành sản xuất, Hiếu đảm bảo tiến độ và trải nghiệm hợp tác mượt mà cho mọi thương hiệu.</div></div></div>
+    <div class="tmc rv" style="transition-delay:.2s"><div class="tmp"><div class="wb b5" style="height:100%"></div><div class="tmpo"></div></div><div class="tmi"><div class="tmn">Gia Nghi</div><div class="tmr">Marketing</div><div class="tmb">Quản lý chiến lược truyền thông và nội dung đa kênh, giúp câu chuyện thương hiệu tiếp cận đúng đối tượng mục tiêu.</div></div></div>
+  </div>
+</section>
+<section class="ab-vl">
+  <span class="ey" style="display:block">What Drives Us</span>
+  <h2 class="serif" style="font-size:clamp(28px,3.2vw,42px);font-weight:400;margin-top:14px;line-height:1.15;font-family:var(--font-hero)">Our <span class="pk">values.</span></h2>
+  <div class="vlg">
+    <div class="vc2 rv"><div class="vi2">&#10022;</div><div class="vt2">Craft First</div><div class="vd2">Chúng tôi không bao giờ thỏa hiệp với chất lượng. Mỗi chi tiết nhỏ đều được chú ý và chăm chút &mdash; vì đó là thứ tạo nên sự khác biệt.</div></div>
+    <div class="vc2 rv" style="transition-delay:.1s"><div class="vi2">&#9678;</div><div class="vt2">Brand Clarity</div><div class="vd2">Visual đẹp nhưng phải đúng. Mỗi lựa chọn sáng tạo đều phải phục vụ cho mục tiêu thương hiệu và nội dung điều thương hiệu muốn nói.</div></div>
+    <div class="vc2 rv" style="transition-delay:.2s"><div class="vi2">&#10095;</div><div class="vt2">Long-term Partnership</div><div class="vd2">Chúng tôi không làm một lần rồi thôi. Chúng tôi xây dựng mối quan hệ lâu dài &mdash; phát triển cùng thương hiệu theo thời gian.</div></div>
+  </div>
+</section>
+<footer class="ft"><div><div class="ft-logo">CREU Studio</div><div class="ft-copy">&copy; 2026</div></div><a href="mailto:hello@creu.vn" class="ft-em">hello@creu.vn</a><div class="ft-loc">Thu Duc, TP.HCM</div><div class="ft-soc"><a href="#">Instagram</a><a href="#">Behance</a><a href="#">Facebook</a></div></footer>
+</div>
+
+<!-- ====== PAGE 5: CONTACT ====== -->
+<div class="page" id="pg-contact">
+<div style="background:linear-gradient(135deg,rgba(255,255,255,.9) 0%,#fce8f5 50%,#ede8ff 100%);padding-top:72px">
+  <div class="ct-pg">
+    <div>
+      <span class="ey" style="display:block">Let's Talk</span>
+      <h1 class="serif ct-pgt">Let's build<br>something<br><span class="pk">meaningful.</span></h1>
+      <p class="ct-pgd">Dù là một dự án nhỏ hay một campaign lớn &mdash; chúng tôi luôn sẵn sàng lắng nghe và tìm ra giải pháp phù hợp nhất.</p>
+      <div class="ct-inf">
+        <div class="ct-row"><div class="ct-ic"><svg viewBox="0 0 16 16" fill="none" stroke="var(--ac)" stroke-width="1.5" width="14"><rect x="1" y="3" width="14" height="10" rx="1.5"/><path d="M1 5l7 5 7-5"/></svg></div><div><div class="ct-lb">Email</div><div class="ct-vl">hello@creu.vn</div></div></div>
+        <div class="ct-row"><div class="ct-ic"><svg viewBox="0 0 16 16" fill="none" stroke="var(--ac)" stroke-width="1.5" width="14"><path d="M8 1C5.2 1 3 3.2 3 6c0 4 5 9 5 9s5-5 5-9c0-2.8-2.2-5-5-5z"/><circle cx="8" cy="6" r="1.5"/></svg></div><div><div class="ct-lb">Studio</div><div class="ct-vl">Thủ Đức, TP. Hồ Chí Minh</div></div></div>
+        <div class="ct-row"><div class="ct-ic"><svg viewBox="0 0 16 16" fill="none" stroke="var(--ac)" stroke-width="1.5" width="14"><circle cx="8" cy="8" r="6"/><path d="M8 4v4l3 2"/></svg></div><div><div class="ct-lb">Giờ làm việc</div><div class="ct-vl">Thứ Hai &ndash; Thứ Sáu, 9:00 &ndash; 18:00</div></div></div>
+      </div>
+      <div class="ct-soc"><a href="#" class="cs-btn">Instagram</a><a href="#" class="cs-btn">Behance</a><a href="#" class="cs-btn">Facebook</a></div>
+    </div>
+    <div class="cf">
+      <div class="cf-t">Gửi thông tin dự án</div>
+      <div class="fr">
+        <div class="ff"><label>Họ và tên</label><input type="text" placeholder="Nguyễn Văn A"></div>
+        <div class="ff"><label>Email</label><input type="email" placeholder="hello@brand.vn"></div>
+      </div>
+      <div class="fr">
+        <div class="ff"><label>Thương hiệu / Công ty</label><input type="text" placeholder="Brand của bạn"></div>
+        <div class="ff"><label>Dịch vụ quan tâm</label><select><option value="">Chọn dịch vụ...</option><option>Video Production</option><option>Photography</option><option>Graphic Design</option><option>Brand Identity</option><option>Marketing Content</option><option>Monthly Partnership</option></select></div>
+      </div>
+      <div class="fr">
+        <div class="ff"><label>Budget dự kiến</label><select><option value="">Chọn ngân sách...</option><option>Dưới 5 triệu</option><option>5 - 15 triệu</option><option>15 - 50 triệu</option><option>Trên 50 triệu</option></select></div>
+        <div class="ff"><label>Deadline dự kiến</label><input type="text" placeholder="VD: Tháng 9/2026"></div>
+      </div>
+      <div class="fr" style="grid-template-columns:1fr">
+        <div class="ff full"><label>Mô tả dự án</label><textarea placeholder="Bạn muốn tạo ra điều gì? Kể cho chúng tôi nghe..."></textarea></div>
+      </div>
+      <button class="fs" onclick="sub(this)">Gửi thông tin &rarr;</button>
+    </div>
+  </div>
+</div>
+<footer class="ft"><div><div class="ft-logo">CREU Studio</div><div class="ft-copy">&copy; 2026</div></div><a href="mailto:hello@creu.vn" class="ft-em">hello@creu.vn</a><div class="ft-loc">Thu Duc, TP.HCM</div><div class="ft-soc"><a href="#">Instagram</a><a href="#">Behance</a><a href="#">Facebook</a></div></footer>
+</div>
+
+<!-- VIDEO MODAL -->
+<div class="modal" id="modal"><button class="modal-close" aria-label="Close">×</button><div class="modal-box"><div class="placeholder"><div><b>VIDEO EMBED AREA</b><span>Thay khối này bằng YouTube / Vimeo iframe hoặc thẻ &lt;video&gt; của CREU.</span></div></div></div></div>
+
+<script>
+// Ambient cursor glow & Nav shadow
+const glow=document.querySelector('.cursor-glow');
+addEventListener('pointermove',e=>{glow.style.left=e.clientX+'px';glow.style.top=e.clientY+'px'});
+const nav=document.querySelector('nav');
+addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>30));
+
+// 3D Card Tilt for Hero
+const card=document.querySelector('#videoCard');
+if(card){
+  card.addEventListener('pointermove',e=>{const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;card.style.transform=`rotateX(${-y*5}deg) rotateY(${x*7}deg) translateY(-4px)`});
+  card.addEventListener('pointerleave',()=>card.style.transform='');
+}
+
+// Modal Showreel
+const modal=document.querySelector('#modal');
+document.querySelectorAll('#heroPlay,.play').forEach(b=>b.addEventListener('click',()=>modal.classList.add('open')));
+document.querySelector('.modal-close').onclick=()=>modal.classList.remove('open');
+modal.addEventListener('click',e=>{if(e.target===modal)modal.classList.remove('open')});
+addEventListener('keydown',e=>{if(e.key==='Escape')modal.classList.remove('open')});
+
+// PAGE ROUTER SYSTEM
+var cur="home";
+function go(id){
+  if(id===cur)return;
+  document.getElementById("pg-"+cur).classList.remove("active");
+  document.getElementById("pg-"+id).classList.add("active");
+  cur=id;
+  window.scrollTo({top:0,behavior:"smooth"});
+  updateNavLinks(id);
+  revSub();
+}
+
+function updateNavLinks(activeId){
+  ["home","work","services","about","contact"].forEach(function(p){
+    var el=document.getElementById("nl-"+p);
+    if(el)el.classList.toggle("on",p===activeId);
+  });
+}
+
+// REVEAL ANIMATIONS FOR SUBPAGES & HOME
+function revSub(){
+  var obs=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("vis");obs.unobserve(e.target);}});
+  },{threshold:0.12});
+  document.querySelectorAll("#pg-"+cur+" .rv").forEach(function(el){el.classList.remove("vis");obs.observe(el);});
+}
+
+function filt(btn,cat){
+  document.querySelectorAll(".fb").forEach(function(b){b.classList.remove("on")});
+  btn.classList.add("on");
+  document.querySelectorAll(".wfi").forEach(function(item){
+    item.style.display=(cat==="all"||(item.dataset.c&&item.dataset.c.indexOf(cat)>-1))?"":"none";
+  });
+}
+
+function sub(btn){
+  btn.textContent="Đã gửi! Chúng tôi sẽ liên hệ sớm.";
+  btn.style.background="var(--ac)";
+  btn.disabled=true;
+}
+
+// Reveal Observer for Home page (.reveal)
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('show');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+revSub();
+</script>
+</body>
+</html>

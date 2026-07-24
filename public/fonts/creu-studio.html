@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CREU Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --pk:#e8a5c8;--ac:#c97ab2;--tx:#1a1a1a;--txm:#555;--txl:#999;
+  --bd:#e5e5e5;--wh:#fff;
+}
+html{scroll-behavior:smooth}
+body{font-family:"Inter",sans-serif;color:var(--tx);background:var(--wh);font-size:14px;overflow-x:hidden}
+
+/* PAGE SYSTEM */
+.page{display:none;min-height:100vh;animation:fadeIn .4s ease both}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px 64px;
+  background:rgba(255,255,255,.88);backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(0,0,0,.05);
+}
+.logo{font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
+.logo em{color:var(--ac);font-style:normal}
+.nav-links{display:flex;gap:36px;list-style:none}
+.nav-links a{
+  text-decoration:none;color:var(--tx);font-size:11px;
+  letter-spacing:.1em;text-transform:uppercase;cursor:pointer;
+  position:relative;transition:color .2s;
+}
+.nav-links a::after{content:"";position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--ac);transform:scaleX(0);transition:transform .25s}
+.nav-links a:hover::after,.nav-links a.on::after{transform:scaleX(1)}
+.nav-links a:hover,.nav-links a.on{color:var(--ac)}
+.nav-dots{width:30px;height:30px;border:1px solid var(--bd);border-radius:50%;display:flex;align-items:center;justify-content:center;gap:2px;cursor:pointer}
+.nav-dots span{width:3px;height:3px;background:var(--tx);border-radius:50%}
+
+/* UTILS */
+.ey{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--txl);font-weight:400}
+.serif{font-family:"Playfair Display",serif}
+.pk{color:var(--ac);font-style:italic}
+
+/* BUTTONS */
+.btn-pill{
+  display:inline-flex;align-items:center;gap:12px;font-size:11px;
+  letter-spacing:.1em;text-transform:uppercase;font-weight:500;
+  border:1px solid rgba(0,0,0,.18);border-radius:100px;
+  padding:13px 22px 13px 14px;color:var(--tx);
+  transition:all .25s;cursor:pointer;background:none;font-family:"Inter",sans-serif;
+}
+.btn-pill:hover{background:var(--tx);color:#fff}
+.btn-pill .ic{width:26px;height:26px;background:var(--tx);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background .25s;flex-shrink:0}
+.btn-pill:hover .ic{background:#fff}
+.btn-link{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ac);text-decoration:none;border-bottom:1px solid var(--ac);padding-bottom:2px;transition:opacity .2s;cursor:pointer;display:inline-block}
+.btn-link:hover{opacity:.65}
+.btn-ul{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--tx);text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:2px;transition:opacity .2s;cursor:pointer}
+.btn-ul:hover{opacity:.55}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(20px);transition:opacity .55s ease,transform .55s ease}
+.rv.vis{opacity:1;transform:translateY(0)}
+
+/* FOOTER */
+.ft{padding:28px 64px;border-top:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.ft-logo{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
+.ft-copy{font-size:10px;color:var(--txl);margin-top:3px}
+.ft-em{font-size:12px;color:var(--tx);text-decoration:none;transition:color .2s}
+.ft-em:hover{color:var(--ac)}
+.ft-loc{font-size:12px;color:var(--txm)}
+.ft-soc{display:flex;gap:24px}
+.ft-soc a{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--tx);text-decoration:none;transition:color .2s}
+.ft-soc a:hover{color:var(--ac)}
+
+/* ════════════ HOME ════════════ */
+.hero{
+  min-height:100vh;padding-top:72px;
+  display:grid;grid-template-columns:1fr 1fr;align-items:center;
+  background:linear-gradient(135deg,#fff 0%,#fce8f5 40%,#ede8ff 70%,#fff 100%);
+  position:relative;overflow:hidden;
+}
+.hero::before{content:"";position:absolute;width:560px;height:560px;background:radial-gradient(circle,rgba(232,165,200,.28) 0%,transparent 70%);top:-120px;left:-120px;pointer-events:none}
+.hero::after{content:"";position:absolute;width:420px;height:420px;background:radial-gradient(circle,rgba(212,200,240,.38) 0%,transparent 70%);bottom:60px;right:80px;pointer-events:none}
+.hero-l{padding:80px 0 80px 64px;position:relative;z-index:1}
+.hero-r{padding:80px 64px 80px 0;position:relative;z-index:1}
+.hero-h{font-size:clamp(52px,6vw,82px);line-height:1.04;font-weight:700;margin:20px 0 44px}
+.vt{width:100%;aspect-ratio:4/3;border-radius:6px;overflow:hidden;position:relative;cursor:pointer;background:#111}
+.vs{position:absolute;inset:0;background:linear-gradient(160deg,#0d0d0d 0%,#261a10 50%,#180d0d 100%)}
+.vp{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:54px;height:54px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.38);border-radius:50%;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);z-index:2;transition:background .2s}
+.vp:hover{background:rgba(255,255,255,.24)}
+.vp::after{content:"";border-left:15px solid #fff;border-top:9px solid transparent;border-bottom:9px solid transparent;margin-left:4px}
+.vl{position:absolute;bottom:16px;left:20px;color:rgba(255,255,255,.45);font-size:10px;letter-spacing:.15em;text-transform:uppercase}
+.vc{position:absolute;bottom:16px;right:20px;color:rgba(255,255,255,.35);font-size:10px;letter-spacing:.1em}
+.sc{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--txl);font-size:9px;letter-spacing:.2em;text-transform:uppercase;z-index:1}
+.sc-ln{width:1px;height:36px;background:linear-gradient(to bottom,var(--txl),transparent)}
+
+.hw{padding:72px 64px}
+.sh{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}
+.se{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--txl)}
+.va{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--txl);text-decoration:none;cursor:pointer;transition:color .2s}
+.va:hover{color:var(--tx)}
+.wg{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:6px;height:480px}
+.wi{position:relative;overflow:hidden;cursor:pointer}
+.wi:first-child{grid-row:1/3}
+.wb{width:100%;height:100%;transition:transform .6s ease}
+.wi:hover .wb{transform:scale(1.05)}
+.b1{background:linear-gradient(155deg,#c8d5c0,#8fa888,#6b7f64)}
+.b2{background:linear-gradient(155deg,#d4c4a0,#b8a07a,#8c7252)}
+.b3{background:linear-gradient(155deg,#d0c8dc,#b0a8cc,#9080b4)}
+.b4{background:linear-gradient(155deg,#c8c4bc,#a8a49c,#88847c)}
+.b5{background:linear-gradient(155deg,#d8d4cc,#b8b4ac,#989490)}
+.b6{background:linear-gradient(155deg,#c4b89c,#a49078,#8c7860)}
+.b7{background:linear-gradient(155deg,#b8d0e0,#90b4c8,#6890aa)}
+.b8{background:linear-gradient(155deg,#e0c8b8,#c0a090,#a07860)}
+.b9{background:linear-gradient(155deg,#c8b8e0,#a898c8,#8878b0)}
+.wo{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.62) 0%,transparent 55%);opacity:0;transition:opacity .3s}
+.wi:hover .wo{opacity:1}
+.wi-inf{position:absolute;bottom:0;left:0;right:0;padding:16px}
+.wi-nm{color:#fff;font-size:11px;font-weight:500;letter-spacing:.05em;text-transform:uppercase;line-height:1.3}
+.wi-tp{color:rgba(255,255,255,.55);font-size:9px;letter-spacing:.12em;text-transform:uppercase;margin-top:2px}
+
+.hsv{
+  padding:72px 64px;display:grid;grid-template-columns:1fr 1.1fr 1fr;gap:56px;align-items:start;
+  background:linear-gradient(135deg,#fff 0%,#fce8f5 60%,#ede8ff 100%);position:relative;overflow:hidden;
+}
+.hsv::before{content:"";position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(232,165,200,.18) 0%,transparent 70%);right:-80px;top:-80px;pointer-events:none}
+.svt{font-size:clamp(36px,3.8vw,52px);line-height:1.1;font-weight:700;margin:18px 0 32px}
+.sl{list-style:none;border-top:1px solid var(--bd)}
+.si{display:flex;align-items:center;justify-content:space-between;padding:18px 0;border-bottom:1px solid var(--bd);cursor:pointer;transition:padding-left .2s}
+.si:hover{padding-left:10px}
+.sn{color:var(--txl);font-size:10px;margin-right:14px;font-weight:300}
+.snm{flex:1;font-size:14px;color:var(--tx)}
+.sp{color:var(--txl);font-size:20px;font-weight:300;transition:transform .2s}
+.si:hover .sp{transform:rotate(45deg);color:var(--ac)}
+.svid{position:relative;border-radius:10px;overflow:hidden;aspect-ratio:3/4;background:linear-gradient(135deg,#e8d0f0,#d0b8e8,#c8a0dc)}
+.svg2{position:absolute;inset:0;background:linear-gradient(135deg,rgba(200,160,220,.5),rgba(160,120,200,.35))}
+.swb{
+  position:absolute;bottom:22px;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:10px;
+  background:rgba(255,255,255,.14);backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.28);border-radius:100px;
+  padding:9px 18px;color:#fff;font-size:10px;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;cursor:pointer;
+}
+.psm{width:22px;height:22px;background:rgba(255,255,255,.28);border-radius:50%;display:flex;align-items:center;justify-content:center}
+.psm::after{content:"";border-left:7px solid #fff;border-top:4px solid transparent;border-bottom:4px solid transparent;margin-left:2px}
+
+.hpr{padding:72px 64px}
+.pg2{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:32px}
+.pc{border:1px solid var(--bd);border-radius:14px;padding:36px 30px;position:relative;transition:box-shadow .3s}
+.pc:hover{box-shadow:0 8px 40px rgba(0,0,0,.07)}
+.pc.ft2{border-color:var(--pk);box-shadow:0 4px 24px rgba(232,165,200,.22)}
+.mp{position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:#fff;border:1px solid var(--pk);border-top:none;padding:4px 14px;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--ac);border-radius:0 0 8px 8px}
+.px{position:absolute;top:14px;right:14px;color:var(--txl);font-size:17px;cursor:pointer;line-height:1}
+.pn{font-size:13px;font-weight:500;margin-bottom:10px}
+.pp{font-size:26px;font-weight:700;margin-bottom:3px}
+.pper{font-size:11px;color:var(--txl);margin-bottom:22px}
+.pf{list-style:none;margin-bottom:26px}
+.pf li{font-size:12px;color:var(--txm);padding:4px 0;line-height:1.45}
+
+.hco{padding:96px 64px 60px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+.ctt{font-size:clamp(42px,5vw,62px);line-height:1.07;font-weight:700}
+.cqs{margin-bottom:32px}
+.cq{font-size:21px;color:#ccc;padding:17px 0;border-bottom:1px solid var(--bd);cursor:pointer;transition:color .2s}
+.cq:hover{color:var(--tx)}
+.cq:first-child{border-top:1px solid var(--bd)}
+
+/* ════════════ WORK PAGE ════════════ */
+.pg-h{
+  padding:140px 64px 72px;
+  background:linear-gradient(135deg,#fff 0%,#fce8f5 50%,#ede8ff 100%);
+  position:relative;overflow:hidden;
+}
+.pg-h::before{content:"";position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(232,165,200,.25) 0%,transparent 70%);top:-100px;right:-60px;pointer-events:none}
+.pg-t{font-size:clamp(48px,6vw,80px);line-height:1.05;font-weight:700;margin:16px 0 0;position:relative;z-index:1}
+.pg-s{color:var(--txm);font-size:14px;margin-top:16px;max-width:420px;line-height:1.7;position:relative;z-index:1}
+
+.wf{padding:32px 64px 0;display:flex;gap:8px;flex-wrap:wrap}
+.fb{border:1px solid var(--bd);border-radius:100px;padding:8px 18px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;background:#fff;color:var(--txm);transition:all .2s;font-family:"Inter",sans-serif}
+.fb:hover,.fb.on{background:var(--tx);color:#fff;border-color:var(--tx)}
+.wfg{padding:32px 64px 80px;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.wfi{position:relative;overflow:hidden;cursor:pointer;aspect-ratio:4/3}
+.wfi .wb{width:100%;height:100%;transition:transform .55s ease}
+.wfi:hover .wb{transform:scale(1.06)}
+.wfi .wo{opacity:0;transition:opacity .3s}
+.wfi:hover .wo{opacity:1}
+.wfi .wi-inf{padding:20px}
+.wfb{grid-column:span 2;aspect-ratio:unset;min-height:360px}
+
+/* ════════════ SERVICES ════════════ */
+.sdl{padding:60px 64px 80px;display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--bd)}
+.sc2{background:#fff;padding:52px 48px;position:relative;overflow:hidden;transition:background .3s;cursor:pointer}
+.sc2:hover{background:#faf8ff}
+.sc2-n{font-size:11px;color:var(--txl);letter-spacing:.12em;margin-bottom:24px}
+.sc2-t{font-size:clamp(26px,2.4vw,36px);font-weight:700;margin-bottom:16px;line-height:1.15}
+.sc2-d{font-size:13px;color:var(--txm);line-height:1.7;margin-bottom:28px;max-width:340px}
+.sc2-tags{display:flex;flex-wrap:wrap;gap:8px}
+.stag{border:1px solid var(--bd);border-radius:100px;padding:5px 12px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--txm)}
+.sc2-ar{position:absolute;top:48px;right:48px;width:36px;height:36px;border:1px solid var(--bd);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all .25s}
+.sc2:hover .sc2-ar{background:var(--tx);border-color:var(--tx)}
+.sc2:hover .sc2-ar svg path{stroke:#fff}
+
+.spr{padding:72px 64px;background:linear-gradient(135deg,#fff 0%,#fce8f5 60%,#ede8ff 100%)}
+.spg{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;margin-top:48px}
+.pst{padding:32px;border:1px solid rgba(201,122,178,.2);border-radius:12px;background:rgba(255,255,255,.7);backdrop-filter:blur(8px)}
+.ps-n{font-size:40px;color:var(--pk);font-weight:700;margin-bottom:16px;line-height:1}
+.ps-t{font-size:14px;font-weight:500;margin-bottom:10px}
+.ps-d{font-size:12px;color:var(--txm);line-height:1.65}
+
+/* ════════════ ABOUT ════════════ */
+.ab-h{
+  padding:140px 64px 0;min-height:70vh;
+  display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:end;
+  background:linear-gradient(160deg,#fff 0%,#fce8f5 50%,#ede8ff 100%);
+  position:relative;overflow:hidden;
+}
+.ab-h::before{content:"";position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(232,165,200,.22) 0%,transparent 70%);bottom:-100px;right:-80px;pointer-events:none}
+.ab-tg{font-size:clamp(40px,5.5vw,72px);line-height:1.06;font-weight:700;margin:20px 0 48px;position:relative;z-index:1}
+.ab-r{padding-bottom:72px;position:relative;z-index:1}
+.ab-in{font-size:15px;line-height:1.8;color:var(--txm);margin-bottom:32px}
+.ab-st{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.stat{padding:24px;border:1px solid rgba(201,122,178,.2);border-radius:10px;background:rgba(255,255,255,.6);backdrop-filter:blur(8px)}
+.stn{font-size:36px;font-weight:700}
+.stn em{color:var(--ac);font-style:normal}
+.stl{font-size:11px;color:var(--txl);letter-spacing:.1em;text-transform:uppercase;margin-top:4px}
+
+.ab-tm{padding:72px 64px}
+.tmg{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
+.tmc{border-radius:12px;overflow:hidden;cursor:pointer}
+.tmp{height:320px;position:relative;overflow:hidden}
+.tmp .wb{transition:transform .5s ease}
+.tmc:hover .tmp .wb{transform:scale(1.05)}
+.tmpo{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.55) 0%,transparent 55%);opacity:0;transition:opacity .3s}
+.tmc:hover .tmpo{opacity:1}
+.tmi{padding:20px 0 0}
+.tmn{font-size:20px;font-weight:700}
+.tmr{font-size:11px;color:var(--txl);letter-spacing:.1em;text-transform:uppercase;margin-top:4px}
+.tmb{font-size:12px;color:var(--txm);line-height:1.65;margin-top:10px}
+
+.ab-vl{padding:72px 64px;background:linear-gradient(135deg,#fff 0%,#fce8f5 60%,#ede8ff 100%)}
+.vlg{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(201,122,178,.15);margin-top:40px;border-radius:12px;overflow:hidden}
+.vc2{background:#fff;padding:40px 36px}
+.vi2{font-size:28px;margin-bottom:20px}
+.vt2{font-size:22px;font-weight:700;margin-bottom:12px}
+.vd2{font-size:13px;color:var(--txm);line-height:1.7}
+
+/* ════════════ CONTACT ════════════ */
+.ct-pg{padding:140px 64px 80px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+.ct-pgt{font-size:clamp(40px,5vw,62px);line-height:1.07;font-weight:700;margin:16px 0 24px}
+.ct-pgd{font-size:14px;color:var(--txm);line-height:1.75;margin-bottom:44px;max-width:380px}
+.ct-inf{display:flex;flex-direction:column;gap:28px;margin-bottom:44px}
+.ct-row{display:flex;gap:14px;align-items:flex-start}
+.ct-ic{width:36px;height:36px;border:1px solid var(--bd);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.ct-lb{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--txl);margin-bottom:3px}
+.ct-vl{font-size:13px;color:var(--tx)}
+.ct-soc{display:flex;gap:14px;flex-wrap:wrap}
+.cs-btn{border:1px solid var(--bd);border-radius:100px;padding:8px 16px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--tx);text-decoration:none;transition:all .2s}
+.cs-btn:hover{background:var(--tx);color:#fff;border-color:var(--tx)}
+.cf{background:#fafafa;border:1px solid var(--bd);border-radius:16px;padding:44px 40px}
+.cf-t{font-size:22px;font-weight:700;margin-bottom:30px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.ff{display:flex;flex-direction:column;gap:6px}
+.ff label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--txl)}
+.ff input,.ff textarea,.ff select{
+  border:1px solid var(--bd);border-radius:8px;padding:12px 14px;font-size:13px;
+  font-family:"Inter",sans-serif;color:var(--tx);background:#fff;outline:none;transition:border-color .2s;
+  -webkit-appearance:none;
+}
+.ff input:focus,.ff textarea:focus,.ff select:focus{border-color:var(--ac)}
+.ff textarea{resize:vertical;min-height:100px}
+.ff.full{grid-column:1/-1}
+.fs{
+  width:100%;padding:15px;background:var(--tx);color:#fff;
+  border:none;border-radius:8px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+  font-family:"Inter",sans-serif;cursor:pointer;transition:background .25s;margin-top:8px;
+}
+.fs:hover{background:var(--ac)}
+
+/* ════════════ RESPONSIVE ════════════ */
+@media(max-width:900px){
+  nav{padding:16px 24px}
+  .nav-links{display:none}
+  .hero{grid-template-columns:1fr;padding-top:72px}
+  .hero-l{padding:56px 24px 20px}
+  .hero-r{padding:0 24px 56px}
+  .hw,.hsv,.hpr,.hco,.pg-h,.wf,.wfg,.sdl,.spr,.ab-h,.ab-tm,.ab-vl,.ct-pg{padding-left:24px;padding-right:24px}
+  .wg{grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,180px);height:auto}
+  .wi:first-child{grid-row:auto}
+  .hsv,.ab-h,.ct-pg{grid-template-columns:1fr}
+  .pg2,.spg,.vlg,.sdl{grid-template-columns:1fr}
+  .tmg{grid-template-columns:1fr 1fr}
+  .wfg{grid-template-columns:1fr 1fr}
+  .wfb{grid-column:span 1;min-height:200px}
+  .ft{padding:28px 24px}
+  .fr{grid-template-columns:1fr}
+  .hco{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="logo" onclick="go('home')">CREU<em>°</em> STUDIO</div>
+  <ul class="nav-links">
+    <li><a onclick="go('work')" id="nl-work">Work</a></li>
+    <li><a onclick="go('services')" id="nl-services">Services</a></li>
+    <li><a onclick="go('about')" id="nl-about">About</a></li>
+    <li><a onclick="go('contact')" id="nl-contact">Contact</a></li>
+  </ul>
+  <div class="nav-dots"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- ====== HOME ====== -->
+<div class="page active" id="pg-home">
+<section class="hero">
+  <div class="hero-l">
+    <p class="ey">Creative Studio</p>
+    <h1 class="serif hero-h">Ideas<br>become<br><span class="pk">visuals.</span></h1>
+    <button class="btn-pill" onclick="go('work')">
+      <span class="ic"><svg viewBox="0 0 12 12" fill="none" width="12"><path d="M2 6H10M10 6L6.5 2.5M10 6L6.5 9.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      Play Showreel
+    </button>
+  </div>
+  <div class="hero-r">
+    <div class="vt"><div class="vs"></div><div class="vp"></div><div class="vl">Showreel 2024</div><div class="vc">01 / 04</div></div>
+  </div>
+  <div class="sc"><span>Scroll to explore</span><div class="sc-ln"></div></div>
+</section>
+
+<section class="hw">
+  <div class="sh"><span class="se">Selected Works ↗</span><span class="va" onclick="go('work')">View All Works ↗</span></div>
+  <div class="wg">
+    <div class="wi"><div class="wb b1" style="height:100%"></div><div class="wo"></div><div class="wi-inf"><div class="wi-nm">Riverside Villa</div><div class="wi-tp">Video · Photo</div></div></div>
+    <div class="wi"><div class="wb b2" style="height:100%"></div><div class="wo"></div><div class="wi-inf"><div class="wi-nm">Moc Coffee</div><div class="wi-tp">Branding</div></div></div>
+    <div class="wi"><div class="wb b3" style="height:100%"></div><div class="wo"></div><div class="wi-inf"><div class="wi-nm">Le Hoi Thu Duc</div><div class="wi-tp">Video · Design</div></div></div>
+    <div class="wi"><div class="wb b4" style="height:100%"></div><div class="wo"></div><div class="wi-inf"><div class="wi-nm">Atelier Home</div><div class="wi-tp">Photography</div></div></div>
+    <div class="wi"><div class="wb b5" style="height:100%"></div><div class="wo"></div><div class="wi-inf"><div class="wi-nm">Atelier Home</div><div class="wi-tp">Brand Identity</div></div></div>
+    <div class="wi"><div class="wb b6" style="height:100%"></div><div class="wo"></div><div class="wi-inf"><div class="wi-nm">Moc Coffee</div><div class="wi-tp">Photo · Video</div></div></div>
+  </div>
+</section>
+
+<section class="hsv">
+  <div style="position:relative;z-index:1">
+    <span class="ey">What We Do</span>
+    <h2 class="serif svt">We create<br>impact<br>through<br><span class="pk">visual<br>storytelling.</span></h2>
+    <span class="btn-ul" onclick="go('services')">Discover All Services &rarr;</span>
+  </div>
+  <ul class="sl" style="position:relative;z-index:1">
+    <li class="si"><span class="sn">01</span><span class="snm">Video Production</span><span class="sp">+</span></li>
+    <li class="si"><span class="sn">02</span><span class="snm">Photography</span><span class="sp">+</span></li>
+    <li class="si"><span class="sn">03</span><span class="snm">Graphic Design</span><span class="sp">+</span></li>
+    <li class="si"><span class="sn">04</span><span class="snm">Brand Identity</span><span class="sp">+</span></li>
+    <li class="si"><span class="sn">05</span><span class="snm">Marketing</span><span class="sp">+</span></li>
+  </ul>
+  <div class="svid" style="position:relative;z-index:1"><div class="svg2"></div><div class="swb"><div class="psm"></div>See How We Work</div></div>
+</section>
+
+<section class="hpr" id="pricing">
+  <span class="ey" style="display:block;margin-bottom:6px">Monthly Partnership</span>
+  <div class="pg2">
+    <div class="pc rv"><div class="pn">Graphic Care</div><div class="pp serif">2.000.000</div><div class="pper">VND / thang</div><ul class="pf"><li>Thiet ke khong gioi han hop ly</li><li>03 Poster / thang</li><li>02 Lan chinh sua</li><li>Phan hoi trong 24h</li></ul><span class="btn-link" onclick="go('contact')">Chon Goi Nay &rarr;</span></div>
+    <div class="pc ft2 rv" style="transition-delay:.1s"><div class="mp">Most Popular</div><div class="px">&times;</div><div class="pn">Creative Care</div><div class="pp serif">5.000.000</div><div class="pper">VND / thang</div><ul class="pf"><li>Toan bo Graphic Care</li><li>05 Production Days / thang</li><li>10 Bai viet Facebook</li><li>Dung Reel / Motion</li></ul><span class="btn-link" onclick="go('contact')">Chon Goi Nay &rarr;</span></div>
+    <div class="pc rv" style="transition-delay:.2s"><div class="pn">Communication Partner</div><div class="pp serif" style="font-size:22px">10.000.000<span style="font-size:13px;color:var(--txl)">+</span></div><div class="pper">VND / thang</div><ul class="pf"><li>10 Production Days / thang</li><li>Chien luoc noi dung</li><li>Bao cao hieu qua</li><li>Chup anh / Ho so nang luc</li></ul><span class="btn-link" onclick="go('contact')">Lien He Tu Van &rarr;</span></div>
+  </div>
+</section>
+
+<section class="hco">
+  <div>
+    <span class="ey" style="display:block;margin-bottom:14px">Let's Talk</span>
+    <h2 class="serif ctt">Let's build<br>something<br>meaningful<br><span class="pk">together.</span></h2>
+  </div>
+  <div>
+    <div class="cqs">
+      <div class="cq serif">What are you building?</div>
+      <div class="cq serif">When do you need it?</div>
+      <div class="cq serif">Budget range?</div>
+    </div>
+    <button class="btn-pill" onclick="go('contact')">
+      <span class="ic"><svg viewBox="0 0 16 16" fill="none" width="14"><rect x="1" y="3" width="14" height="10" rx="1.5" stroke="#fff" stroke-width="1.5"/><path d="M1 5l7 5 7-5" stroke="#fff" stroke-width="1.5"/></svg></span>
+      Gui thong tin cho chung toi
+    </button>
+  </div>
+</section>
+
+<footer class="ft"><div><div class="ft-logo">CREU Studio</div><div class="ft-copy">&copy; 2024 All rights reserved.</div></div><a href="mailto:hello@creu.vn" class="ft-em">hello@creu.vn</a><div class="ft-loc">Thu Duc, TP.HCM</div><div class="ft-soc"><a href="#">Instagram</a><a href="#">Behance</a><a href="#">Facebook</a></div></footer>
+</div>
+
+<!-- ====== WORK ====== -->
+<div class="page" id="pg-work">
+<div class="pg-h">
+  <span class="ey" style="position:relative;z-index:1">Work</span>
+  <h1 class="serif pg-t">Every frame<br>tells a <span class="pk">story.</span></h1>
+  <p class="pg-s">A curated collection of campaigns, identity systems, and visual narratives built for brands that dare to stand out.</p>
+</div>
+<div class="wf">
+  <button class="fb on" onclick="filt(this,'all')">All</button>
+  <button class="fb" onclick="filt(this,'video')">Video</button>
+  <button class="fb" onclick="filt(this,'photo')">Photography</button>
+  <button class="fb" onclick="filt(this,'design')">Design</button>
+  <button class="fb" onclick="filt(this,'brand')">Branding</button>
+</div>
+<div class="wfg">
+  <div class="wfi wfb" data-c="video photo"><div class="wb b1" style="height:100%"></div><div class="wo"></div><div class="wi-inf"><div class="wi-nm">Riverside Villa</div><div class="wi-tp">Video · Photo &mdash; 2024</div></div></div>
+  <div class="wfi" data-c="brand"><div class="wb b2" style="height:100%"></div><div class="wo"></div><div class="wi-inf"><div class="wi-nm">Moc Coffee</div><div class="wi-tp">Branding &mdash; 2024</div></div></div>
+  <div class="wfi" data-c="video design"><div class="wb b3" style="height:100%"></div><div class="wo"></div><div class="wi-inf"><div class="wi-nm">Le Hoi Thu Duc</div><div class="wi-tp">Video &middot; Design &mdash; 2023</div></div></div>
+  <div class="wfi" data-c="photo"><div class="wb b4" style="height:100%"></div><div class="wo"></div><div class="wi-inf"><div class="wi-nm">Atelier Home</div><div class="wi-tp">Photography &mdash; 2024</div></div></div>
+  <div class="wfi wfb" data-c="brand design"><div class="wb b5" style="height:100%"></div><div class="wo"></div><div class="wi-inf"><div class="wi-nm">Atelier Home Brand Identity</div><div class="wi-tp">Brand Identity &mdash; 2023</div></div></div>
+  <div class="wfi" data-c="photo video"><div class="wb b6" style="height:100%"></div><div class="wo"></div><div class="wi-inf"><div class="wi-nm">Moc Coffee</div><div class="wi-tp">Photo &middot; Video &mdash; 2024</div></div></div>
+  <div class="wfi" data-c="brand"><div class="wb b7" style="height:100%"></div><div class="wo"></div><div class="wi-inf"><div class="wi-nm">Coastal Brand Co.</div><div class="wi-tp">Branding &mdash; 2023</div></div></div>
+  <div class="wfi" data-c="video"><div class="wb b8" style="height:100%"></div><div class="wo"></div><div class="wi-inf"><div class="wi-nm">Harvest Festival</div><div class="wi-tp">Video &mdash; 2023</div></div></div>
+  <div class="wfi" data-c="design"><div class="wb b9" style="height:100%"></div><div class="wo"></div><div class="wi-inf"><div class="wi-nm">Urban Studio</div><div class="wi-tp">Graphic Design &mdash; 2024</div></div></div>
+</div>
+<footer class="ft"><div><div class="ft-logo">CREU Studio</div><div class="ft-copy">&copy; 2024</div></div><a href="mailto:hello@creu.vn" class="ft-em">hello@creu.vn</a><div class="ft-loc">Thu Duc, TP.HCM</div><div class="ft-soc"><a href="#">Instagram</a><a href="#">Behance</a><a href="#">Facebook</a></div></footer>
+</div>
+
+<!-- ====== SERVICES ====== -->
+<div class="page" id="pg-services">
+<div class="pg-h">
+  <span class="ey" style="position:relative;z-index:1">Services</span>
+  <h1 class="serif pg-t">We craft<br><span class="pk">experiences</span><br>that resonate.</h1>
+  <p class="pg-s">Tu mot campaign don le den mot he sinh thai thuong hieu toan dien - chung toi dem dung craft cho tung diem cham.</p>
+</div>
+<div class="sdl">
+  <div class="sc2 rv"><div class="sc2-n">01</div><div class="sc2-ar"><svg viewBox="0 0 12 12" fill="none" width="12"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="serif sc2-t">Video Production</div><div class="sc2-d">Tu concept den post-production, chung toi san xuat video thuong hieu, TVC, Reels va documentary voi chat luong dien anh.</div><div class="sc2-tags"><span class="stag">TVC</span><span class="stag">Brand Film</span><span class="stag">Reels</span><span class="stag">Documentary</span></div></div>
+  <div class="sc2 rv" style="transition-delay:.08s"><div class="sc2-n">02</div><div class="sc2-ar"><svg viewBox="0 0 12 12" fill="none" width="12"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="serif sc2-t">Photography</div><div class="sc2-d">Chup anh san pham, khong gian, chan dung va su kien &mdash; moi buc anh la mot cau chuyen duoc ke qua anh sang.</div><div class="sc2-tags"><span class="stag">Product</span><span class="stag">Architecture</span><span class="stag">Portrait</span><span class="stag">Event</span></div></div>
+  <div class="sc2 rv" style="transition-delay:.16s"><div class="sc2-n">03</div><div class="sc2-ar"><svg viewBox="0 0 12 12" fill="none" width="12"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="serif sc2-t">Graphic Design</div><div class="sc2-d">Thiet ke poster, banner, key visual va tat ca collateral can thiet &mdash; dep, dung brand, va dung deadline.</div><div class="sc2-tags"><span class="stag">Poster</span><span class="stag">Key Visual</span><span class="stag">Infographic</span></div></div>
+  <div class="sc2 rv" style="transition-delay:.24s"><div class="sc2-n">04</div><div class="sc2-ar"><svg viewBox="0 0 12 12" fill="none" width="12"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="serif sc2-t">Brand Identity</div><div class="sc2-d">Xay dung he thong nhan dien thuong hieu toan dien: logo, typography, mau sac, voice &mdash; tat ca thanh mot ngon ngu nhat quan.</div><div class="sc2-tags"><span class="stag">Logo</span><span class="stag">Brand System</span><span class="stag">Guideline</span></div></div>
+  <div class="sc2 rv" style="transition-delay:.32s"><div class="sc2-n">05</div><div class="sc2-ar"><svg viewBox="0 0 12 12" fill="none" width="12"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="serif sc2-t">Marketing Content</div><div class="sc2-d">Noi dung Social Media, bai viet, caption va chien luoc content giup thuong hieu noi dung dieu, dung luc, dung nguoi.</div><div class="sc2-tags"><span class="stag">Social Media</span><span class="stag">Content Strategy</span><span class="stag">Copywriting</span></div></div>
+  <div class="sc2 rv" style="transition-delay:.4s;background:linear-gradient(135deg,#fce8f5,#ede8ff);cursor:default">
+    <div style="height:100%;display:flex;flex-direction:column;justify-content:center">
+      <div class="serif" style="font-size:28px;font-weight:700;margin-bottom:16px;line-height:1.2">Not sure<br>what you<br><span class="pk">need?</span></div>
+      <p style="font-size:13px;color:var(--txm);line-height:1.7;margin-bottom:28px">Noi chuyen voi minh &mdash; chung toi se giup ban tim ra huong di phu hop nhat.</p>
+      <span class="btn-link" onclick="go('contact')">Let's Talk &rarr;</span>
+    </div>
+  </div>
+</div>
+<div class="spr">
+  <span class="ey" style="display:block">How We Work</span>
+  <h2 class="serif" style="font-size:clamp(30px,3.5vw,44px);font-weight:700;margin-top:16px;line-height:1.15">From brief to<br><span class="pk">beautiful.</span></h2>
+  <div class="spg">
+    <div class="pst rv"><div class="serif ps-n">01</div><div class="ps-t">Discovery</div><div class="ps-d">Hieu thuong hieu, muc tieu va doi tuong muc tieu &mdash; truoc khi bat dau bat cu dieu gi.</div></div>
+    <div class="pst rv" style="transition-delay:.1s"><div class="serif ps-n">02</div><div class="ps-t">Concept</div><div class="ps-d">Phat trien y tuong sang tao, mood board va huong visual phu hop voi brand.</div></div>
+    <div class="pst rv" style="transition-delay:.2s"><div class="serif ps-n">03</div><div class="ps-t">Production</div><div class="ps-d">Thuc hien voi doi ngu chuyen nghiep &mdash; quay phim, chup anh, thiet ke.</div></div>
+    <div class="pst rv" style="transition-delay:.3s"><div class="serif ps-n">04</div><div class="ps-t">Delivery</div><div class="ps-d">Ban giao file dung dinh dang, dung deadline, kem ho tro sau du an.</div></div>
+  </div>
+</div>
+<footer class="ft"><div><div class="ft-logo">CREU Studio</div><div class="ft-copy">&copy; 2024</div></div><a href="mailto:hello@creu.vn" class="ft-em">hello@creu.vn</a><div class="ft-loc">Thu Duc, TP.HCM</div><div class="ft-soc"><a href="#">Instagram</a><a href="#">Behance</a><a href="#">Facebook</a></div></footer>
+</div>
+
+<!-- ====== ABOUT ====== -->
+<div class="page" id="pg-about">
+<section class="ab-h">
+  <div style="position:relative;z-index:1">
+    <span class="ey" style="display:block">Who We Are</span>
+    <h1 class="serif ab-tg">We're the<br>studio behind<br>the <span class="pk">story.</span></h1>
+  </div>
+  <div class="ab-r">
+    <p class="ab-in">CREU Studio la mot creative studio dat tai Thu Duc, TP.HCM &mdash; chuyen bien y tuong thanh hinh anh va cau chuyen thuong hieu co chieu sau. Chung toi tin rang moi thuong hieu deu co mot cau chuyen xung dang duoc ke theo cach dep nhat.</p>
+    <div class="ab-st">
+      <div class="stat rv"><div class="serif stn">50<em>+</em></div><div class="stl">Du an hoan thanh</div></div>
+      <div class="stat rv" style="transition-delay:.1s"><div class="serif stn">3<em>+</em></div><div class="stl">Nam kinh nghiem</div></div>
+      <div class="stat rv" style="transition-delay:.2s"><div class="serif stn">30<em>+</em></div><div class="stl">Thuong hieu tin tuong</div></div>
+      <div class="stat rv" style="transition-delay:.3s"><div class="serif stn">5<em>&#9733;</em></div><div class="stl">Danh gia khach hang</div></div>
+    </div>
+  </div>
+</section>
+<section class="ab-tm">
+  <span class="ey" style="display:block">The Team</span>
+  <h2 class="serif" style="font-size:clamp(28px,3.2vw,42px);font-weight:700;margin-top:14px;line-height:1.15">People behind<br><span class="pk">the lens.</span></h2>
+  <div class="tmg">
+    <div class="tmc rv"><div class="tmp"><div class="wb b3" style="height:100%"></div><div class="tmpo"></div></div><div class="tmi"><div class="serif tmn">Minh Creu</div><div class="tmr">Founder &middot; Creative Director</div><div class="tmb">Voi 5 nam kinh nghiem trong visual storytelling, Minh dan dat vision sang tao va dam bao moi du an deu co chieu sau va ban sac.</div></div></div>
+    <div class="tmc rv" style="transition-delay:.1s"><div class="tmp"><div class="wb b1" style="height:100%"></div><div class="tmpo"></div></div><div class="tmi"><div class="serif tmn">Linh Pham</div><div class="tmr">Lead Photographer</div><div class="tmb">Chuyen ve nhieu anh kien truc va lifestyle, Linh co con mat nhin anh sang rat dac biet &mdash; tao ra nhung frame nguoi xem khong the bo qua.</div></div></div>
+    <div class="tmc rv" style="transition-delay:.2s"><div class="tmp"><div class="wb b5" style="height:100%"></div><div class="tmpo"></div></div><div class="tmi"><div class="serif tmn">Hai Tran</div><div class="tmr">Motion Designer</div><div class="tmb">Hai bien nhung concept phuc tap thanh chuyen dong muot ma va co cam xuc &mdash; tu Reels den brand film deu co dau an rieng.</div></div></div>
+  </div>
+</section>
+<section class="ab-vl">
+  <span class="ey" style="display:block">What Drives Us</span>
+  <h2 class="serif" style="font-size:clamp(28px,3.2vw,42px);font-weight:700;margin-top:14px;line-height:1.15">Our <span class="pk">values.</span></h2>
+  <div class="vlg">
+    <div class="vc2 rv"><div class="vi2">&#10022;</div><div class="serif vt2">Craft First</div><div class="vd2">Chung toi khong bao gio thoa hiep voi chat luong. Moi chi tiet nho deu duoc chu y va cham chut &mdash; vi do la thu tao nen su khac biet.</div></div>
+    <div class="vc2 rv" style="transition-delay:.1s"><div class="vi2">&#9678;</div><div class="serif vt2">Brand Clarity</div><div class="vd2">Visual dep nhung phai dung. Moi lua chon sang tao deu phai phuc vu cho muc tieu thuong hieu va noi dung dieu thuong hieu muon noi.</div></div>
+    <div class="vc2 rv" style="transition-delay:.2s"><div class="vi2">&#10095;</div><div class="serif vt2">Long-term Partnership</div><div class="vd2">Chung toi khong lam mot lan roi thoi. Chung toi xay dung moi quan he lau dai &mdash; phat trien cung thuong hieu theo thoi gian.</div></div>
+  </div>
+</section>
+<footer class="ft"><div><div class="ft-logo">CREU Studio</div><div class="ft-copy">&copy; 2024</div></div><a href="mailto:hello@creu.vn" class="ft-em">hello@creu.vn</a><div class="ft-loc">Thu Duc, TP.HCM</div><div class="ft-soc"><a href="#">Instagram</a><a href="#">Behance</a><a href="#">Facebook</a></div></footer>
+</div>
+
+<!-- ====== CONTACT ====== -->
+<div class="page" id="pg-contact">
+<div style="background:linear-gradient(135deg,#fff 0%,#fce8f5 50%,#ede8ff 100%);padding-top:72px">
+  <div class="ct-pg">
+    <div>
+      <span class="ey" style="display:block">Let's Talk</span>
+      <h1 class="serif ct-pgt">Let's build<br>something<br><span class="pk">meaningful.</span></h1>
+      <p class="ct-pgd">Du la mot du an nho hay mot campaign lon &mdash; chung toi luon san sang lang nghe va tim ra giai phap phu hop nhat.</p>
+      <div class="ct-inf">
+        <div class="ct-row"><div class="ct-ic"><svg viewBox="0 0 16 16" fill="none" stroke="var(--ac)" stroke-width="1.5" width="14"><rect x="1" y="3" width="14" height="10" rx="1.5"/><path d="M1 5l7 5 7-5"/></svg></div><div><div class="ct-lb">Email</div><div class="ct-vl">hello@creu.vn</div></div></div>
+        <div class="ct-row"><div class="ct-ic"><svg viewBox="0 0 16 16" fill="none" stroke="var(--ac)" stroke-width="1.5" width="14"><path d="M8 1C5.2 1 3 3.2 3 6c0 4 5 9 5 9s5-5 5-9c0-2.8-2.2-5-5-5z"/><circle cx="8" cy="6" r="1.5"/></svg></div><div><div class="ct-lb">Studio</div><div class="ct-vl">Thu Duc, TP. Ho Chi Minh</div></div></div>
+        <div class="ct-row"><div class="ct-ic"><svg viewBox="0 0 16 16" fill="none" stroke="var(--ac)" stroke-width="1.5" width="14"><circle cx="8" cy="8" r="6"/><path d="M8 4v4l3 2"/></svg></div><div><div class="ct-lb">Gio lam viec</div><div class="ct-vl">Thu Hai &ndash; Thu Sau, 9:00 &ndash; 18:00</div></div></div>
+      </div>
+      <div class="ct-soc"><a href="#" class="cs-btn">Instagram</a><a href="#" class="cs-btn">Behance</a><a href="#" class="cs-btn">Facebook</a></div>
+    </div>
+    <div class="cf">
+      <div class="serif cf-t">Gui thong tin du an</div>
+      <div class="fr">
+        <div class="ff"><label>Ho va ten</label><input type="text" placeholder="Nguyen Van A"></div>
+        <div class="ff"><label>Email</label><input type="email" placeholder="hello@brand.vn"></div>
+      </div>
+      <div class="fr">
+        <div class="ff"><label>Thuong hieu / Cong ty</label><input type="text" placeholder="Brand cua ban"></div>
+        <div class="ff"><label>Dich vu quan tam</label><select><option value="">Chon dich vu...</option><option>Video Production</option><option>Photography</option><option>Graphic Design</option><option>Brand Identity</option><option>Marketing Content</option><option>Monthly Partnership</option></select></div>
+      </div>
+      <div class="fr">
+        <div class="ff"><label>Budget du kien</label><select><option value="">Chon ngan sach...</option><option>Duoi 5 trieu</option><option>5 - 15 trieu</option><option>15 - 50 trieu</option><option>Tren 50 trieu</option></select></div>
+        <div class="ff"><label>Deadline du kien</label><input type="text" placeholder="VD: Thang 9/2024"></div>
+      </div>
+      <div class="fr" style="grid-template-columns:1fr">
+        <div class="ff full"><label>Mo ta du an</label><textarea placeholder="Ban muon tao ra dieu gi? Ke cho chung toi nghe..."></textarea></div>
+      </div>
+      <button class="fs" onclick="sub(this)">Gui thong tin &rarr;</button>
+    </div>
+  </div>
+</div>
+<footer class="ft"><div><div class="ft-logo">CREU Studio</div><div class="ft-copy">&copy; 2024</div></div><a href="mailto:hello@creu.vn" class="ft-em">hello@creu.vn</a><div class="ft-loc">Thu Duc, TP.HCM</div><div class="ft-soc"><a href="#">Instagram</a><a href="#">Behance</a><a href="#">Facebook</a></div></footer>
+</div>
+
+<script>
+var cur="home";
+function go(id){
+  if(id===cur)return;
+  document.getElementById("pg-"+cur).classList.remove("active");
+  document.getElementById("pg-"+id).classList.add("active");
+  cur=id;window.scrollTo({top:0,behavior:"instant"});
+  ["work","services","about","contact"].forEach(function(p){
+    var el=document.getElementById("nl-"+p);
+    if(el)el.classList.toggle("on",p===id);
+  });
+  rev();
+}
+function rev(){
+  var obs=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("vis");obs.unobserve(e.target);}});
+  },{threshold:0.12});
+  document.querySelectorAll("#pg-"+cur+" .rv").forEach(function(el){el.classList.remove("vis");obs.observe(el);});
+}
+function filt(btn,cat){
+  document.querySelectorAll(".fb").forEach(function(b){b.classList.remove("on")});
+  btn.classList.add("on");
+  document.querySelectorAll(".wfi").forEach(function(item){
+    item.style.display=(cat==="all"||( item.dataset.c&&item.dataset.c.indexOf(cat)>-1))?"":"none";
+  });
+}
+function sub(btn){
+  btn.textContent="Da gui! Chung toi se lien he som.";
+  btn.style.background="var(--ac)";
+  btn.disabled=true;
+}
+rev();
+var ho=new IntersectionObserver(function(es){
+  es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("vis");ho.unobserve(e.target);}});
+},{threshold:0.1});
+document.querySelectorAll("#pg-home .rv").forEach(function(el){ho.observe(el);});
+</script>
+</body>
+</html>
