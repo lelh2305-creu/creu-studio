@@ -17,7 +17,8 @@ export default function Hero({ onPlayShowreel, onNavigate, heroTitle, heroDesc }
     const rect = e.currentTarget.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
-    setTilt({ x: -y * 10, y: x * 14 });
+    // Controlled, smooth tilt values to prevent jitter/spinning
+    setTilt({ x: -y * 6, y: x * 8 });
   };
 
   const handleMouseLeave = () => {
@@ -87,9 +88,11 @@ export default function Hero({ onPlayShowreel, onNavigate, heroTitle, heroDesc }
             </motion.div>
           </motion.div>
 
-          {/* Right Column: 3D Card */}
+          {/* Right Column: 3D Card Container */}
           <motion.div
-            className="video-wrap"
+            className="video-wrap cursor-pointer"
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
             initial={{ opacity: 0, scale: 0.92, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.25, ease: 'easeOut' }}
@@ -99,16 +102,14 @@ export default function Hero({ onPlayShowreel, onNavigate, heroTitle, heroDesc }
             <div className="orb o3" />
 
             <motion.div
-              className="video-card cursor-pointer"
+              className="video-card"
               onClick={onPlayShowreel}
-              onMouseMove={handleMouseMove}
-              onMouseLeave={handleMouseLeave}
               animate={{
                 rotateX: tilt.x,
                 rotateY: tilt.y,
-                translateY: tilt.x !== 0 ? -8 : 0,
+                translateY: tilt.x !== 0 ? -4 : 0,
               }}
-              transition={{ type: 'spring', damping: 18, stiffness: 180 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 140 }}
             >
               <div className="video-visual" />
               <div className="video-shine" />
