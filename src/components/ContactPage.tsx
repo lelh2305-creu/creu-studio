@@ -8,6 +8,7 @@ interface ContactPageProps {
 }
 
 export default function ContactPage({ config: propsConfig }: ContactPageProps) {
+  const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [config, setConfig] = useState<any>(propsConfig || {
     email: 'hello@creu.vn',
@@ -15,7 +16,7 @@ export default function ContactPage({ config: propsConfig }: ContactPageProps) {
     workingHours: 'Thứ Hai – Thứ Sáu, 9:00 – 18:00',
     instagram: 'https://instagram.com',
     behance: 'https://behance.net',
-    facebook: 'https://facebook.com',
+    facebook: 'https://www.facebook.com/CreU.VN/',
   });
 
   useEffect(() => {
@@ -43,9 +44,45 @@ export default function ContactPage({ config: propsConfig }: ContactPageProps) {
       .catch(() => {});
   }, [propsConfig]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
+    setSubmitting(true);
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+      await fetch('https://formsubmit.co/ajax/hello@creu.vn', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          ...data,
+          _subject: `Dự án mới từ ${data.name || 'Khách hàng'} - CREU Studio Website`,
+        }),
+      });
+
+      // Backup dispatch to lelh2305@gmail.com
+      fetch('https://formsubmit.co/ajax/lelh2305@gmail.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          ...data,
+          _subject: `[CREU Studio] Dự án mới từ ${data.name || 'Khách hàng'}`,
+        }),
+      }).catch(() => {});
+
+      setSubmitted(true);
+    } catch (err) {
+      setSubmitted(true);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -122,29 +159,28 @@ export default function ContactPage({ config: propsConfig }: ContactPageProps) {
               <div className="fr">
                 <div className="ff">
                   <label>Họ và tên</label>
-                  <input type="text" placeholder="Nguyễn Văn A" required />
+                  <input type="text" name="name" placeholder="Nguyễn Văn A" required />
                 </div>
                 <div className="ff">
                   <label>Email</label>
-                  <input type="email" placeholder="hello@brand.vn" required />
+                  <input type="email" name="email" placeholder="hello@brand.vn" required />
                 </div>
               </div>
 
               <div className="fr">
                 <div className="ff">
                   <label>Thương hiệu / Công ty</label>
-                  <input type="text" placeholder="Brand của bạn" />
+                  <input type="text" name="brand" placeholder="Brand của bạn" />
                 </div>
                 <div className="ff">
                   <label>Dịch vụ quan tâm</label>
-                  <select defaultValue="">
-                    <option value="" disabled>Chọn dịch vụ...</option>
-                    <option>Video Production</option>
-                    <option>Photography</option>
-                    <option>Graphic Design</option>
-                    <option>Brand Identity</option>
-                    <option>Marketing Content</option>
-                    <option>Monthly Partnership</option>
+                  <select name="service" defaultValue="Video Production">
+                    <option value="Video Production">Video Production</option>
+                    <option value="Photography">Photography</option>
+                    <option value="Graphic Design">Graphic Design</option>
+                    <option value="Brand Identity">Brand Identity</option>
+                    <option value="Marketing Content">Marketing Content</option>
+                    <option value="Monthly Partnership">Monthly Partnership</option>
                   </select>
                 </div>
               </div>
@@ -152,24 +188,23 @@ export default function ContactPage({ config: propsConfig }: ContactPageProps) {
               <div className="fr">
                 <div className="ff">
                   <label>Budget dự kiến</label>
-                  <select defaultValue="">
-                    <option value="" disabled>Chọn ngân sách...</option>
-                    <option>Dưới 5 triệu</option>
-                    <option>5 - 15 triệu</option>
-                    <option>15 - 50 triệu</option>
-                    <option>Trên 50 triệu</option>
+                  <select name="budget" defaultValue="5 - 15 triệu">
+                    <option value="Dưới 5 triệu">Dưới 5 triệu</option>
+                    <option value="5 - 15 triệu">5 - 15 triệu</option>
+                    <option value="15 - 50 triệu">15 - 50 triệu</option>
+                    <option value="Trên 50 triệu">Trên 50 triệu</option>
                   </select>
                 </div>
                 <div className="ff">
                   <label>Deadline dự kiến</label>
-                  <input type="text" placeholder="VD: Tháng 9/2026" />
+                  <input type="text" name="deadline" placeholder="VD: Tháng 9/2026" />
                 </div>
               </div>
 
               <div className="fr" style={{ gridTemplateColumns: '1fr' }}>
                 <div className="ff full">
                   <label>Mô tả dự án</label>
-                  <textarea placeholder="Bạn muốn tạo ra điều gì? Kể cho chúng tôi nghe..."></textarea>
+                  <textarea name="message" placeholder="Bạn muốn tạo ra điều gì? Kể cho chúng tôi nghe..."></textarea>
                 </div>
               </div>
 
@@ -177,9 +212,13 @@ export default function ContactPage({ config: propsConfig }: ContactPageProps) {
                 type="submit"
                 className="fs"
                 style={submitted ? { background: 'var(--ac)', color: '#fff' } : {}}
-                disabled={submitted}
+                disabled={submitting || submitted}
               >
-                {submitted ? 'Đã gửi! Chúng tôi sẽ liên hệ sớm.' : 'Gửi thông tin →'}
+                {submitting
+                  ? 'Đang gửi...'
+                  : submitted
+                  ? 'Đã gửi thành công! Chúng tôi sẽ liên hệ sớm.'
+                  : 'Gửi thông tin →'}
               </button>
             </form>
           </div>
