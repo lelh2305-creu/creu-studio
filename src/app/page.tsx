@@ -29,28 +29,29 @@ export default function Home() {
   const [siteData, setSiteData] = useState<any>(defaultSiteData);
 
   const loadSiteData = () => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('creu_site_data');
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          if (parsed?.siteConfig) {
-            setSiteData(parsed);
-            return;
-          }
-        } catch {}
-      }
-    }
-
     fetch('/api/data')
       .then((res) => res.json())
       .then((d) => {
         if (d && !d.error && d.siteConfig) {
           setSiteData(d);
-          localStorage.setItem('creu_site_data', JSON.stringify(d));
+          if (typeof window !== 'undefined') {
+            try {
+              localStorage.setItem('creu_site_data', JSON.stringify(d));
+            } catch {}
+          }
         }
       })
-      .catch(() => {});
+      .catch(() => {
+        if (typeof window !== 'undefined') {
+          const saved = localStorage.getItem('creu_site_data');
+          if (saved) {
+            try {
+              const parsed = JSON.parse(saved);
+              if (parsed?.siteConfig) setSiteData(parsed);
+            } catch {}
+          }
+        }
+      });
   };
 
   useEffect(() => {
