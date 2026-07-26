@@ -1,37 +1,63 @@
 import { NextResponse } from 'next/server';
-import siteData from '@/data/siteData.json';
-import fs from 'fs';
-import path from 'path';
+import type { NextRequest } from 'next/server';
+import siteDataFallback from '@/data/siteData.json';
 
-let inMemoryData: any = null;
+export const runtime = 'edge';
 
-export async function GET() {
-  if (inMemoryData) {
-    return NextResponse.json(inMemoryData);
-  }
-  try {
-    const dataPath = path.join(process.cwd(), 'src/data/siteData.json');
-    if (fs.existsSync(dataPath)) {
-      const fileContent = fs.readFileSync(dataPath, 'utf8');
-      const parsed = JSON.parse(fileContent);
-      return NextResponse.json(parsed);
-    }
-  } catch (e) {}
-  return NextResponse.json(siteData);
+function getKV(): any {
+  return (globalThis as any).CREU_KV || (process.env as any).CREU_KV || null;
 }
 
-export async function POST(request: Request) {
+export async function GET() {
+  try {
+    const kv = getKV();
+
+    if (kv) {
+      const stored = await kv.get('site_data');
+      if (stored) {
+        return NextResponse.json(JSON.parse(stored));
+      }
+    }
+
+    return NextResponse.json(siteDataFallback);
+  } catch (error) {
+    console.error('[GET /api/data] error:', error);
+    return NextResponse.json(siteDataFallback);
+  }
+}
+
+export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    if (body && body.siteConfig) {
-      inMemoryData = body;
-      try {
-        const dataPath = path.join(process.cwd(), 'src/data/siteData.json');
-        fs.writeFileSync(dataPath, JSON.stringify(body, null, 2), 'utf8');
-      } catch (e) {}
+
+    if (!body || !body.siteConfig) {
+      return NextResponse.json(
+        { success: false, message: 'Invalid payload: missing siteConfig' },
+        { status: 400 }
+      );
     }
-    return NextResponse.json({ success: true, message: 'Data synced successfully', data: body });
+
+    const kv = getKV();
+
+    if (kv) {
+      await kv.put('site_data', JSON.stringify(body));
+      return NextResponse.json({
+        success: true,
+        message: 'Data synced globally via KV',
+        data: body,
+      });
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: 'Data saved (local dev mode — KV not available)',
+      data: body,
+    });
   } catch (error) {
-    return NextResponse.json({ success: true, message: 'Data saved' });
+    console.error('[POST /api/data] error:', error);
+    return NextResponse.json(
+      { success: false, message: 'Internal server error' },
+      { status: 500 }
+    );
   }
 }
