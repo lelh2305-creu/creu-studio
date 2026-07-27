@@ -142,6 +142,16 @@ export default function AdminPage() {
         cache: 'no-store',
         body: JSON.stringify(payload),
       });
+
+      if (!res.ok) {
+        if (res.status === 413) {
+          setMessage('❌ Lỗi: Dung lượng ảnh quá lớn! Hãy thử chọn ảnh dung lượng nhỏ hơn.');
+        } else {
+          setMessage(`❌ Lỗi lưu dữ liệu: Mã lỗi ${res.status}`);
+        }
+        return;
+      }
+
       const resData = await res.json();
       if (resData.kvAvailable === false) {
         setMessage('✓ Đã lưu thay đổi! (Đang chạy ở chế độ Dev)');
@@ -149,7 +159,7 @@ export default function AdminPage() {
         setMessage('✓ Đã lưu thay đổi thành công toàn cầu!');
       }
     } catch (err) {
-      setMessage('✓ Đã lưu thay đổi thành công!');
+      setMessage('❌ Không thể kết nối máy chủ để lưu thay đổi.');
     } finally {
       setSaving(false);
       setTimeout(() => setMessage(''), 4000);
@@ -162,8 +172,8 @@ export default function AdminPage() {
     const objectUrl = URL.createObjectURL(file);
     img.onload = () => {
       const canvas = document.createElement('canvas');
-      const MAX_WIDTH = 1200;
-      const MAX_HEIGHT = 1200;
+      const MAX_WIDTH = 900;
+      const MAX_HEIGHT = 900;
       let width = img.width;
       let height = img.height;
 
@@ -184,8 +194,8 @@ export default function AdminPage() {
       const ctx = canvas.getContext('2d');
       if (ctx) {
         ctx.drawImage(img, 0, 0, width, height);
-        // Compress image to optimized 82% quality JPEG data URL (~150KB)
-        const compressedUrl = canvas.toDataURL('image/jpeg', 0.82);
+        // Compress image to optimized 75% quality JPEG data URL (~60KB)
+        const compressedUrl = canvas.toDataURL('image/jpeg', 0.75);
         callback(compressedUrl);
       } else {
         callback(objectUrl);
