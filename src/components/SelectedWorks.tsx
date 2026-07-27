@@ -16,26 +16,30 @@ export default function SelectedWorks({ onNavigate, onPlayVideo, works: propsWor
   useEffect(() => {
     if (propsWorks && propsWorks.length > 0) {
       setWorksList(propsWorks.slice(0, 4));
-      return;
     }
 
-    const saved = localStorage.getItem('creu_site_data');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (parsed?.works) {
-          setWorksList(parsed.works.slice(0, 4));
-          return;
-        }
-      } catch {}
-    }
-
-    fetch('/api/data')
+    fetch('/api/data?t=' + Date.now(), { cache: 'no-store' })
       .then((res) => res.json())
       .then((data) => {
-        if (data.works) setWorksList(data.works.slice(0, 4));
+        if (data.works && data.works.length > 0) {
+          setWorksList(data.works.slice(0, 4));
+        }
       })
-      .catch(() => setWorksList(defaultSiteData.works.slice(0, 4)));
+      .catch(() => {
+        if (!propsWorks || propsWorks.length === 0) {
+          const saved = localStorage.getItem('creu_site_data');
+          if (saved) {
+            try {
+              const parsed = JSON.parse(saved);
+              if (parsed?.works) {
+                setWorksList(parsed.works.slice(0, 4));
+                return;
+              }
+            } catch {}
+          }
+          setWorksList(defaultSiteData.works.slice(0, 4));
+        }
+      });
   }, [propsWorks]);
 
   const listToRender = worksList.length > 0 ? worksList : defaultSiteData.works.slice(0, 4);
@@ -49,17 +53,17 @@ export default function SelectedWorks({ onNavigate, onPlayVideo, works: propsWor
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <h2>Selected works</h2>
+          <h2>Selected Works</h2>
           <a onClick={() => onNavigate('work')} style={{ cursor: 'pointer' }}>
-            View all projects ↗
+            Xem tất cả dự án ↗
           </a>
         </motion.div>
 
         <div className="workgrid">
           {listToRender.map((w, idx) => (
             <motion.article
-              className="work relative group"
               key={w.id || idx}
+              className="work"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -75,14 +79,21 @@ export default function SelectedWorks({ onNavigate, onPlayVideo, works: propsWor
               {w.image ? (
                 <img src={w.image} alt={w.title} className="art" style={{ objectFit: 'cover', width: '100%', height: '100%' }} />
               ) : (
-                <div className={`art ${w.bgClass || `a${(idx % 4) + 1}`}`} />
+                <div className={`art ${w.bgClass || 'a1'}`} />
               )}
+
+              {w.videoUrl && (
+                <div className="absolute top-3 left-3 z-30 px-3 py-1 bg-black/60 backdrop-blur-md border border-white/20 rounded-full text-[10px] uppercase font-bold text-white flex items-center gap-1">
+                  ▶ Play Video
+                </div>
+              )}
+
               <div className="work-info">
                 <div>
                   <strong>{w.title}</strong>
                   <small>{w.categoryText}</small>
                 </div>
-                <span className="arrow">↗</span>
+                <div className="arrow">↗</div>
               </div>
             </motion.article>
           ))}

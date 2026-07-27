@@ -15,26 +15,30 @@ export default function PartnershipPricing({ onNavigate, pricing: propsPricing }
   useEffect(() => {
     if (propsPricing && propsPricing.length > 0) {
       setPricingList(propsPricing);
-      return;
     }
 
-    const saved = localStorage.getItem('creu_site_data');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (parsed?.pricing) {
-          setPricingList(parsed.pricing);
-          return;
-        }
-      } catch {}
-    }
-
-    fetch('/api/data')
+    fetch('/api/data?t=' + Date.now(), { cache: 'no-store' })
       .then((res) => res.json())
       .then((data) => {
-        if (data.pricing) setPricingList(data.pricing);
+        if (data.pricing && data.pricing.length > 0) {
+          setPricingList(data.pricing);
+        }
       })
-      .catch(() => setPricingList(defaultSiteData.pricing));
+      .catch(() => {
+        if (!propsPricing || propsPricing.length === 0) {
+          const saved = localStorage.getItem('creu_site_data');
+          if (saved) {
+            try {
+              const parsed = JSON.parse(saved);
+              if (parsed?.pricing) {
+                setPricingList(parsed.pricing);
+                return;
+              }
+            } catch {}
+          }
+          setPricingList(defaultSiteData.pricing);
+        }
+      });
   }, [propsPricing]);
 
   const cardsToRender = pricingList.length > 0 ? pricingList : defaultSiteData.pricing;

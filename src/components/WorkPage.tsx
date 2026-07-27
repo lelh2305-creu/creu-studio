@@ -17,26 +17,30 @@ export default function WorkPage({ onPlayVideo, works: propsWorks }: WorkPagePro
   useEffect(() => {
     if (propsWorks && propsWorks.length > 0) {
       setWorkItems(propsWorks);
-      return;
     }
 
-    const saved = localStorage.getItem('creu_site_data');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (parsed?.works) {
-          setWorkItems(parsed.works);
-          return;
-        }
-      } catch {}
-    }
-
-    fetch('/api/data')
+    fetch('/api/data?t=' + Date.now(), { cache: 'no-store' })
       .then((res) => res.json())
       .then((data) => {
-        if (data.works) setWorkItems(data.works);
+        if (data.works && data.works.length > 0) {
+          setWorkItems(data.works);
+        }
       })
-      .catch(() => setWorkItems(defaultSiteData.works));
+      .catch(() => {
+        if (!propsWorks || propsWorks.length === 0) {
+          const saved = localStorage.getItem('creu_site_data');
+          if (saved) {
+            try {
+              const parsed = JSON.parse(saved);
+              if (parsed?.works) {
+                setWorkItems(parsed.works);
+                return;
+              }
+            } catch {}
+          }
+          setWorkItems(defaultSiteData.works);
+        }
+      });
   }, [propsWorks]);
 
   const displayList = workItems.length > 0 ? workItems : defaultSiteData.works;
