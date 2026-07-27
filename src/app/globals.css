@@ -447,14 +447,14 @@ section { padding: 100px 0; }
 .workgrid {
   display: grid;
   grid-template-columns: 1.35fr 1fr 1fr;
-  grid-template-rows: 260px 260px;
-  gap: 14px;
+  grid-auto-rows: 260px;
+  gap: 16px;
 }
 .work {
   position: relative;
   border-radius: 24px;
   overflow: hidden;
-  min-height: 0;
+  min-height: 260px;
   border: 1px solid rgba(255,255,255,.72);
   box-shadow: 0 18px 42px rgba(66,76,125,.12);
   cursor: pointer;
@@ -466,6 +466,8 @@ body.dark .work {
 }
 .work:first-child { grid-row: span 2; }
 .work:nth-child(4) { grid-column: span 2; }
+.work:nth-child(5) { grid-column: span 2; }
+.work:nth-child(6) { grid-column: span 1; }
 .art { position: absolute; inset: 0; transition: transform .7s cubic-bezier(.2,.7,.2,1); }
 .a1 { background: linear-gradient(150deg,#c8d4c5,#637365); }
 .a2 { background: linear-gradient(150deg,#d8c8ad,#8b7158); }
