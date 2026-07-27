@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { getRequestContext } from '@cloudflare/next-on-pages';
 import siteDataFallback from '@/data/siteData.json';
 
 export const runtime = 'edge';
@@ -13,7 +14,14 @@ const noCacheHeaders = {
 };
 
 function getKV(req?: any): any {
+  try {
+    const ctx = getRequestContext();
+    const env = ctx?.env as any;
+    if (env?.CREU_KV) return env.CREU_KV;
+  } catch (e) {}
+
   if (req && req.env && req.env.CREU_KV) return req.env.CREU_KV;
+
   return (
     (process.env as any).CREU_KV ||
     (globalThis as any).CREU_KV ||
