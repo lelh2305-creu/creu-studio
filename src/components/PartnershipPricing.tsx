@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import defaultSiteData from '@/data/siteData.json';
 
@@ -9,39 +8,8 @@ interface PartnershipPricingProps {
   pricing?: any[];
 }
 
-export default function PartnershipPricing({ onNavigate, pricing: propsPricing }: PartnershipPricingProps) {
-  const [pricingList, setPricingList] = useState<any[]>(propsPricing || []);
-
-  useEffect(() => {
-    if (propsPricing && propsPricing.length > 0) {
-      setPricingList(propsPricing);
-    }
-
-    fetch('/api/data?t=' + Date.now(), { cache: 'no-store' })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.pricing && data.pricing.length > 0) {
-          setPricingList(data.pricing);
-        }
-      })
-      .catch(() => {
-        if (!propsPricing || propsPricing.length === 0) {
-          const saved = localStorage.getItem('creu_site_data');
-          if (saved) {
-            try {
-              const parsed = JSON.parse(saved);
-              if (parsed?.pricing) {
-                setPricingList(parsed.pricing);
-                return;
-              }
-            } catch {}
-          }
-          setPricingList(defaultSiteData.pricing);
-        }
-      });
-  }, [propsPricing]);
-
-  const cardsToRender = pricingList.length > 0 ? pricingList : defaultSiteData.pricing;
+export default function PartnershipPricing({ onNavigate, pricing }: PartnershipPricingProps) {
+  const cardsToRender = pricing && pricing.length > 0 ? pricing : defaultSiteData.pricing;
 
   return (
     <section className="pricing" id="pricing">

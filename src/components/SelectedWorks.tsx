@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import defaultSiteData from '@/data/siteData.json';
 
@@ -10,39 +9,8 @@ interface SelectedWorksProps {
   works?: any[];
 }
 
-export default function SelectedWorks({ onNavigate, onPlayVideo, works: propsWorks }: SelectedWorksProps) {
-  const [worksList, setWorksList] = useState<any[]>(propsWorks || []);
-
-  useEffect(() => {
-    if (propsWorks && propsWorks.length > 0) {
-      setWorksList(propsWorks);
-    }
-
-    fetch('/api/data?t=' + Date.now(), { cache: 'no-store' })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.works && data.works.length > 0) {
-          setWorksList(data.works);
-        }
-      })
-      .catch(() => {
-        if (!propsWorks || propsWorks.length === 0) {
-          const saved = localStorage.getItem('creu_site_data');
-          if (saved) {
-            try {
-              const parsed = JSON.parse(saved);
-              if (parsed?.works) {
-                setWorksList(parsed.works);
-                return;
-              }
-            } catch {}
-          }
-          setWorksList(defaultSiteData.works);
-        }
-      });
-  }, [propsWorks]);
-
-  const listToRender = worksList.length > 0 ? worksList : defaultSiteData.works;
+export default function SelectedWorks({ onNavigate, onPlayVideo, works }: SelectedWorksProps) {
+  const listToRender = works && works.length > 0 ? works : defaultSiteData.works;
 
   return (
     <section id="work" className="relative">
