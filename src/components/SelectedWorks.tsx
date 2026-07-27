@@ -11,18 +11,18 @@ interface SelectedWorksProps {
 }
 
 export default function SelectedWorks({ onNavigate, onPlayVideo, works: propsWorks }: SelectedWorksProps) {
-  const [worksList, setWorksList] = useState<any[]>(propsWorks?.slice(0, 4) || []);
+  const [worksList, setWorksList] = useState<any[]>(propsWorks || []);
 
   useEffect(() => {
     if (propsWorks && propsWorks.length > 0) {
-      setWorksList(propsWorks.slice(0, 4));
+      setWorksList(propsWorks);
     }
 
     fetch('/api/data?t=' + Date.now(), { cache: 'no-store' })
       .then((res) => res.json())
       .then((data) => {
         if (data.works && data.works.length > 0) {
-          setWorksList(data.works.slice(0, 4));
+          setWorksList(data.works);
         }
       })
       .catch(() => {
@@ -32,17 +32,17 @@ export default function SelectedWorks({ onNavigate, onPlayVideo, works: propsWor
             try {
               const parsed = JSON.parse(saved);
               if (parsed?.works) {
-                setWorksList(parsed.works.slice(0, 4));
+                setWorksList(parsed.works);
                 return;
               }
             } catch {}
           }
-          setWorksList(defaultSiteData.works.slice(0, 4));
+          setWorksList(defaultSiteData.works);
         }
       });
   }, [propsWorks]);
 
-  const listToRender = worksList.length > 0 ? worksList : defaultSiteData.works.slice(0, 4);
+  const listToRender = worksList.length > 0 ? worksList : defaultSiteData.works;
 
   return (
     <section id="work" className="relative">
