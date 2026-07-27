@@ -295,18 +295,27 @@ export default function AdminPage() {
 
   const handleUpdateWorkField = (id: number, field: keyof WorkItem, value: any) => {
     const updatedWorks = data.works.map((w) => (w.id === id ? { ...w, [field]: value } : w));
-    setData({ ...data, works: updatedWorks });
+    const updated = { ...data, works: updatedWorks };
+    setData(updated);
+    if (field === 'image') {
+      handleSave(updated);
+    }
   };
 
   // Team Actions
   const handleUpdateTeam = (id: number, field: keyof TeamMember, value: any) => {
     const updatedTeam = data.team.map((t) => (t.id === id ? { ...t, [field]: value } : t));
-    setData({ ...data, team: updatedTeam });
+    const updated = { ...data, team: updatedTeam };
+    setData(updated);
+    if (field === 'image') {
+      handleSave(updated);
+    }
   };
 
   // Config Actions
   const handleUpdateConfig = (field: keyof SiteConfig, value: string) => {
-    setData({ ...data, siteConfig: { ...data.siteConfig, [field]: value } });
+    const updated = { ...data, siteConfig: { ...data.siteConfig, [field]: value } };
+    setData(updated);
   };
 
   return (
