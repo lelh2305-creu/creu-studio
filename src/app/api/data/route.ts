@@ -3,6 +3,14 @@ import type { NextRequest } from 'next/server';
 import siteDataFallback from '@/data/siteData.json';
 
 export const runtime = 'edge';
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+const noCacheHeaders = {
+  'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+  'Pragma': 'no-cache',
+  'Expires': '0',
+};
 
 function getKV(req?: any): any {
   if (req && req.env && req.env.CREU_KV) return req.env.CREU_KV;
@@ -22,14 +30,14 @@ export async function GET(request: NextRequest) {
     if (kv) {
       const stored = await kv.get('site_data');
       if (stored) {
-        return NextResponse.json(JSON.parse(stored));
+        return NextResponse.json(JSON.parse(stored), { headers: noCacheHeaders });
       }
     }
 
-    return NextResponse.json(siteDataFallback);
+    return NextResponse.json(siteDataFallback, { headers: noCacheHeaders });
   } catch (error) {
     console.error('[GET /api/data] error:', error);
-    return NextResponse.json(siteDataFallback);
+    return NextResponse.json(siteDataFallback, { headers: noCacheHeaders });
   }
 }
 
@@ -40,7 +48,7 @@ export async function POST(request: NextRequest) {
     if (!body || !body.siteConfig) {
       return NextResponse.json(
         { success: false, message: 'Invalid payload: missing siteConfig' },
-        { status: 400 }
+        { status: 400, headers: noCacheHeaders }
       );
     }
 
@@ -48,25 +56,31 @@ export async function POST(request: NextRequest) {
 
     if (kv) {
       await kv.put('site_data', JSON.stringify(body));
-      return NextResponse.json({
-        success: true,
-        message: 'Data synced globally via KV',
-        kvAvailable: true,
-        data: body,
-      });
+      return NextResponse.json(
+        {
+          success: true,
+          message: 'Data synced globally via KV',
+          kvAvailable: true,
+          data: body,
+        },
+        { headers: noCacheHeaders }
+      );
     }
 
-    return NextResponse.json({
-      success: true,
-      message: 'Data saved (local dev mode — KV not available)',
-      kvAvailable: false,
-      data: body,
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        message: 'Data saved (local dev mode — KV not available)',
+        kvAvailable: false,
+        data: body,
+      },
+      { headers: noCacheHeaders }
+    );
   } catch (error) {
     console.error('[POST /api/data] error:', error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
-      { status: 500 }
+      { status: 500, headers: noCacheHeaders }
     );
   }
 }

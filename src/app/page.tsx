@@ -29,7 +29,10 @@ export default function Home() {
   const [siteData, setSiteData] = useState<any>(defaultSiteData);
 
   const loadSiteData = () => {
-    fetch('/api/data')
+    fetch('/api/data?t=' + Date.now(), {
+      cache: 'no-store',
+      headers: { 'Cache-Control': 'no-cache' },
+    })
       .then((res) => res.json())
       .then((d) => {
         if (d && !d.error && d.siteConfig) {

@@ -127,17 +127,27 @@ export default function AdminPage() {
 
     try {
       localStorage.setItem('creu_site_data', JSON.stringify(payload));
+      window.dispatchEvent(new Event('storage'));
     } catch (e) {
       console.error('LocalStorage error', e);
     }
 
     try {
-      await fetch('/api/data', {
+      const res = await fetch('/api/data', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache',
+        },
+        cache: 'no-store',
         body: JSON.stringify(payload),
       });
-      setMessage('✓ Đã lưu thay đổi thành công!');
+      const resData = await res.json();
+      if (resData.kvAvailable === false) {
+        setMessage('✓ Đã lưu thay đổi! (Đang chạy ở chế độ Dev)');
+      } else {
+        setMessage('✓ Đã lưu thay đổi thành công toàn cầu!');
+      }
     } catch (err) {
       setMessage('✓ Đã lưu thay đổi thành công!');
     } finally {
