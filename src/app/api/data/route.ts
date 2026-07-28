@@ -37,8 +37,18 @@ export async function GET(request: NextRequest) {
       if (res.ok) {
         const json = await res.json();
         if (json.result) {
-          const parsed = typeof json.result === 'string' ? JSON.parse(json.result) : json.result;
-          return NextResponse.json(parsed, { headers: noCacheHeaders });
+          let parsed = json.result;
+          if (typeof parsed === 'string') {
+            try {
+              parsed = JSON.parse(parsed);
+              if (typeof parsed === 'string') {
+                parsed = JSON.parse(parsed);
+              }
+            } catch (e) {}
+          }
+          if (parsed && typeof parsed === 'object' && parsed.siteConfig) {
+            return NextResponse.json(parsed, { headers: noCacheHeaders });
+          }
         }
       }
     }
@@ -48,7 +58,18 @@ export async function GET(request: NextRequest) {
     if (kv) {
       const stored = await kv.get('site_data');
       if (stored) {
-        return NextResponse.json(JSON.parse(stored), { headers: noCacheHeaders });
+        let parsed = stored;
+        if (typeof parsed === 'string') {
+          try {
+            parsed = JSON.parse(parsed);
+            if (typeof parsed === 'string') {
+              parsed = JSON.parse(parsed);
+            }
+          } catch (e) {}
+        }
+        if (parsed && typeof parsed === 'object' && parsed.siteConfig) {
+          return NextResponse.json(parsed, { headers: noCacheHeaders });
+        }
       }
     }
 
@@ -73,7 +94,7 @@ export async function POST(request: NextRequest) {
           Authorization: `Bearer ${UPSTASH_TOKEN}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(JSON.stringify(body)),
+        body: JSON.stringify(body),
         cache: 'no-store',
       });
       if (res.ok) {
