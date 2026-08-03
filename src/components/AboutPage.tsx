@@ -68,9 +68,15 @@ export default function AboutPage({ team: propsTeam }: AboutPageProps) {
     <div className="min-h-screen pt-4">
       <section className="ab-h">
         <div style={{ position: 'relative', zIndex: 1 }}>
-          <span className="ey" style={{ display: 'block' }}>Who We Are</span>
+          <span className="ey" style={{ display: 'block' }}>
+            {lang === 'en' ? 'Who We Are' : 'Về chúng tôi'}
+          </span>
           <h1 className="serif ab-tg">
-            We're the<br />studio behind<br />the <span className="pk">story.</span>
+            {lang === 'en' ? (
+              <>We're the<br />studio behind<br />the <span className="pk">story.</span></>
+            ) : (
+              <>Studio<br />đằng sau những<br /><span className="pk">câu chuyện.</span></>
+            )}
           </h1>
         </div>
         <div className="ab-r">
@@ -98,9 +104,15 @@ export default function AboutPage({ team: propsTeam }: AboutPageProps) {
       </section>
 
       <section className="ab-tm">
-        <span className="ey" style={{ display: 'block' }}>The Team</span>
+        <span className="ey" style={{ display: 'block' }}>
+          {lang === 'en' ? 'The Team' : 'Đội ngũ nhân sự'}
+        </span>
         <h2 className="serif" style={{ fontSize: 'clamp(28px,3.2vw,42px)', fontWeight: 400, marginTop: '14px', lineHeight: 1.15, color: 'var(--ink)' }}>
-          People behind<br /><span className="pk">the lens.</span>
+          {lang === 'en' ? (
+            <>People behind<br /><span className="pk">the lens.</span></>
+          ) : (
+            <>Con người đằng sau<br /><span className="pk">ống kính.</span></>
+          )}
         </h2>
         <div className="tmg">
           {teamList.map((m, idx) => {
@@ -137,9 +149,15 @@ export default function AboutPage({ team: propsTeam }: AboutPageProps) {
       </section>
 
       <section className="ab-vl">
-        <span className="ey" style={{ display: 'block' }}>What Drives Us</span>
+        <span className="ey" style={{ display: 'block' }}>
+          {lang === 'en' ? 'What Drives Us' : 'Giá trị cốt lõi'}
+        </span>
         <h2 className="serif" style={{ fontSize: 'clamp(28px,3.2vw,42px)', fontWeight: 400, marginTop: '14px', lineHeight: 1.15, color: 'var(--ink)' }}>
-          Our <span className="pk">values.</span>
+          {lang === 'en' ? (
+            <>Our <span className="pk">values.</span></>
+          ) : (
+            <>Triết lý <span className="pk">sáng tạo.</span></>
+          )}
         </h2>
         <div className="vlg">
           {values.map((v, idx) => (

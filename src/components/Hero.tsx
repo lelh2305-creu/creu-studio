@@ -54,9 +54,11 @@ export default function Hero({ onPlayShowreel, onNavigate, heroTitle, heroDesc }
             </motion.div>
 
             <motion.h1 variants={itemVars}>
-              Ideas<br />
-              become<br />
-              <em>visuals.</em>
+              {lang === 'en' ? (
+                <>Ideas<br />become<br /><em>visuals.</em></>
+              ) : (
+                <>Ý tưởng<br />thành<br /><em>hình ảnh.</em></>
+              )}
             </motion.h1>
 
             <motion.p variants={itemVars} className="desc">

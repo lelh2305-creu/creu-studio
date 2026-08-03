@@ -60,14 +60,14 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
       title: 'Discovery',
       desc: lang === 'en'
         ? 'Understanding your brand, objectives, and target audience — before starting anything.'
-        : 'Hiểu thương hiệu, mục tiêu và đối tượng mục tiêu — trước khi bắt đầu bất cứ điều gì.',
+        : 'Tìm hiểu thương hiệu, mục tiêu và đối tượng khách hàng — trước khi bắt đầu triển khai.',
     },
     {
       num: '02',
       title: 'Concept',
       desc: lang === 'en'
         ? 'Developing creative ideas, moodboards, and visual directions tailored to your brand.'
-        : 'Phát triển ý tưởng sáng tạo, mood board và hướng visual phù hợp với brand.',
+        : 'Phát triển ý tưởng sáng tạo, mood board và định hướng thị giác phù hợp với thương hiệu.',
     },
     {
       num: '03',
@@ -81,21 +81,27 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
       title: 'Delivery',
       desc: lang === 'en'
         ? 'Delivering formatted assets on time, complete with post-launch support.'
-        : 'Bàn giao file đúng định dạng, đúng deadline, kèm hỗ trợ sau dự án.',
+        : 'Bàn giao sản phẩm đúng định dạng, đúng tiến độ, kèm hỗ trợ sau dự án.',
     },
   ];
 
   return (
     <div className="min-h-screen pt-12">
       <div className="pg-h">
-        <span className="ey" style={{ position: 'relative', zIndex: 1 }}>Services</span>
+        <span className="ey" style={{ position: 'relative', zIndex: 1 }}>
+          {lang === 'en' ? 'Services' : 'Dịch vụ'}
+        </span>
         <h1 className="serif pg-t">
-          We craft<br /><span className="pk">experiences</span><br />that resonate.
+          {lang === 'en' ? (
+            <>We craft<br /><span className="pk">experiences</span><br />that resonate.</>
+          ) : (
+            <>Tạo ra<br /><span className="pk">trải nghiệm</span><br />giàu cảm xúc.</>
+          )}
         </h1>
         <p className="pg-s">
           {lang === 'en'
             ? 'From a single campaign to a full brand ecosystem — we bring the right craft to every touchpoint.'
-            : 'Từ một campaign đơn lẻ đến một hệ sinh thái thương hiệu toàn diện - chúng tôi đem đúng craft cho từng điểm chạm.'}
+            : 'Từ một chiến dịch đơn lẻ đến một hệ sinh thái thương hiệu toàn diện — chúng tôi mang tới giải pháp tinh tế cho từng điểm chạm.'}
         </p>
       </div>
 
@@ -129,23 +135,35 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
           <div className="sc2" style={{ cursor: 'default' }}>
             <div style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <div className="serif" style={{ fontSize: '28px', fontWeight: 400, marginBottom: '16px', lineHeight: 1.2 }}>
-                Not sure<br />what you<br /><span className="pk">need?</span>
+                {lang === 'en' ? (
+                  <>Not sure<br />what you<br /><span className="pk">need?</span></>
+                ) : (
+                  <>Bạn chưa biết<br />cần bắt đầu<br /><span className="pk">từ đâu?</span></>
+                )}
               </div>
               <p style={{ fontSize: '14px', color: 'var(--muted)', lineHeight: 1.7, marginBottom: '28px' }}>
                 {lang === 'en'
                   ? "Talk to us — we'll help you find the best path forward."
-                  : 'Nói chuyện với mình — chúng tôi sẽ giúp bạn tìm ra hướng đi phù hợp nhất.'}
+                  : 'Hãy liên hệ với chúng tôi — CREU sẽ tư vấn giải pháp phù hợp nhất cho bạn.'}
               </p>
-              <span className="btn-link" onClick={() => onNavigate('contact')}>Let's Talk &rarr;</span>
+              <span className="btn-link" onClick={() => onNavigate('contact')}>
+                {lang === 'en' ? "Let's Talk →" : 'Tư vấn ngay →'}
+              </span>
             </div>
           </div>
         </div>
       </div>
 
       <div className="spr shell">
-        <span className="ey" style={{ display: 'block' }}>How We Work</span>
+        <span className="ey" style={{ display: 'block' }}>
+          {lang === 'en' ? 'How We Work' : 'Quy trình làm việc'}
+        </span>
         <h2 className="serif" style={{ fontSize: 'clamp(30px,3.5vw,44px)', fontWeight: 400, marginTop: '16px', lineHeight: 1.15, color: 'var(--ink)' }}>
-          From brief to<br /><span className="pk">beautiful.</span>
+          {lang === 'en' ? (
+            <>From brief to<br /><span className="pk">beautiful.</span></>
+          ) : (
+            <>Từ ý tưởng đến<br /><span className="pk">sản phẩm hoàn chỉnh.</span></>
+          )}
         </h2>
         <div className="spg">
           {steps.map((st, sIdx) => (

@@ -15,10 +15,13 @@ export default function ContactBanner() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <div className="eyebrow">Let's talk</div>
+          <div className="eyebrow">{lang === 'en' ? "Let's talk" : 'Bắt đầu ngay'}</div>
           <h2>
-            Let’s build something<br />
-            <em style={{ fontWeight: 300, color: '#b386d9' }}>meaningful together.</em>
+            {lang === 'en' ? (
+              <>Let’s build something<br /><em style={{ fontWeight: 300, color: '#b386d9' }}>meaningful together.</em></>
+            ) : (
+              <>Cùng CREU tạo nên<br /><em style={{ fontWeight: 300, color: '#b386d9' }}>trải nghiệm thị giác giàu cảm xúc.</em></>
+            )}
           </h2>
           <p>
             {lang === 'en'

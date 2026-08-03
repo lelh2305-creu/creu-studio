@@ -68,9 +68,15 @@ export default function ContactPage({ config: propsConfig }: ContactPageProps) {
       <div style={{ background: 'var(--header-bg)', paddingTop: '30px' }}>
         <div className="ct-pg">
           <div>
-            <span className="ey" style={{ display: 'block' }}>Let's Talk</span>
+            <span className="ey" style={{ display: 'block' }}>
+              {lang === 'en' ? "Let's Talk" : 'Liên hệ'}
+            </span>
             <h1 className="serif ct-pgt">
-              Let's build<br />something<br /><span className="pk">meaningful.</span>
+              {lang === 'en' ? (
+                <>Let's build<br />something<br /><span className="pk">meaningful.</span></>
+              ) : (
+                <>Cùng CREU tạo nên<br />trải nghiệm thị giác<br /><span className="pk">giàu cảm xúc.</span></>
+              )}
             </h1>
             <p className="ct-pgd">
               {lang === 'en'
