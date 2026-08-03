@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLang } from '@/context/LangContext';
+import { t } from '@/lib/translations';
 
 interface NavbarProps {
   currentTab: string;
@@ -13,6 +15,7 @@ interface NavbarProps {
 export default function Navbar({ currentTab, onTabChange, isDark, onToggleTheme }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { lang, toggle: toggleLang } = useLang();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 30);
@@ -21,11 +24,11 @@ export default function Navbar({ currentTab, onTabChange, isDark, onToggleTheme 
   }, []);
 
   const navItems = [
-    { id: 'home', label: 'Home' },
-    { id: 'work', label: 'Work' },
-    { id: 'services', label: 'Services' },
-    { id: 'about', label: 'About' },
-    { id: 'contact', label: 'Contact' },
+    { id: 'home', label: t('nav.home', lang) },
+    { id: 'work', label: t('nav.work', lang) },
+    { id: 'services', label: t('nav.services', lang) },
+    { id: 'about', label: t('nav.about', lang) },
+    { id: 'contact', label: t('nav.contact', lang) },
   ];
 
   const handleMobileNav = (id: string) => {
@@ -64,6 +67,15 @@ export default function Navbar({ currentTab, onTabChange, isDark, onToggleTheme 
         </div>
 
         <div className="flex items-center gap-2 md:gap-3">
+          {/* Language Switcher Button VI / EN */}
+          <button
+            onClick={toggleLang}
+            className="px-2.5 py-1 rounded-full border border-white/20 bg-white/40 dark:bg-white/10 text-[11px] font-bold tracking-wider text-gray-800 dark:text-gray-200 hover:border-[#a855f7] transition-all cursor-pointer"
+            title="Chuyển đổi ngôn ngữ / Switch language"
+          >
+            {lang === 'vi' ? '🇻🇳 VI' : '🇬🇧 EN'}
+          </button>
+
           {/* Theme Switcher Button */}
           <button
             className="theme-btn"
@@ -75,7 +87,7 @@ export default function Navbar({ currentTab, onTabChange, isDark, onToggleTheme 
           </button>
 
           <button className="talk hidden sm:block" onClick={() => onTabChange('contact')}>
-            Let's talk ↗
+            {t('nav.cta', lang)} ↗
           </button>
 
           {/* Mobile Hamburger Button */}
@@ -122,7 +134,7 @@ export default function Navbar({ currentTab, onTabChange, isDark, onToggleTheme 
                   onClick={() => handleMobileNav('contact')}
                   className="w-full py-3.5 rounded-2xl bg-[#a855f7] text-white text-xs font-bold uppercase tracking-wider text-center"
                 >
-                  Let's talk ↗
+                  {t('nav.cta', lang)} ↗
                 </button>
               </div>
             </div>
