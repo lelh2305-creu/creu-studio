@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --font-main: 'UTM Avo', 'DM Sans', system-ui, -apple-system, sans-serif;
-  --font-title: 'UTM Avo', 'Manrope', system-ui, sans-serif;
+  --font-main: 'Be Vietnam Pro', system-ui, -apple-system, sans-serif;
+  --font-title: 'Be Vietnam Pro', system-ui, sans-serif;
   --font-hero: 'Playfair Display', Georgia, serif;
   
   --ink: #18233b;
@@ -223,7 +223,7 @@ body.dark .theme-btn {
 body.dark .eyebrow { color: #a855f7; }
 
 .hero h1 {
-  font-family: var(--font-hero);
+  font-family: var(--font-main);
   font-weight: 400;
   letter-spacing: -.03em;
   font-size: clamp(62px,7.2vw,112px);
@@ -232,7 +232,8 @@ body.dark .eyebrow { color: #a855f7; }
   color: var(--ink);
   -webkit-text-stroke: 0;
 }
-.hero h1 em {
+.hero h1 em, .hero h1 i {
+  font-family: var(--font-hero);
   font-style: italic;
   font-weight: 400;
   background: linear-gradient(90deg,#8ca7ff,#c29bf3,#ff9cc9);
