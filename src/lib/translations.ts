@@ -1,0 +1,63 @@
+export type Lang = 'vi' | 'en';
+
+export const translations = {
+  nav: {
+    home: { vi: 'Trang chủ', en: 'Home' },
+    work: { vi: 'Dự án', en: 'Work' },
+    services: { vi: 'Dịch vụ', en: 'Services' },
+    about: { vi: 'Về chúng tôi', en: 'About' },
+    contact: { vi: 'Liên hệ', en: 'Contact' },
+    cta: { vi: 'Bắt đầu ngay', en: "Let's talk" },
+  },
+  hero: {
+    eyebrow: { vi: 'CREATIVE STUDIO · THỦ ĐỨC', en: 'CREATIVE STUDIO · THU DUC' },
+    title: { vi: 'Ý tưởng\nthành\nhình ảnh.', en: 'Ideas\nbecome\nvisuals.' },
+    desc: { vi: 'CREU biến chiến lược thương hiệu thành hình ảnh, video và trải nghiệm thị giác giàu cảm xúc — từ ý tưởng đến sản phẩm hoàn chỉnh.', en: 'CREU transforms brand strategy into visuals, video, and emotionally rich experiences — from concept to final product.' },
+    showreel: { vi: 'Xem showreel', en: 'Play showreel' },
+    explore: { vi: 'Khám phá dự án', en: 'Explore our work' },
+  },
+  works: {
+    title: { vi: 'Dự án nổi bật', en: 'Selected Works' },
+    viewAll: { vi: 'Xem tất cả dự án', en: 'View all projects' },
+  },
+  services: {
+    title: { vi: 'Dịch vụ', en: 'Services' },
+    branding: { vi: 'Thiết kế thương hiệu', en: 'Brand Identity' },
+    photo: { vi: 'Nhiếp ảnh', en: 'Photography' },
+    video: { vi: 'Video & Film', en: 'Video & Film' },
+    web: { vi: 'Website', en: 'Website' },
+    marketing: { vi: 'Marketing Outsource', en: 'Marketing Outsource' },
+    ai: { vi: 'AI Creative', en: 'AI Creative' },
+  },
+  about: {
+    title: { vi: 'Về CREU Studio', en: 'About CREU Studio' },
+    desc: { vi: 'Chúng tôi là studio sáng tạo chuyên biệt về hình ảnh thương hiệu, video và trải nghiệm thị giác tại TP. Hồ Chí Minh.', en: 'We are a creative studio specializing in brand visuals, video, and visual experiences in Ho Chi Minh City.' },
+  },
+  contact: {
+    title: { vi: 'Bắt đầu dự án', en: 'Start a project' },
+    desc: { vi: 'Hãy kể cho chúng tôi nghe về dự án của bạn.', en: 'Tell us about your project.' },
+    name: { vi: 'Họ và tên', en: 'Full name' },
+    email: { vi: 'Email', en: 'Email' },
+    message: { vi: 'Nội dung', en: 'Message' },
+    send: { vi: 'Gửi tin nhắn', en: 'Send message' },
+  },
+  pricing: {
+    title: { vi: 'Gói dịch vụ', en: 'Partnership Plans' },
+    popular: { vi: 'Phổ biến nhất', en: 'Most popular' },
+    perMonth: { vi: 'VND / tháng', en: 'VND / month' },
+    cta: { vi: 'Chọn gói này', en: 'Get started' },
+  },
+  footer: {
+    copy: { vi: '© 2026 CREU Studio. All rights reserved.', en: '© 2026 CREU Studio. All rights reserved.' },
+  },
+};
+
+export function t(key: string, lang: Lang): string {
+  const keys = key.split('.');
+  let current: any = translations;
+  for (const k of keys) {
+    if (!current[k]) return key;
+    current = current[k];
+  }
+  return current[lang] ?? current['vi'] ?? key;
+}

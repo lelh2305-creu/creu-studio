@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import LenisScroll from '@/components/LenisScroll';
 import CursorGlow from '@/components/CursorGlow';
+import { LangProvider } from '@/context/LangContext';
 
 export const metadata: Metadata = {
   title: 'CREU Studio — Creative Studio & Digital Experiences',
@@ -36,10 +37,12 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <div className="bg" />
-        <CursorGlow />
-        <LenisScroll />
-        {children}
+        <LangProvider>
+          <div className="bg" />
+          <CursorGlow />
+          <LenisScroll />
+          {children}
+        </LangProvider>
       </body>
     </html>
   );
