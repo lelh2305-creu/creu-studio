@@ -70,7 +70,7 @@ export default function Navbar({ currentTab, onTabChange, isDark, onToggleTheme 
           {/* Language Switcher Button VI / EN */}
           <button
             onClick={toggleLang}
-            className="px-3 py-1 rounded-full border border-gray-400/70 dark:border-white/30 bg-white/90 dark:bg-white/10 text-[11px] font-extrabold tracking-wider text-gray-900 dark:text-white hover:border-[#a855f7] dark:hover:border-[#c499f5] shadow-sm hover:scale-105 transition-all cursor-pointer"
+            className="px-3 py-1.5 rounded-full border border-[#18181b] bg-[#18181b] text-white text-[11px] font-extrabold tracking-wider hover:bg-black hover:border-black shadow-md hover:scale-105 transition-all cursor-pointer"
             title="Chuyển đổi ngôn ngữ / Switch language"
           >
             {lang === 'vi' ? '🇻🇳 VI' : '🇬🇧 EN'}
