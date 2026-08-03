@@ -100,6 +100,7 @@
       "plan": "Gói 01",
       "title": "Graphic Care",
       "copy": "Giải pháp thiết kế chuyên nghiệp & linh hoạt.",
+      "copyEn": "Professional & flexible design solutions.",
       "price": "5.000.000",
       "per": "VND / tháng",
       "features": [
@@ -108,6 +109,12 @@
         "02 Lần chỉnh sửa",
         "Phản hồi trong 24h"
       ],
+      "featuresEn": [
+        "Reasonable unlimited design",
+        "03 Posters / month",
+        "02 Revision rounds",
+        "Response within 24h"
+      ],
       "popular": false
     },
     {
@@ -115,6 +122,7 @@
       "plan": "Gói 02",
       "title": "Creative Care",
       "copy": "Sản xuất nội dung sáng tạo toàn diện mỗi tháng.",
+      "copyEn": "Comprehensive monthly creative content production.",
       "price": "7.000.000",
       "per": "VND / tháng",
       "features": [
@@ -122,6 +130,12 @@
         "05 Production Days / tháng",
         "10 Bài viết Facebook",
         "Dựng Reel / Motion Graphic"
+      ],
+      "featuresEn": [
+        "All Graphic Care perks",
+        "05 Production Days / month",
+        "10 Facebook Posts",
+        "Reels / Motion Graphics production"
       ],
       "popular": true,
       "badge": "Phổ biến nhất"
@@ -131,6 +145,7 @@
       "plan": "Gói 03",
       "title": "Communication Partner",
       "copy": "Đối tác chiến lược truyền thông dài hạn cho doanh nghiệp.",
+      "copyEn": "Long-term strategic communication partner for business.",
       "price": "10.000.000+",
       "per": "VND / tháng",
       "features": [
@@ -138,6 +153,12 @@
         "Chiến lược nội dung",
         "Báo cáo hiệu quả",
         "Hỗ trợ 1–1 cùng Account Lead"
+      ],
+      "featuresEn": [
+        "10 Production Days / month",
+        "Content Strategy",
+        "Performance Reports",
+        "1-on-1 Support with Account Lead"
       ],
       "popular": false
     }
@@ -148,6 +169,7 @@
       "name": "Hoàng Lê",
       "role": "Founder - CEO",
       "bio": "Với 5 năm kinh nghiệm trong visual storytelling, dẫn dắt vision sáng tạo và đảm bảo mỗi dự án đều có chiều sâu và bản sắc.",
+      "bioEn": "With 5 years of experience in visual storytelling, driving creative vision and ensuring every project has depth and identity.",
       "image": "",
       "bgClass": "b3"
     },
@@ -156,6 +178,7 @@
       "name": "Trung Hiếu",
       "role": "Co Founder",
       "bio": "Đồng hành chiến lược và điều hành sản xuất, Hiếu đảm bảo tiến độ và trải nghiệm hợp tác mượt mà cho mọi thương hiệu.",
+      "bioEn": "Strategic partner and production director, ensuring smooth progress and seamless collaboration for all brands.",
       "image": "",
       "bgClass": "b1"
     },
@@ -164,6 +187,7 @@
       "name": "Gia Nghi",
       "role": "Marketing Leader",
       "bio": "Quản lý chiến lược truyền thông và nội dung đa kênh, giúp câu chuyện thương hiệu tiếp cận đúng đối tượng mục tiêu.",
+      "bioEn": "Managing omni-channel communication strategies and content, helping brand stories reach the right target audience.",
       "image": "",
       "bgClass": "b5"
     }

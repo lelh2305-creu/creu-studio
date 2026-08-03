@@ -39,32 +39,37 @@ export default function PartnershipPricing({ onNavigate, pricing }: PartnershipP
         </motion.div>
 
         <div className="cards">
-          {cardsToRender.map((c, idx) => (
-            <motion.article
-              key={c.id || idx}
-              className={`card ${c.popular ? 'popular' : ''}`}
-              initial={{ opacity: 0, y: 35 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: idx * 0.12 }}
-              whileHover={{ y: -12 }}
-            >
-              {c.badge && <span className="badge">{lang === 'en' ? t('pricing.popular', lang) : c.badge}</span>}
-              <span className="plan">{c.plan}</span>
-              <h3>{c.title}</h3>
-              <div className="copy">{c.copy}</div>
-              <div className="price">{c.price}</div>
-              <div className="per">{lang === 'en' ? t('pricing.perMonth', lang) : (c.per || 'VND / tháng')}</div>
-              <ul className="features">
-                {(c.features || []).map((f: string, fIdx: number) => (
-                  <li key={fIdx}>{f}</li>
-                ))}
-              </ul>
-              <a className="choose" onClick={() => onNavigate('contact')} style={{ cursor: 'pointer' }}>
-                <b>→</b>{c.btnText || t('pricing.cta', lang)}
-              </a>
-            </motion.article>
-          ))}
+          {cardsToRender.map((c, idx) => {
+            const activeCopy = (lang === 'en' && c.copyEn) ? c.copyEn : c.copy;
+            const activeFeatures = (lang === 'en' && c.featuresEn && c.featuresEn.length > 0) ? c.featuresEn : (c.features || []);
+
+            return (
+              <motion.article
+                key={c.id || idx}
+                className={`card ${c.popular ? 'popular' : ''}`}
+                initial={{ opacity: 0, y: 35 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: idx * 0.12 }}
+                whileHover={{ y: -12 }}
+              >
+                {c.badge && <span className="badge">{lang === 'en' ? t('pricing.popular', lang) : c.badge}</span>}
+                <span className="plan">{c.plan}</span>
+                <h3>{c.title}</h3>
+                <div className="copy">{activeCopy}</div>
+                <div className="price">{c.price}</div>
+                <div className="per">{lang === 'en' ? t('pricing.perMonth', lang) : (c.per || 'VND / tháng')}</div>
+                <ul className="features">
+                  {activeFeatures.map((f: string, fIdx: number) => (
+                    <li key={fIdx}>{f}</li>
+                  ))}
+                </ul>
+                <a className="choose" onClick={() => onNavigate('contact')} style={{ cursor: 'pointer' }}>
+                  <b>→</b>{c.btnText || t('pricing.cta', lang)}
+                </a>
+              </motion.article>
+            );
+          })}
         </div>
       </div>
     </section>

@@ -103,31 +103,36 @@ export default function AboutPage({ team: propsTeam }: AboutPageProps) {
           People behind<br /><span className="pk">the lens.</span>
         </h2>
         <div className="tmg">
-          {teamList.map((m, idx) => (
-            <motion.div
-              key={m.id || idx}
-              className="tmc"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: idx * 0.12 }}
-              whileHover={{ y: -6 }}
-            >
-              <div className="tmp">
-                {m.image ? (
-                  <img src={m.image} alt={m.name} className="wb" style={{ objectFit: 'cover', width: '100%', height: '100%' }} />
-                ) : (
-                  <div className={`wb ${m.bgClass || 'b1'}`} style={{ height: '100%' }} />
-                )}
-                <div className="tmpo" />
-              </div>
-              <div className="tmi">
-                <div className="tmn">{m.name}</div>
-                <div className="tmr">{m.role}</div>
-                <div className="tmb">{m.bio}</div>
-              </div>
-            </motion.div>
-          ))}
+          {teamList.map((m, idx) => {
+            const activeBio = (lang === 'en' && m.bioEn) ? m.bioEn : m.bio;
+            const activeRole = (lang === 'en' && m.roleEn) ? m.roleEn : m.role;
+
+            return (
+              <motion.div
+                key={m.id || idx}
+                className="tmc"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: idx * 0.12 }}
+                whileHover={{ y: -6 }}
+              >
+                <div className="tmp">
+                  {m.image ? (
+                    <img src={m.image} alt={m.name} className="wb" style={{ objectFit: 'cover', width: '100%', height: '100%' }} />
+                  ) : (
+                    <div className={`wb ${m.bgClass || 'b1'}`} style={{ height: '100%' }} />
+                  )}
+                  <div className="tmpo" />
+                </div>
+                <div className="tmi">
+                  <div className="tmn">{m.name}</div>
+                  <div className="tmr">{activeRole}</div>
+                  <div className="tmb">{activeBio}</div>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </section>
 

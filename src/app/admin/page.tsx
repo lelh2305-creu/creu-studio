@@ -21,7 +21,9 @@ interface TeamMember {
   id: number;
   name: string;
   role: string;
+  roleEn?: string;
   bio: string;
+  bioEn?: string;
   image: string;
   bgClass: string;
 }
@@ -31,9 +33,11 @@ interface PricingItem {
   plan: string;
   title: string;
   copy: string;
+  copyEn?: string;
   price: string;
   per: string;
   features: string[];
+  featuresEn?: string[];
   popular?: boolean;
   badge?: string;
 }
@@ -589,12 +593,23 @@ export default function AdminPage() {
                   </div>
 
                   <div>
-                    <label className="block text-xs uppercase font-bold text-gray-400 mb-1">Tiểu sử (Bio)</label>
+                    <label className="block text-xs uppercase font-bold text-gray-400 mb-1">Tiểu sử Tiếng Việt (Bio VI)</label>
                     <textarea
                       value={member.bio}
                       onChange={(e) => handleUpdateTeam(member.id, 'bio', e.target.value)}
-                      rows={3}
+                      rows={2}
                       className="w-full px-3 py-2 bg-[#0e1424] border border-white/15 rounded-lg text-xs text-white focus:border-[#a855f7] outline-none resize-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs uppercase font-bold text-purple-300 mb-1">🇬🇧 Bio Tiếng Anh (Bio EN)</label>
+                    <textarea
+                      value={member.bioEn || ''}
+                      onChange={(e) => handleUpdateTeam(member.id, 'bioEn', e.target.value)}
+                      rows={2}
+                      placeholder="English biography..."
+                      className="w-full px-3 py-2 bg-[#0e1424] border border-purple-500/30 rounded-lg text-xs text-purple-200 focus:border-[#a855f7] outline-none resize-none"
                     />
                   </div>
                 </div>
@@ -639,7 +654,7 @@ export default function AdminPage() {
                   </div>
 
                   <div>
-                    <label className="block text-xs uppercase font-bold text-gray-400 mb-1">Mô tả gói</label>
+                    <label className="block text-xs uppercase font-bold text-gray-400 mb-1">Mô tả (VI)</label>
                     <textarea
                       value={card.copy}
                       onChange={(e) => {
@@ -648,6 +663,35 @@ export default function AdminPage() {
                       }}
                       rows={2}
                       className="w-full px-3 py-2 bg-[#0e1424] border border-white/15 rounded-lg text-xs text-white focus:border-[#a855f7] outline-none resize-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs uppercase font-bold text-purple-300 mb-1">🇬🇧 Mô tả Tiếng Anh (Copy EN)</label>
+                    <textarea
+                      value={card.copyEn || ''}
+                      onChange={(e) => {
+                        const updated = data.pricing.map((p) => (p.id === card.id ? { ...p, copyEn: e.target.value } : p));
+                        setData({ ...data, pricing: updated });
+                      }}
+                      rows={2}
+                      placeholder="English copy..."
+                      className="w-full px-3 py-2 bg-[#0e1424] border border-purple-500/30 rounded-lg text-xs text-purple-200 focus:border-[#a855f7] outline-none resize-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs uppercase font-bold text-purple-300 mb-1">🇬🇧 Quyền lợi Tiếng Anh (Features EN - Mỗi dòng 1 quyền lợi)</label>
+                    <textarea
+                      value={(card.featuresEn || []).join('\n')}
+                      onChange={(e) => {
+                        const lines = e.target.value.split('\n');
+                        const updated = data.pricing.map((p) => (p.id === card.id ? { ...p, featuresEn: lines } : p));
+                        setData({ ...data, pricing: updated });
+                      }}
+                      rows={4}
+                      placeholder="Feature 1&#10;Feature 2&#10;Feature 3"
+                      className="w-full px-3 py-2 bg-[#0e1424] border border-purple-500/30 rounded-lg text-xs text-purple-200 focus:border-[#a855f7] outline-none resize-none font-mono"
                     />
                   </div>
                 </div>
