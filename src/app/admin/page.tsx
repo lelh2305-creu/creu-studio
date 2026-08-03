@@ -15,6 +15,8 @@ interface WorkItem {
   bgClass: string;
   isWide?: boolean;
   description?: string;
+  descriptionEn?: string;
+  gallery?: string[];
 }
 
 interface TeamMember {
@@ -507,8 +509,46 @@ export default function AdminPage() {
                             placeholder="Dán link Video (YouTube/Vimeo)"
                             value={work.videoUrl || ''}
                             onChange={(e) => handleUpdateWorkField(work.id, 'videoUrl', e.target.value)}
-                            className="text-xs text-purple-200 bg-[#0e1424] border border-white/15 px-3 py-1 rounded-lg focus:border-[#a855f7] outline-none w-full md:w-3/4"
+                            className="text-xs text-purple-200 bg-[#0e1424] border border-white/15 px-3 py-1 rounded-lg focus:border-[#a855f7] outline-none w-full"
                           />
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                          <div>
+                            <label className="block text-[10px] uppercase font-bold text-gray-400 mb-1">Mô Tả Chi Tiết (VI)</label>
+                            <textarea
+                              value={work.description || ''}
+                              onChange={(e) => handleUpdateWorkField(work.id, 'description', e.target.value)}
+                              rows={2}
+                              placeholder="Mô tả dự án tiếng Việt..."
+                              className="w-full px-3 py-1.5 bg-[#0e1424] border border-white/15 rounded-lg text-xs text-white focus:border-[#a855f7] outline-none resize-none"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-[10px] uppercase font-bold text-purple-300 mb-1">🇬🇧 Mô Tả Chi Tiết (EN)</label>
+                            <textarea
+                              value={work.descriptionEn || ''}
+                              onChange={(e) => handleUpdateWorkField(work.id, 'descriptionEn', e.target.value)}
+                              rows={2}
+                              placeholder="English project description..."
+                              className="w-full px-3 py-1.5 bg-[#0e1424] border border-purple-500/30 rounded-lg text-xs text-purple-200 focus:border-[#a855f7] outline-none resize-none"
+                            />
+                          </div>
+
+                          <div className="md:col-span-2">
+                            <label className="block text-[10px] uppercase font-bold text-purple-300 mb-1">🖼️ Gallery Ảnh (Mỗi dòng 1 link URL ảnh)</label>
+                            <textarea
+                              value={(work.gallery || []).join('\n')}
+                              onChange={(e) => {
+                                const lines = e.target.value.split('\n').filter(Boolean);
+                                handleUpdateWorkField(work.id, 'gallery', lines);
+                              }}
+                              rows={3}
+                              placeholder="https://image1.jpg&#10;https://image2.jpg"
+                              className="w-full px-3 py-1.5 bg-[#0e1424] border border-purple-500/30 rounded-lg text-xs text-purple-200 focus:border-[#a855f7] outline-none resize-none font-mono"
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
