@@ -2,6 +2,8 @@
 
 import { motion } from 'framer-motion';
 import defaultSiteData from '@/data/siteData.json';
+import { useLang } from '@/context/LangContext';
+import { t } from '@/lib/translations';
 
 interface SelectedWorksProps {
   onNavigate: (tab: string) => void;
@@ -10,6 +12,7 @@ interface SelectedWorksProps {
 }
 
 export default function SelectedWorks({ onNavigate, onPlayVideo, works }: SelectedWorksProps) {
+  const { lang } = useLang();
   const listToRender = works && works.length > 0 ? works : defaultSiteData.works;
 
   return (
@@ -21,9 +24,9 @@ export default function SelectedWorks({ onNavigate, onPlayVideo, works }: Select
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <h2>Selected Works</h2>
+          <h2>{t('works.title', lang)}</h2>
           <a onClick={() => onNavigate('work')} style={{ cursor: 'pointer' }}>
-            Xem tất cả dự án ↗
+            {t('works.viewAll', lang)} ↗
           </a>
         </motion.div>
 

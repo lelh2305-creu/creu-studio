@@ -2,12 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import Footer from './Footer';
+import { useLang } from '@/context/LangContext';
 
 interface ContactPageProps {
   config?: any;
 }
 
 export default function ContactPage({ config: propsConfig }: ContactPageProps) {
+  const { lang } = useLang();
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [config, setConfig] = useState<any>(propsConfig || {
@@ -25,18 +27,7 @@ export default function ContactPage({ config: propsConfig }: ContactPageProps) {
       return;
     }
 
-    const saved = localStorage.getItem('creu_site_data');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (parsed?.siteConfig) {
-          setConfig(parsed.siteConfig);
-          return;
-        }
-      } catch {}
-    }
-
-    fetch('/api/data')
+    fetch('/api/data?t=' + Date.now(), { cache: 'no-store' })
       .then((res) => res.json())
       .then((data) => {
         if (data.siteConfig) setConfig(data.siteConfig);
@@ -52,7 +43,6 @@ export default function ContactPage({ config: propsConfig }: ContactPageProps) {
     const data = Object.fromEntries(formData.entries());
 
     try {
-      // Send directly to lelh2305@gmail.com for 100% instant delivery
       await fetch('https://formsubmit.co/ajax/lelh2305@gmail.com', {
         method: 'POST',
         headers: {
@@ -83,7 +73,9 @@ export default function ContactPage({ config: propsConfig }: ContactPageProps) {
               Let's build<br />something<br /><span className="pk">meaningful.</span>
             </h1>
             <p className="ct-pgd">
-              Dù là một dự án nhỏ hay một campaign lớn — chúng tôi luôn sẵn sàng lắng nghe và tìm ra giải pháp phù hợp nhất.
+              {lang === 'en'
+                ? 'Whether a small project or a large campaign — we are always ready to listen and find the right solution.'
+                : 'Dù là một dự án nhỏ hay một campaign lớn — chúng tôi luôn sẵn sàng lắng nghe và tìm ra giải pháp phù hợp nhất.'}
             </p>
 
             <div className="ct-inf">
@@ -109,7 +101,7 @@ export default function ContactPage({ config: propsConfig }: ContactPageProps) {
                 </div>
                 <div>
                   <div className="ct-lb">Studio</div>
-                  <div className="ct-vl">{config.location}</div>
+                  <div className="ct-vl">{lang === 'en' ? 'Thu Duc, Ho Chi Minh City' : config.location}</div>
                 </div>
               </div>
 
@@ -121,13 +113,13 @@ export default function ContactPage({ config: propsConfig }: ContactPageProps) {
                   </svg>
                 </div>
                 <div>
-                  <div className="ct-lb">Giờ làm việc</div>
-                  <div className="ct-vl">{config.workingHours}</div>
+                  <div className="ct-lb">{lang === 'en' ? 'Working Hours' : 'Giờ làm việc'}</div>
+                  <div className="ct-vl">{lang === 'en' ? 'Monday – Friday, 9:00 – 18:00' : config.workingHours}</div>
                 </div>
               </div>
             </div>
 
-            {/* Social Media Link Buttons (Dynamic Links) */}
+            {/* Social Media Link Buttons */}
             <div className="ct-soc">
               <a href={config.instagram || '#'} target="_blank" rel="noopener noreferrer" className="cs-btn">
                 Instagram
@@ -142,26 +134,26 @@ export default function ContactPage({ config: propsConfig }: ContactPageProps) {
           </div>
 
           <div className="cf">
-            <div className="cf-t">Gửi thông tin dự án</div>
+            <div className="cf-t">{lang === 'en' ? 'Send project details' : 'Gửi thông tin dự án'}</div>
             <form onSubmit={handleSubmit}>
               <div className="fr">
                 <div className="ff">
-                  <label>Họ và tên</label>
-                  <input type="text" name="name" placeholder="Nguyễn Văn A" required />
+                  <label>{lang === 'en' ? 'Full name' : 'Họ và tên'}</label>
+                  <input type="text" name="name" placeholder={lang === 'en' ? 'John Doe' : 'Nguyễn Văn A'} required />
                 </div>
                 <div className="ff">
                   <label>Email</label>
-                  <input type="email" name="email" placeholder="hello@brand.vn" required />
+                  <input type="email" name="email" placeholder="hello@brand.com" required />
                 </div>
               </div>
 
               <div className="fr">
                 <div className="ff">
-                  <label>Thương hiệu / Công ty</label>
-                  <input type="text" name="brand" placeholder="Brand của bạn" />
+                  <label>{lang === 'en' ? 'Brand / Company' : 'Thương hiệu / Công ty'}</label>
+                  <input type="text" name="brand" placeholder={lang === 'en' ? 'Your Brand' : 'Brand của bạn'} />
                 </div>
                 <div className="ff">
-                  <label>Dịch vụ quan tâm</label>
+                  <label>{lang === 'en' ? 'Service needed' : 'Dịch vụ quan tâm'}</label>
                   <select name="service" defaultValue="Video Production">
                     <option value="Video Production">Video Production</option>
                     <option value="Photography">Photography</option>
@@ -175,24 +167,24 @@ export default function ContactPage({ config: propsConfig }: ContactPageProps) {
 
               <div className="fr">
                 <div className="ff">
-                  <label>Budget dự kiến</label>
+                  <label>{lang === 'en' ? 'Estimated budget' : 'Budget dự kiến'}</label>
                   <select name="budget" defaultValue="5 - 15 triệu">
-                    <option value="Dưới 5 triệu">Dưới 5 triệu</option>
-                    <option value="5 - 15 triệu">5 - 15 triệu</option>
-                    <option value="15 - 50 triệu">15 - 50 triệu</option>
-                    <option value="Trên 50 triệu">Trên 50 triệu</option>
+                    <option value="Dưới 5 triệu">{lang === 'en' ? 'Under $200' : 'Dưới 5 triệu'}</option>
+                    <option value="5 - 15 triệu">{lang === 'en' ? '$200 - $600' : '5 - 15 triệu'}</option>
+                    <option value="15 - 50 triệu">{lang === 'en' ? '$600 - $2,000' : '15 - 50 triệu'}</option>
+                    <option value="Trên 50 triệu">{lang === 'en' ? 'Over $2,000' : 'Trên 50 triệu'}</option>
                   </select>
                 </div>
                 <div className="ff">
-                  <label>Deadline dự kiến</label>
-                  <input type="text" name="deadline" placeholder="VD: Tháng 9/2026" />
+                  <label>{lang === 'en' ? 'Target deadline' : 'Deadline dự kiến'}</label>
+                  <input type="text" name="deadline" placeholder={lang === 'en' ? 'e.g. Sept 2026' : 'VD: Tháng 9/2026'} />
                 </div>
               </div>
 
               <div className="fr" style={{ gridTemplateColumns: '1fr' }}>
                 <div className="ff full">
-                  <label>Mô tả dự án</label>
-                  <textarea name="message" placeholder="Bạn muốn tạo ra điều gì? Kể cho chúng tôi nghe..."></textarea>
+                  <label>{lang === 'en' ? 'Project description' : 'Mô tả dự án'}</label>
+                  <textarea name="message" placeholder={lang === 'en' ? 'What would you like to create? Tell us...' : 'Bạn muốn tạo ra điều gì? Kể cho chúng tôi nghe...'}></textarea>
                 </div>
               </div>
 
@@ -203,10 +195,10 @@ export default function ContactPage({ config: propsConfig }: ContactPageProps) {
                 disabled={submitting || submitted}
               >
                 {submitting
-                  ? 'Đang gửi...'
+                  ? (lang === 'en' ? 'Sending...' : 'Đang gửi...')
                   : submitted
-                  ? 'Đã gửi thành công! Chúng tôi sẽ liên hệ sớm.'
-                  : 'Gửi thông tin →'}
+                  ? (lang === 'en' ? 'Sent successfully! We will reach out soon.' : 'Đã gửi thành công! Chúng tôi sẽ liên hệ sớm.')
+                  : (lang === 'en' ? 'Send message →' : 'Gửi thông tin →')}
               </button>
             </form>
           </div>

@@ -2,6 +2,8 @@
 
 import { motion } from 'framer-motion';
 import defaultSiteData from '@/data/siteData.json';
+import { useLang } from '@/context/LangContext';
+import { t } from '@/lib/translations';
 
 interface PartnershipPricingProps {
   onNavigate: (tab: string) => void;
@@ -9,6 +11,7 @@ interface PartnershipPricingProps {
 }
 
 export default function PartnershipPricing({ onNavigate, pricing }: PartnershipPricingProps) {
+  const { lang } = useLang();
   const cardsToRender = pricing && pricing.length > 0 ? pricing : defaultSiteData.pricing;
 
   return (
@@ -22,10 +25,17 @@ export default function PartnershipPricing({ onNavigate, pricing }: PartnershipP
         >
           <div className="eyebrow">Monthly partnership</div>
           <h2>
-            Đồng hành dài hạn.<br />
-            Tạo ra giá trị thật.
+            {lang === 'en' ? (
+              <>Long-term partnership.<br />Real value created.</>
+            ) : (
+              <>Đồng hành dài hạn.<br />Tạo ra giá trị thật.</>
+            )}
           </h2>
-          <p>Ba gói dịch vụ linh hoạt, đồng hành cùng mục tiêu và ngân sách của bạn.</p>
+          <p>
+            {lang === 'en'
+              ? 'Three flexible partnership plans tailored to your brand goals and budget.'
+              : 'Ba gói dịch vụ linh hoạt, đồng hành cùng mục tiêu và ngân sách của bạn.'}
+          </p>
         </motion.div>
 
         <div className="cards">
@@ -39,19 +49,19 @@ export default function PartnershipPricing({ onNavigate, pricing }: PartnershipP
               transition={{ duration: 0.5, delay: idx * 0.12 }}
               whileHover={{ y: -12 }}
             >
-              {c.badge && <span className="badge">{c.badge}</span>}
+              {c.badge && <span className="badge">{lang === 'en' ? t('pricing.popular', lang) : c.badge}</span>}
               <span className="plan">{c.plan}</span>
               <h3>{c.title}</h3>
               <div className="copy">{c.copy}</div>
               <div className="price">{c.price}</div>
-              <div className="per">{c.per || 'VND / tháng'}</div>
+              <div className="per">{lang === 'en' ? t('pricing.perMonth', lang) : (c.per || 'VND / tháng')}</div>
               <ul className="features">
                 {(c.features || []).map((f: string, fIdx: number) => (
                   <li key={fIdx}>{f}</li>
                 ))}
               </ul>
               <a className="choose" onClick={() => onNavigate('contact')} style={{ cursor: 'pointer' }}>
-                <b>→</b>{c.btnText || 'Chọn gói này'}
+                <b>→</b>{c.btnText || t('pricing.cta', lang)}
               </a>
             </motion.article>
           ))}

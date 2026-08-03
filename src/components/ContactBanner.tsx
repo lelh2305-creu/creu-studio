@@ -1,8 +1,11 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useLang } from '@/context/LangContext';
 
 export default function ContactBanner() {
+  const { lang } = useLang();
+
   return (
     <section id="contact">
       <div className="shell center">
@@ -17,7 +20,11 @@ export default function ContactBanner() {
             Let’s build something<br />
             <em style={{ fontWeight: 300, color: '#b386d9' }}>meaningful together.</em>
           </h2>
-          <p>Dù là một chiến dịch mới hay một ý tưởng đang ấp ủ — hãy cùng CREU biến nó thành trải nghiệm thị giác ấn tượng.</p>
+          <p>
+            {lang === 'en'
+              ? 'Whether a new campaign or an emerging idea — let CREU bring it to life with striking visual experiences.'
+              : 'Dù là một chiến dịch mới hay một ý tưởng đang ấp ủ — hãy cùng CREU biến nó thành trải nghiệm thị giác ấn tượng.'}
+          </p>
           <a className="primary" href="mailto:hello@creu.vn">
             <span>hello@creu.vn</span>
             <span>↗</span>

@@ -2,50 +2,87 @@
 
 import { motion } from 'framer-motion';
 import Footer from './Footer';
+import { useLang } from '@/context/LangContext';
 
 interface ServicesPageProps {
   onNavigate: (tab: string) => void;
 }
 
 export default function ServicesPage({ onNavigate }: ServicesPageProps) {
+  const { lang } = useLang();
+
   const servicesList = [
     {
       num: '01',
       title: 'Video Production',
-      desc: 'Từ concept đến post-production, chúng tôi sản xuất video thương hiệu, TVC, Reels và documentary với chất lượng điện ảnh.',
+      desc: lang === 'en'
+        ? 'From concept to post-production, we produce brand films, TVCs, Reels, and documentaries with cinematic quality.'
+        : 'Từ concept đến post-production, chúng tôi sản xuất video thương hiệu, TVC, Reels và documentary với chất lượng điện ảnh.',
       tags: ['TVC', 'Brand Film', 'Reels', 'Documentary'],
     },
     {
       num: '02',
       title: 'Photography',
-      desc: 'Chụp ảnh sản phẩm, không gian, chân dung và sự kiện — mỗi bức ảnh là một câu chuyện được kể qua ánh sáng.',
+      desc: lang === 'en'
+        ? 'Product, architectural, portrait, and event photography — every shot tells a story crafted by light.'
+        : 'Chụp ảnh sản phẩm, không gian, chân dung và sự kiện — mỗi bức ảnh là một câu chuyện được kể qua ánh sáng.',
       tags: ['Product', 'Architecture', 'Portrait', 'Event'],
     },
     {
       num: '03',
       title: 'Graphic Design',
-      desc: 'Thiết kế poster, banner, key visual và tất cả collateral cần thiết — đẹp, đúng brand, và đúng deadline.',
+      desc: lang === 'en'
+        ? 'Designing posters, banners, key visuals, and all required collateral — beautiful, brand-accurate, on deadline.'
+        : 'Thiết kế poster, banner, key visual và tất cả collateral cần thiết — đẹp, đúng brand, và đúng deadline.',
       tags: ['Poster', 'Key Visual', 'Infographic'],
     },
     {
       num: '04',
       title: 'Brand Identity',
-      desc: 'Xây dựng hệ thống nhận diện thương hiệu toàn diện: logo, typography, màu sắc, voice — tất cả thành một ngôn ngữ nhất quán.',
+      desc: lang === 'en'
+        ? 'Building comprehensive brand identity systems: logo, typography, color palettes — unified into a consistent voice.'
+        : 'Xây dựng hệ thống nhận diện thương hiệu toàn diện: logo, typography, màu sắc, voice — tất cả thành một ngôn ngữ nhất quán.',
       tags: ['Logo', 'Brand System', 'Guideline'],
     },
     {
       num: '05',
       title: 'Marketing Content',
-      desc: 'Nội dung Social Media, bài viết, caption và chiến lược content giúp thương hiệu nói đúng điệu, đúng lúc, đúng người.',
+      desc: lang === 'en'
+        ? 'Social media content, copy, and strategy helping brands speak to the right audience at the right time.'
+        : 'Nội dung Social Media, bài viết, caption và chiến lược content giúp thương hiệu nói đúng điệu, đúng lúc, đúng người.',
       tags: ['Social Media', 'Content Strategy', 'Copywriting'],
     },
   ];
 
   const steps = [
-    { num: '01', title: 'Discovery', desc: 'Hiểu thương hiệu, mục tiêu và đối tượng mục tiêu — trước khi bắt đầu bất cứ điều gì.' },
-    { num: '02', title: 'Concept', desc: 'Phát triển ý tưởng sáng tạo, mood board và hướng visual phù hợp với brand.' },
-    { num: '03', title: 'Production', desc: 'Thực hiện với đội ngũ chuyên nghiệp — quay phim, chụp ảnh, thiết kế.' },
-    { num: '04', title: 'Delivery', desc: 'Bàn giao file đúng định dạng, đúng deadline, kèm hỗ trợ sau dự án.' },
+    {
+      num: '01',
+      title: 'Discovery',
+      desc: lang === 'en'
+        ? 'Understanding your brand, objectives, and target audience — before starting anything.'
+        : 'Hiểu thương hiệu, mục tiêu và đối tượng mục tiêu — trước khi bắt đầu bất cứ điều gì.',
+    },
+    {
+      num: '02',
+      title: 'Concept',
+      desc: lang === 'en'
+        ? 'Developing creative ideas, moodboards, and visual directions tailored to your brand.'
+        : 'Phát triển ý tưởng sáng tạo, mood board và hướng visual phù hợp với brand.',
+    },
+    {
+      num: '03',
+      title: 'Production',
+      desc: lang === 'en'
+        ? 'Executing with a dedicated professional team — filming, photography, and design.'
+        : 'Thực hiện với đội ngũ chuyên nghiệp — quay phim, chụp ảnh, thiết kế.',
+    },
+    {
+      num: '04',
+      title: 'Delivery',
+      desc: lang === 'en'
+        ? 'Delivering formatted assets on time, complete with post-launch support.'
+        : 'Bàn giao file đúng định dạng, đúng deadline, kèm hỗ trợ sau dự án.',
+    },
   ];
 
   return (
@@ -56,7 +93,9 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
           We craft<br /><span className="pk">experiences</span><br />that resonate.
         </h1>
         <p className="pg-s">
-          Từ một campaign đơn lẻ đến một hệ sinh thái thương hiệu toàn diện - chúng tôi đem đúng craft cho từng điểm chạm.
+          {lang === 'en'
+            ? 'From a single campaign to a full brand ecosystem — we bring the right craft to every touchpoint.'
+            : 'Từ một campaign đơn lẻ đến một hệ sinh thái thương hiệu toàn diện - chúng tôi đem đúng craft cho từng điểm chạm.'}
         </p>
       </div>
 
@@ -80,8 +119,8 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
               <div className="sc2-t">{item.title}</div>
               <div className="sc2-d">{item.desc}</div>
               <div className="sc2-tags">
-                {item.tags.map((t, tIdx) => (
-                  <span key={tIdx} className="stag">{t}</span>
+                {item.tags.map((tItem, tIdx) => (
+                  <span key={tIdx} className="stag">{tItem}</span>
                 ))}
               </div>
             </motion.div>
@@ -93,7 +132,9 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
                 Not sure<br />what you<br /><span className="pk">need?</span>
               </div>
               <p style={{ fontSize: '14px', color: 'var(--muted)', lineHeight: 1.7, marginBottom: '28px' }}>
-                Nói chuyện với mình — chúng tôi sẽ giúp bạn tìm ra hướng đi phù hợp nhất.
+                {lang === 'en'
+                  ? "Talk to us — we'll help you find the best path forward."
+                  : 'Nói chuyện với mình — chúng tôi sẽ giúp bạn tìm ra hướng đi phù hợp nhất.'}
               </p>
               <span className="btn-link" onClick={() => onNavigate('contact')}>Let's Talk &rarr;</span>
             </div>

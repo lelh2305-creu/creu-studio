@@ -1,6 +1,8 @@
 'use client';
 
 import { motion, Variants } from 'framer-motion';
+import { useLang } from '@/context/LangContext';
+import { t } from '@/lib/translations';
 
 interface HeroProps {
   onPlayShowreel: () => void;
@@ -10,6 +12,8 @@ interface HeroProps {
 }
 
 export default function Hero({ onPlayShowreel, onNavigate, heroTitle, heroDesc }: HeroProps) {
+  const { lang } = useLang();
+
   const containerVars: Variants = {
     hidden: { opacity: 0 },
     show: {
@@ -30,7 +34,9 @@ export default function Hero({ onPlayShowreel, onNavigate, heroTitle, heroDesc }
     },
   };
 
-  const descriptionText = heroDesc || 'CREU biến chiến lược thương hiệu thành hình ảnh, video và trải nghiệm thị giác giàu cảm xúc — từ ý tưởng đến sản phẩm hoàn chỉnh.';
+  const descriptionText = lang === 'en'
+    ? t('hero.desc', lang)
+    : (heroDesc || t('hero.desc', lang));
 
   return (
     <section className="hero">
@@ -44,7 +50,7 @@ export default function Hero({ onPlayShowreel, onNavigate, heroTitle, heroDesc }
             animate="show"
           >
             <motion.div variants={itemVars} className="eyebrow">
-              CREATIVE STUDIO · THỦ ĐỨC
+              {t('hero.eyebrow', lang)}
             </motion.div>
 
             <motion.h1 variants={itemVars}>
@@ -64,16 +70,16 @@ export default function Hero({ onPlayShowreel, onNavigate, heroTitle, heroDesc }
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.96 }}
               >
-                <span>Play showreel</span>
+                <span>{t('hero.showreel', lang)}</span>
                 <span>↗</span>
               </motion.button>
               <a className="link" onClick={() => onNavigate('work')} style={{ cursor: 'pointer' }}>
-                Explore our work ↓
+                {t('hero.explore', lang)} ↓
               </a>
             </motion.div>
           </motion.div>
 
-          {/* Right Column: Hero Video Card Container (Rock-solid 100% Stable) */}
+          {/* Right Column: Hero Video Card */}
           <motion.div
             className="video-wrap cursor-pointer"
             initial={{ opacity: 0, scale: 0.95, y: 20 }}

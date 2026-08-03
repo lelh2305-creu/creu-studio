@@ -1,18 +1,21 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useLang } from '@/context/LangContext';
+import { t } from '@/lib/translations';
 
 export default function Footer() {
+  const { lang } = useLang();
   const [config, setConfig] = useState<any>({
     email: 'hello@creu.vn',
-    location: 'Thu Duc, TP.HCM',
+    location: 'Thủ Đức, TP. Hồ Chí Minh',
     instagram: 'https://instagram.com',
     behance: 'https://behance.net',
     facebook: 'https://facebook.com',
   });
 
   useEffect(() => {
-    fetch('/api/data')
+    fetch('/api/data?t=' + Date.now(), { cache: 'no-store' })
       .then((res) => res.json())
       .then((data) => {
         if (data.siteConfig) setConfig(data.siteConfig);
@@ -24,12 +27,12 @@ export default function Footer() {
     <footer className="ft">
       <div>
         <div className="ft-logo">CREU Studio</div>
-        <div className="ft-copy">&copy; 2026</div>
+        <div className="ft-copy">{t('footer.copy', lang)}</div>
       </div>
       <a href={`mailto:${config.email}`} className="ft-em">
         {config.email}
       </a>
-      <div className="ft-loc">{config.location}</div>
+      <div className="ft-loc">{lang === 'en' ? 'Thu Duc, Ho Chi Minh City' : config.location}</div>
       <div className="ft-soc">
         <a href={config.instagram || '#'} target="_blank" rel="noopener noreferrer">
           Instagram

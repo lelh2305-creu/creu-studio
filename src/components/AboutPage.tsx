@@ -4,52 +4,64 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Footer from './Footer';
 import defaultSiteData from '@/data/siteData.json';
+import { useLang } from '@/context/LangContext';
 
 interface AboutPageProps {
   team?: any[];
 }
 
 export default function AboutPage({ team: propsTeam }: AboutPageProps) {
+  const { lang } = useLang();
   const [team, setTeam] = useState<any[]>(propsTeam || []);
 
   useEffect(() => {
     if (propsTeam && propsTeam.length > 0) {
       setTeam(propsTeam);
-      return;
     }
 
-    const saved = localStorage.getItem('creu_site_data');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (parsed?.team) {
-          setTeam(parsed.team);
-          return;
-        }
-      } catch {}
-    }
-
-    fetch('/api/data')
+    fetch('/api/data?t=' + Date.now(), { cache: 'no-store' })
       .then((res) => res.json())
       .then((data) => {
         if (data.team) setTeam(data.team);
       })
-      .catch(() => setTeam(defaultSiteData.team));
+      .catch(() => {
+        if (!propsTeam || propsTeam.length === 0) {
+          setTeam(defaultSiteData.team);
+        }
+      });
   }, [propsTeam]);
 
   const stats = [
-    { num: '50', em: '+', label: 'Dự án hoàn thành' },
-    { num: '3', em: '+', label: 'Năm kinh nghiệm' },
-    { num: '30', em: '+', label: 'Thương hiệu tin tưởng' },
-    { num: '5', em: '★', label: 'Đánh giá khách hàng' },
+    { num: '50', em: '+', label: lang === 'en' ? 'Completed Projects' : 'Dự án hoàn thành' },
+    { num: '3', em: '+', label: lang === 'en' ? 'Years of Experience' : 'Năm kinh nghiệm' },
+    { num: '30', em: '+', label: lang === 'en' ? 'Trusted Brands' : 'Thương hiệu tin tưởng' },
+    { num: '5', em: '★', label: lang === 'en' ? 'Client Rating' : 'Đánh giá khách hàng' },
   ];
 
   const teamList = team && team.length > 0 ? team : defaultSiteData.team;
 
   const values = [
-    { icon: '✦', title: 'Craft First', desc: 'Chúng tôi không bao giờ thỏa hiệp với chất lượng. Mỗi chi tiết nhỏ đều được chú ý và chăm chút — vì đó là thứ tạo nên sự khác biệt.' },
-    { icon: '◎', title: 'Brand Clarity', desc: 'Visual đẹp nhưng phải đúng. Mỗi lựa chọn sáng tạo đều phải phục vụ cho mục tiêu thương hiệu và nội dung điều thương hiệu muốn nói.' },
-    { icon: '❯', title: 'Long-term Partnership', desc: 'Chúng tôi không làm một lần rồi thôi. Chúng tôi xây dựng mối quan hệ lâu dài — phát triển cùng thương hiệu theo thời gian.' },
+    {
+      icon: '✦',
+      title: 'Craft First',
+      desc: lang === 'en'
+        ? 'We never compromise on quality. Every small detail is refined — because that is what makes the difference.'
+        : 'Chúng tôi không bao giờ thỏa hiệp với chất lượng. Mỗi chi tiết nhỏ đều được chú ý và chăm chút — vì đó là thứ tạo nên sự khác biệt.',
+    },
+    {
+      icon: '◎',
+      title: 'Brand Clarity',
+      desc: lang === 'en'
+        ? 'Beautiful visuals must be accurate. Every creative choice must serve your brand objectives.'
+        : 'Visual đẹp nhưng phải đúng. Mỗi lựa chọn sáng tạo đều phải phục vụ cho mục tiêu thương hiệu và nội dung điều thương hiệu muốn nói.',
+    },
+    {
+      icon: '❯',
+      title: 'Long-term Partnership',
+      desc: lang === 'en'
+        ? 'We don’t do one-offs. We build long-lasting relationships — growing with brands over time.'
+        : 'Chúng tôi không làm một lần rồi thôi. Chúng tôi xây dựng mối quan hệ lâu dài — phát triển cùng thương hiệu theo thời gian.',
+    },
   ];
 
   return (
@@ -63,7 +75,9 @@ export default function AboutPage({ team: propsTeam }: AboutPageProps) {
         </div>
         <div className="ab-r">
           <p className="ab-in">
-            CREU Studio là một creative studio đặt tại Thủ Đức, TP.HCM — chuyên biến ý tưởng thành hình ảnh và câu chuyện thương hiệu có chiều sâu. Chúng tôi tin rằng mỗi thương hiệu đều có một câu chuyện xứng đáng được kể theo cách đẹp nhất.
+            {lang === 'en'
+              ? 'CREU Studio is a creative studio based in Thu Duc, HCMC — specializing in shaping brand ideas into deep visual narratives. We believe every brand has a story that deserves to be told in the most compelling way.'
+              : 'CREU Studio là một creative studio đặt tại Thủ Đức, TP.HCM — chuyên biến ý tưởng thành hình ảnh và câu chuyện thương hiệu có chiều sâu. Chúng tôi tin rằng mỗi thương hiệu đều có một câu chuyện xứng đáng được kể theo cách đẹp nhất.'}
           </p>
           <div className="ab-st">
             {stats.map((st, idx) => (
