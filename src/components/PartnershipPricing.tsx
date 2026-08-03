@@ -58,7 +58,7 @@ export default function PartnershipPricing({ onNavigate, pricing }: PartnershipP
                 <h3>{c.title}</h3>
                 <div className="copy">{activeCopy}</div>
                 <div className="price">{c.price}</div>
-                <div className="per">{lang === 'en' ? t('pricing.perMonth', lang) : (c.per || 'VND / tháng')}</div>
+                <div className="per">USD / month</div>
                 <ul className="features">
                   {activeFeatures.map((f: string, fIdx: number) => (
                     <li key={fIdx}>{f}</li>

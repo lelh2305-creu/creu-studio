@@ -571,8 +571,23 @@ body.dark .plan { color: #c499f5; }
 
 .card h3 { font-family: var(--font-title); font-size: 25px; margin: 14px 0 8px; color: var(--ink); }
 .card .copy { font-size: 12px; color: var(--muted); min-height: 46px; line-height: 1.55; }
-.price { font-family: var(--font-title); font-size: 37px; letter-spacing: .03em; margin: 26px 0 3px; color: var(--ink); }
-.per { font-size: 11px; color: #8891a5; }
+.price {
+  font-family: var(--font-hero);
+  font-size: clamp(38px, 4vw, 50px);
+  font-weight: 700;
+  letter-spacing: -.02em;
+  line-height: 1;
+  margin: 26px 0 6px;
+  color: var(--ink);
+}
+.per {
+  font-family: var(--font-main);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
 
 .features {
   list-style: none;

@@ -44,7 +44,7 @@ export const translations = {
   pricing: {
     title: { vi: 'Gói dịch vụ', en: 'Partnership Plans' },
     popular: { vi: 'Phổ biến nhất', en: 'Most popular' },
-    perMonth: { vi: 'VND / tháng', en: 'VND / month' },
+    perMonth: { vi: 'USD / month', en: 'USD / month' },
     cta: { vi: 'Chọn gói này', en: 'Get started' },
   },
   footer: {
