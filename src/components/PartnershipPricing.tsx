@@ -14,6 +14,20 @@ export default function PartnershipPricing({ onNavigate, pricing }: PartnershipP
   const { lang } = useLang();
   const cardsToRender = pricing && pricing.length > 0 ? pricing : defaultSiteData.pricing;
 
+  const formatPrice = (priceStr: string) => {
+    if (!priceStr) return null;
+    return priceStr.split(/(\$|\+)/).map((part, i) => {
+      if (part === '$' || part === '+') {
+        return (
+          <span key={i} className="price-symbol">
+            {part}
+          </span>
+        );
+      }
+      return part;
+    });
+  };
+
   return (
     <section className="pricing" id="pricing">
       <div className="shell">
@@ -57,7 +71,7 @@ export default function PartnershipPricing({ onNavigate, pricing }: PartnershipP
                 <span className="plan">{c.plan}</span>
                 <h3>{c.title}</h3>
                 <div className="copy">{activeCopy}</div>
-                <div className="price">{c.price}</div>
+                <div className="price">{formatPrice(c.price)}</div>
                 <div className="per">USD / month</div>
                 <ul className="features">
                   {activeFeatures.map((f: string, fIdx: number) => (
