@@ -9,6 +9,7 @@ import SelectedWorks from '@/components/SelectedWorks';
 import PartnershipPricing from '@/components/PartnershipPricing';
 import ContactBanner from '@/components/ContactBanner';
 import VideoModal from '@/components/VideoModal';
+import WatermarkLogo3D from '@/components/WatermarkLogo3D';
 
 import WorkPage from '@/components/WorkPage';
 import ServicesPage from '@/components/ServicesPage';
@@ -99,6 +100,9 @@ export default function Home() {
 
   return (
     <main className="relative min-h-screen">
+      {/* 3D Interactive Scroll Watermark Logo */}
+      <WatermarkLogo3D />
+
       <Navbar
         currentTab={currentTab}
         onTabChange={handleTabChange}
