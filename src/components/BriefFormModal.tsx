@@ -92,7 +92,8 @@ export default function BriefFormModal({ isOpen, onClose }: BriefFormModalProps)
     setSubmitting(true);
 
     const payload = {
-      _subject: `📋 CLIENT BRIEF MỚI TỪ: ${formData.companyName || formData.contactName || 'Khách hàng'} - CREU Studio`,
+      _subject: 'CREU Brief Form - Khách hàng mới',
+      _next: 'https://creu.vn',
       'THÔNG TIN KHÁCH HÀNG': {
         'Công ty / Cá nhân': formData.companyName,
         'Người phụ trách': formData.contactName,
@@ -136,7 +137,7 @@ export default function BriefFormModal({ isOpen, onClose }: BriefFormModalProps)
     };
 
     try {
-      await fetch('https://formsubmit.co/ajax/hello@creu.vn', {
+      await fetch('https://formsubmit.co/ajax/01e5c9c8caf2bcac68e91025db13bbbf', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -231,7 +232,14 @@ export default function BriefFormModal({ isOpen, onClose }: BriefFormModalProps)
               </button>
             </motion.div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-10">
+            <form
+              action="https://formsubmit.co/01e5c9c8caf2bcac68e91025db13bbbf"
+              method="POST"
+              onSubmit={handleSubmit}
+              className="space-y-10"
+            >
+              <input type="hidden" name="_subject" value="CREU Brief Form - Khách hàng mới" />
+              <input type="hidden" name="_next" value="https://creu.vn" />
               {/* SECTION 1: CLIENT INFO */}
               <div className="space-y-4 p-5 rounded-2xl bg-white/60 dark:bg-white/5 border border-black/5 dark:border-white/10">
                 <h3 className="text-sm font-bold uppercase tracking-wider text-[#a855f7] flex items-center gap-2">
