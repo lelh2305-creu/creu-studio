@@ -5,6 +5,7 @@ export const translations = {
     home: { vi: 'Trang chủ', en: 'Home' },
     work: { vi: 'Dự án', en: 'Work' },
     services: { vi: 'Dịch vụ', en: 'Services' },
+    blog: { vi: 'Blog', en: 'Blog' },
     about: { vi: 'Về chúng tôi', en: 'About' },
     contact: { vi: 'Liên hệ', en: 'Contact' },
     cta: { vi: 'Bắt đầu ngay', en: "Let's talk" },
@@ -28,6 +29,13 @@ export const translations = {
     web: { vi: 'Website', en: 'Website' },
     marketing: { vi: 'Marketing Outsource', en: 'Marketing Outsource' },
     ai: { vi: 'AI Creative', en: 'AI Creative' },
+  },
+  blog: {
+    title: { vi: 'Blog & Sáng tạo', en: 'Blog & Journal' },
+    subtitle: { vi: 'Góc nhìn sáng tạo, xu hướng thiết kế thương hiệu và bài viết chuyên sâu từ CREU Studio.', en: 'Creative insights, brand design trends, and in-depth articles from CREU Studio.' },
+    readMore: { vi: 'Đọc tiếp →', en: 'Read more →' },
+    back: { vi: '← Quay lại Blog', en: '← Back to Blog' },
+    publishedOn: { vi: 'Đăng ngày', en: 'Published on' },
   },
   about: {
     title: { vi: 'Về CREU Studio', en: 'About CREU Studio' },

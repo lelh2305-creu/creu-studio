@@ -27,6 +27,7 @@ export default function Navbar({ currentTab, onTabChange, isDark, onToggleTheme 
     { id: 'home', label: t('nav.home', lang) },
     { id: 'work', label: t('nav.work', lang) },
     { id: 'services', label: t('nav.services', lang) },
+    { id: 'blog', label: t('nav.blog', lang) },
     { id: 'about', label: t('nav.about', lang) },
     { id: 'contact', label: t('nav.contact', lang) },
   ];
@@ -39,7 +40,7 @@ export default function Navbar({ currentTab, onTabChange, isDark, onToggleTheme 
   return (
     <>
       <nav className={scrolled ? 'scrolled' : ''}>
-        <a className="logo" onClick={() => onTabChange('home')}>
+        <a className="logo cursor-pointer" onClick={() => onTabChange('home')}>
           <b>CREU</b><i>✱</i>
         </a>
 
@@ -51,7 +52,7 @@ export default function Navbar({ currentTab, onTabChange, isDark, onToggleTheme 
               <a
                 key={item.id}
                 onClick={() => onTabChange(item.id)}
-                className={isActive ? 'on' : ''}
+                className={`cursor-pointer ${isActive ? 'on' : ''}`}
               >
                 {item.label}
                 {isActive && (
@@ -104,7 +105,7 @@ export default function Navbar({ currentTab, onTabChange, isDark, onToggleTheme 
 
           {/* Mobile Hamburger Button */}
           <button
-            className="md:hidden w-10 h-10 rounded-full border border-white/20 bg-white/40 dark:bg-white/10 text-ink dark:text-white flex items-center justify-center text-lg font-bold transition-all"
+            className="md:hidden w-10 h-10 rounded-full border border-white/20 bg-white/40 dark:bg-white/10 text-ink dark:text-white flex items-center justify-center text-lg font-bold transition-all cursor-pointer"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle mobile menu"
           >
@@ -130,7 +131,7 @@ export default function Navbar({ currentTab, onTabChange, isDark, onToggleTheme 
                   <button
                     key={item.id}
                     onClick={() => handleMobileNav(item.id)}
-                    className={`text-left text-lg font-bold py-3 px-4 rounded-2xl transition-all ${
+                    className={`text-left text-lg font-bold py-3 px-4 rounded-2xl transition-all cursor-pointer ${
                       currentTab === item.id
                         ? 'bg-[#a855f7] text-white'
                         : 'text-gray-800 dark:text-gray-200 hover:bg-white/20'
@@ -144,7 +145,7 @@ export default function Navbar({ currentTab, onTabChange, isDark, onToggleTheme 
               <div className="pt-4 border-t border-white/10 flex gap-3">
                 <button
                   onClick={() => handleMobileNav('contact')}
-                  className="w-full py-3.5 rounded-2xl bg-[#a855f7] text-white text-xs font-bold uppercase tracking-wider text-center"
+                  className="w-full py-3.5 rounded-2xl bg-[#a855f7] text-white text-xs font-bold uppercase tracking-wider text-center cursor-pointer"
                 >
                   {t('nav.cta', lang)} ↗
                 </button>

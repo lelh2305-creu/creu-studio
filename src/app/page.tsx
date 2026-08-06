@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import ServicesBar from '@/components/ServicesBar';
@@ -20,6 +21,7 @@ import defaultSiteData from '@/data/siteData.json';
 export default function Home() {
   const [currentTab, setCurrentTab] = useState('home');
   const [isDark, setIsDark] = useState(false);
+  const router = useRouter();
 
   // Video Modal State
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
@@ -61,6 +63,15 @@ export default function Home() {
   useEffect(() => {
     loadSiteData();
 
+    // Check query params for tab
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const tabParam = urlParams.get('tab');
+      if (tabParam && ['home', 'work', 'services', 'about', 'contact'].includes(tabParam)) {
+        setCurrentTab(tabParam);
+      }
+    }
+
     const savedTheme = localStorage.getItem('creu_theme');
     if (savedTheme === 'dark') {
       setIsDark(true);
@@ -85,9 +96,12 @@ export default function Home() {
   }, [isDark]);
 
   const handleTabChange = (tab: string) => {
+    if (tab === 'blog') {
+      router.push('/blog');
+      return;
+    }
     setCurrentTab(tab);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    // Re-check site data when navigating tabs
     loadSiteData();
   };
 
