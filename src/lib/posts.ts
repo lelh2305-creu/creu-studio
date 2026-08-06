@@ -61,8 +61,19 @@ export function getAllPosts(): Post[] {
           const { data, content } = parseFrontmatter(fileContent);
 
           const slug = data.slug || file.replace(/\.mdx?$/, '');
-          const contentVi = content.trim();
-          const contentEn = (data.content_en || data.contentEn || '').trim();
+          
+          let contentVi = content.trim();
+          let contentEn = (data.content_en || data.contentEn || '').trim();
+
+          if (content.includes('<!-- EN -->')) {
+            const parts = content.split('<!-- EN -->');
+            contentVi = parts[0].trim();
+            contentEn = parts[1].trim();
+          } else if (content.includes('<!-- ENGLISH -->')) {
+            const parts = content.split('<!-- ENGLISH -->');
+            contentVi = parts[0].trim();
+            contentEn = parts[1].trim();
+          }
 
           postsMap.set(slug, {
             slug,

@@ -186,12 +186,16 @@ export default function BlogPostDetailClient({ post }: BlogPostDetailClientProps
     }
   };
 
-  // Language selection with clean fallback to content_vi
-  const activeContent = lang === 'en'
-    ? (post.content_en && post.content_en.trim().length > 0 ? post.content_en : (post.content_vi || post.content))
-    : (post.content_vi || post.content);
+  // Explicit language selection with clean fallback to VI
+  const isEn = lang === 'en';
 
-  const activeTitle = (lang === 'en' && post.titleEn && post.titleEn.trim().length > 0) ? post.titleEn : post.title;
+  const activeContent = isEn
+    ? (post.content_en && post.content_en.trim().length > 0 ? post.content_en : post.content_vi)
+    : post.content_vi;
+
+  const activeTitle = isEn
+    ? (post.titleEn && post.titleEn.trim().length > 0 ? post.titleEn : ((post as any).title_en && (post as any).title_en.trim().length > 0 ? (post as any).title_en : post.title))
+    : post.title;
 
   return (
     <main className="relative min-h-screen text-gray-900 dark:text-white">
@@ -206,7 +210,7 @@ export default function BlogPostDetailClient({ post }: BlogPostDetailClientProps
 
       <article className="pt-28 pb-20">
         <div className="shell max-w-4xl mx-auto px-4">
-          {/* Top Control Bar: Breadcrumb + Language / Theme Controls */}
+          {/* Top Control Bar: Breadcrumb + Language Switcher */}
           <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-4 border-b border-gray-200 dark:border-white/10">
             {/* Breadcrumbs Navigation */}
             <nav className="flex items-center gap-2 text-xs sm:text-sm font-semibold" style={{ color: isDark ? '#94a3b8' : '#4b5563' }}>
@@ -223,13 +227,13 @@ export default function BlogPostDetailClient({ post }: BlogPostDetailClientProps
               </span>
             </nav>
 
-            {/* Quick Language Switcher Bar */}
+            {/* Language Switcher */}
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setLang('vi')}
                 className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
                   lang === 'vi'
-                    ? 'bg-[#a855f7] text-white shadow-md'
+                    ? 'bg-[#a855f7] text-white shadow-md font-extrabold'
                     : 'bg-black/5 dark:bg-white/10 text-gray-700 dark:text-gray-300 hover:bg-black/10'
                 }`}
               >
@@ -239,7 +243,7 @@ export default function BlogPostDetailClient({ post }: BlogPostDetailClientProps
                 onClick={() => setLang('en')}
                 className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
                   lang === 'en'
-                    ? 'bg-[#a855f7] text-white shadow-md'
+                    ? 'bg-[#a855f7] text-white shadow-md font-extrabold'
                     : 'bg-black/5 dark:bg-white/10 text-gray-700 dark:text-gray-300 hover:bg-black/10'
                 }`}
               >
