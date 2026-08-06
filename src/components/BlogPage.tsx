@@ -53,7 +53,14 @@ export default function BlogPage({ posts }: BlogPageProps) {
             return (
               <motion.div
                 key={post.slug}
-                className="group bg-white/95 dark:bg-[#0e1424]/90 border border-gray-200 dark:border-white/10 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between"
+                className="group overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between"
+                style={{
+                  background: isDark ? 'rgba(14, 20, 36, 0.75)' : 'rgba(255, 255, 255, 0.65)',
+                  backdropFilter: 'blur(12px)',
+                  WebkitBackdropFilter: 'blur(12px)',
+                  border: isDark ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid rgba(255, 255, 255, 0.4)',
+                  borderRadius: '24px',
+                }}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -74,7 +81,7 @@ export default function BlogPage({ posts }: BlogPageProps) {
 
                   {/* Card Content */}
                   <div className="p-6 space-y-3">
-                    <div className="flex items-center gap-3 text-xs font-semibold text-gray-700 dark:text-gray-300" style={{ color: isDark ? '#cbd5e1' : '#4b5563' }}>
+                    <div className="flex items-center gap-3 text-xs font-semibold" style={{ color: isDark ? '#cbd5e1' : '#4b5563' }}>
                       <span>{post.date}</span>
                       <span>·</span>
                       <span>{post.author || 'CREU Studio'}</span>
@@ -91,7 +98,7 @@ export default function BlogPage({ posts }: BlogPageProps) {
 
                     <p
                       className="text-sm leading-relaxed line-clamp-3 font-normal"
-                      style={{ color: isDark ? '#cbd5e1' : '#1f2937' }}
+                      style={{ color: isDark ? '#e2e8f0' : '#1f2937' }}
                     >
                       {activeDesc}
                     </p>
@@ -102,7 +109,8 @@ export default function BlogPage({ posts }: BlogPageProps) {
                 <div className="px-6 pb-6 pt-2">
                   <Link
                     href={`/blog/${post.slug}`}
-                    className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#a855f7] dark:text-[#c499f5] group-hover:translate-x-1 transition-transform"
+                    className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider group-hover:translate-x-1 transition-transform"
+                    style={{ color: isDark ? '#c499f5' : '#8b5cf6' }}
                   >
                     {t('blog.readMore', lang)} →
                   </Link>

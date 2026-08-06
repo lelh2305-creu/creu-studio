@@ -14,7 +14,7 @@ interface BlogPostDetailClientProps {
   post: Post;
 }
 
-function renderMarkdownContent(content: string) {
+function renderMarkdownContent(content: string, isDark: boolean) {
   const lines = content.split('\n');
   const elements: React.ReactNode[] = [];
   let inList = false;
@@ -23,7 +23,7 @@ function renderMarkdownContent(content: string) {
   const flushList = (keyPrefix: number) => {
     if (inList && listItems.length > 0) {
       elements.push(
-        <ul key={`ul-${keyPrefix}`} className="list-disc list-inside space-y-2.5 my-5 text-[#1f2937] dark:text-gray-200">
+        <ul key={`ul-${keyPrefix}`} className="list-disc list-inside space-y-2.5 my-5" style={{ color: isDark ? '#e2e8f0' : '#1f2937' }}>
           {listItems}
         </ul>
       );
@@ -44,7 +44,7 @@ function renderMarkdownContent(content: string) {
     if (trimmed.startsWith('### ')) {
       flushList(idx);
       elements.push(
-        <h3 key={idx} className="text-xl sm:text-2xl font-bold text-[#111827] dark:text-white mt-8 mb-4 tracking-tight" style={{ fontFamily: 'var(--font-title)' }}>
+        <h3 key={idx} className="text-xl sm:text-2xl font-bold mt-8 mb-4 tracking-tight" style={{ fontFamily: 'var(--font-title)', color: isDark ? '#ffffff' : '#111827' }}>
           {trimmed.replace('### ', '')}
         </h3>
       );
@@ -54,7 +54,7 @@ function renderMarkdownContent(content: string) {
     if (trimmed.startsWith('## ')) {
       flushList(idx);
       elements.push(
-        <h2 key={idx} className="text-2xl sm:text-3xl font-extrabold text-[#111827] dark:text-white mt-10 mb-5 tracking-tight" style={{ fontFamily: 'var(--font-title)' }}>
+        <h2 key={idx} className="text-2xl sm:text-3xl font-extrabold mt-10 mb-5 tracking-tight" style={{ fontFamily: 'var(--font-title)', color: isDark ? '#ffffff' : '#111827' }}>
           {trimmed.replace('## ', '')}
         </h2>
       );
@@ -64,7 +64,7 @@ function renderMarkdownContent(content: string) {
     if (trimmed.startsWith('# ')) {
       flushList(idx);
       elements.push(
-        <h1 key={idx} className="text-3xl sm:text-4xl font-extrabold text-[#111827] dark:text-white mt-12 mb-6 tracking-tight" style={{ fontFamily: 'var(--font-title)' }}>
+        <h1 key={idx} className="text-3xl sm:text-4xl font-extrabold mt-12 mb-6 tracking-tight" style={{ fontFamily: 'var(--font-title)', color: isDark ? '#ffffff' : '#111827' }}>
           {trimmed.replace('# ', '')}
         </h1>
       );
@@ -85,7 +85,7 @@ function renderMarkdownContent(content: string) {
       flushList(idx);
       const quoteText = trimmed.replace('> ', '').replace(/^"|"$/g, '');
       elements.push(
-        <blockquote key={idx} className="my-6 p-5 rounded-2xl bg-[#a855f7]/10 dark:bg-[#a855f7]/20 border-l-4 border-[#a855f7] italic text-[#111827] dark:text-gray-100 text-base sm:text-lg font-medium leading-relaxed shadow-sm">
+        <blockquote key={idx} className="my-6 p-5 rounded-2xl bg-[#a855f7]/10 dark:bg-[#a855f7]/20 border-l-4 border-[#a855f7] italic text-base sm:text-lg font-medium leading-relaxed shadow-sm" style={{ color: isDark ? '#f1f5f9' : '#111827' }}>
           "{quoteText}"
         </blockquote>
       );
@@ -97,8 +97,8 @@ function renderMarkdownContent(content: string) {
       inList = true;
       const itemText = trimmed.substring(2);
       listItems.push(
-        <li key={idx} className="text-base sm:text-lg text-[#1f2937] dark:text-gray-200 leading-relaxed">
-          {parseInlineFormatting(itemText)}
+        <li key={idx} className="text-base sm:text-lg leading-relaxed" style={{ color: isDark ? '#e2e8f0' : '#1f2937' }}>
+          {parseInlineFormatting(itemText, isDark)}
         </li>
       );
       return;
@@ -108,8 +108,8 @@ function renderMarkdownContent(content: string) {
     if (/^\d+\.\s+/.test(trimmed)) {
       flushList(idx);
       elements.push(
-        <p key={idx} className="text-base sm:text-lg text-[#1f2937] dark:text-gray-200 leading-relaxed my-3 font-medium">
-          {parseInlineFormatting(trimmed)}
+        <p key={idx} className="text-base sm:text-lg leading-relaxed my-3 font-medium" style={{ color: isDark ? '#e2e8f0' : '#1f2937' }}>
+          {parseInlineFormatting(trimmed, isDark)}
         </p>
       );
       return;
@@ -118,8 +118,8 @@ function renderMarkdownContent(content: string) {
     // Paragraph
     flushList(idx);
     elements.push(
-      <p key={idx} className="text-base sm:text-lg text-[#1f2937] dark:text-gray-200 leading-relaxed my-4">
-        {parseInlineFormatting(trimmed)}
+      <p key={idx} className="text-base sm:text-lg leading-relaxed my-4" style={{ color: isDark ? '#e2e8f0' : '#1f2937' }}>
+        {parseInlineFormatting(trimmed, isDark)}
       </p>
     );
   });
@@ -129,14 +129,14 @@ function renderMarkdownContent(content: string) {
   return elements;
 }
 
-function parseInlineFormatting(text: string): React.ReactNode {
+function parseInlineFormatting(text: string, isDark: boolean): React.ReactNode {
   const parts = text.split(/(\*\*.*?\*\*|\*.*?\*|\[.*?\]\(.*?\))/g);
   return parts.map((part, i) => {
     if (part.startsWith('**') && part.endsWith('**')) {
-      return <strong key={i} className="font-bold text-[#111827] dark:text-white">{part.slice(2, -2)}</strong>;
+      return <strong key={i} className="font-bold" style={{ color: isDark ? '#ffffff' : '#111827' }}>{part.slice(2, -2)}</strong>;
     }
     if (part.startsWith('*') && part.endsWith('*')) {
-      return <em key={i} className="italic text-[#111827] dark:text-white">{part.slice(1, -1)}</em>;
+      return <em key={i} className="italic" style={{ color: isDark ? '#ffffff' : '#111827' }}>{part.slice(1, -1)}</em>;
     }
     const linkMatch = part.match(/^\[(.*?)\]\((.*?)\)$/);
     if (linkMatch) {
@@ -145,7 +145,7 @@ function parseInlineFormatting(text: string): React.ReactNode {
         href = '/?tab=services';
       }
       return (
-        <Link key={i} href={href} className="text-[#a855f7] dark:text-[#c499f5] font-bold underline hover:opacity-80">
+        <Link key={i} href={href} className="font-bold underline hover:opacity-80 transition-opacity" style={{ color: isDark ? '#c499f5' : '#8b5cf6' }}>
           {linkMatch[1]}
         </Link>
       );
@@ -155,13 +155,13 @@ function parseInlineFormatting(text: string): React.ReactNode {
 }
 
 export default function BlogPostDetailClient({ post }: BlogPostDetailClientProps) {
-  const { lang } = useLang();
+  const { lang, setLang } = useLang();
   const [isDark, setIsDark] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('creu_theme');
-    if (savedTheme === 'dark') {
+    if (savedTheme === 'dark' || document.body.classList.contains('dark')) {
       setIsDark(true);
       document.body.classList.add('dark');
     }
@@ -206,20 +206,47 @@ export default function BlogPostDetailClient({ post }: BlogPostDetailClientProps
 
       <article className="pt-28 pb-20">
         <div className="shell max-w-4xl mx-auto px-4">
-          {/* Breadcrumbs Navigation */}
-          <nav className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-600 dark:text-gray-400 mb-8">
-            <Link href="/" className="hover:text-[#a855f7] transition-colors">
-              {t('blog.home', lang)}
-            </Link>
-            <span>/</span>
-            <Link href="/blog" className="hover:text-[#a855f7] transition-colors">
-              Blog
-            </Link>
-            <span>/</span>
-            <span className="text-[#111827] dark:text-gray-100 font-bold truncate max-w-[200px] sm:max-w-md">
-              {activeTitle}
-            </span>
-          </nav>
+          {/* Top Control Bar: Breadcrumb + Language / Theme Controls */}
+          <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-4 border-b border-gray-200 dark:border-white/10">
+            {/* Breadcrumbs Navigation */}
+            <nav className="flex items-center gap-2 text-xs sm:text-sm font-semibold" style={{ color: isDark ? '#94a3b8' : '#4b5563' }}>
+              <Link href="/" className="hover:text-[#a855f7] transition-colors">
+                {t('blog.home', lang)}
+              </Link>
+              <span>/</span>
+              <Link href="/blog" className="hover:text-[#a855f7] transition-colors">
+                Blog
+              </Link>
+              <span>/</span>
+              <span className="font-bold truncate max-w-[180px] sm:max-w-md" style={{ color: isDark ? '#ffffff' : '#111827' }}>
+                {activeTitle}
+              </span>
+            </nav>
+
+            {/* Quick Language Switcher Bar */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setLang('vi')}
+                className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                  lang === 'vi'
+                    ? 'bg-[#a855f7] text-white shadow-md'
+                    : 'bg-black/5 dark:bg-white/10 text-gray-700 dark:text-gray-300 hover:bg-black/10'
+                }`}
+              >
+                🇻🇳 VI
+              </button>
+              <button
+                onClick={() => setLang('en')}
+                className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                  lang === 'en'
+                    ? 'bg-[#a855f7] text-white shadow-md'
+                    : 'bg-black/5 dark:bg-white/10 text-gray-700 dark:text-gray-300 hover:bg-black/10'
+                }`}
+              >
+                🇬🇧 EN
+              </button>
+            </div>
+          </div>
 
           {/* Category & Title Header */}
           <div className="space-y-4 mb-8">
@@ -227,14 +254,17 @@ export default function BlogPostDetailClient({ post }: BlogPostDetailClientProps
               {post.category}
             </span>
 
-            <h1 className="text-3xl sm:text-5xl font-extrabold text-[#111827] dark:text-white tracking-tight leading-tight" style={{ fontFamily: 'var(--font-title)' }}>
+            <h1
+              className="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight"
+              style={{ fontFamily: 'var(--font-title)', color: isDark ? '#ffffff' : '#111827' }}
+            >
               {activeTitle}
             </h1>
 
-            <div className="flex items-center gap-4 text-xs sm:text-sm text-gray-600 dark:text-gray-300 pt-2 border-b border-gray-200 dark:border-white/10 pb-6">
-              <span>{t('blog.publishedOn', lang)}: <strong className="text-[#111827] dark:text-white">{post.date}</strong></span>
+            <div className="flex items-center gap-4 text-xs sm:text-sm pt-2 border-b border-gray-200 dark:border-white/10 pb-6" style={{ color: isDark ? '#cbd5e1' : '#4b5563' }}>
+              <span>{t('blog.publishedOn', lang)}: <strong style={{ color: isDark ? '#ffffff' : '#111827' }}>{post.date}</strong></span>
               <span>·</span>
-              <span>{t('blog.author', lang)}: <strong className="text-[#111827] dark:text-white">{post.author || 'CREU Studio'}</strong></span>
+              <span>{t('blog.author', lang)}: <strong style={{ color: isDark ? '#ffffff' : '#111827' }}>{post.author || 'CREU Studio'}</strong></span>
             </div>
           </div>
 
@@ -249,16 +279,31 @@ export default function BlogPostDetailClient({ post }: BlogPostDetailClientProps
             </div>
           )}
 
-          {/* Article Body Content Wrapped in Frosted Glass Box */}
-          <div className="bg-white/90 dark:bg-[#0e1424]/90 backdrop-blur-md rounded-3xl p-6 sm:p-10 border border-gray-200 dark:border-white/10 shadow-xl space-y-6">
-            {renderMarkdownContent(activeContent)}
+          {/* Article Body Content Wrapped in Translucent Glass Box */}
+          <div
+            className="shadow-xl space-y-6"
+            style={{
+              background: isDark ? 'rgba(14, 20, 36, 0.85)' : 'rgba(255, 255, 255, 0.85)',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              border: isDark ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid rgba(255, 255, 255, 0.4)',
+              borderRadius: '24px',
+              padding: '2rem',
+            }}
+          >
+            {renderMarkdownContent(activeContent, isDark)}
           </div>
 
           {/* Footer Back & Share Actions */}
           <div className="mt-16 pt-8 border-t border-gray-200 dark:border-white/10 flex items-center justify-between">
             <Link
               href="/blog"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/90 dark:bg-white/10 border border-gray-300 dark:border-white/20 text-xs font-bold uppercase tracking-wider text-[#111827] dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-white/20 transition-all shadow-md"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full border text-xs font-bold uppercase tracking-wider transition-all shadow-md"
+              style={{
+                background: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.9)',
+                borderColor: isDark ? 'rgba(255, 255, 255, 0.2)' : '#e5e7eb',
+                color: isDark ? '#ffffff' : '#111827',
+              }}
             >
               {t('blog.backToBlog', lang)}
             </Link>
