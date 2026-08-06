@@ -17,43 +17,36 @@ export default function BriefFormModal({ isOpen, onClose }: BriefFormModalProps)
 
   // Form State
   const [formData, setFormData] = useState({
-    // Section 1
     companyName: '',
     contactName: '',
     contactPhone: '',
     contactEmail: '',
     industry: '',
 
-    // Section 2
     posterPurpose: [] as string[],
     designVersions: '',
     usageLocation: [] as string[],
 
-    // Section 3
     posterDimensions: '',
     socialSizes: [] as string[],
     fileFormats: [] as string[],
 
-    // Section 4
     mainTitle: '',
     contentDetail: '',
     visualSource: [] as string[],
     visualType: [] as string[],
     brandingLogo: [] as string[],
 
-    // Section 5
     creativeTone: [] as string[],
     preferredColors: '',
     avoidColors: '',
     references: '',
     avoidPoints: '',
 
-    // Section 6
     deadline: '',
     estimatedBudget: '',
     revisionRounds: [] as string[],
 
-    // Section 7
     sourceDiscovery: [] as string[],
     specialNotes: '',
   });
@@ -87,78 +80,31 @@ export default function BriefFormModal({ isOpen, onClose }: BriefFormModalProps)
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitting(true);
 
-    const payload = {
-      _subject: 'CREU Brief Form - Khách hàng mới',
-      _next: 'https://creu.vn',
-      'THÔNG TIN KHÁCH HÀNG': {
-        'Công ty / Cá nhân': formData.companyName,
-        'Người phụ trách': formData.contactName,
-        'Số điện thoại': formData.contactPhone,
-        Email: formData.contactEmail,
-        'Ngành nghề': formData.industry,
-      },
-      'DỰ ÁN POSTER': {
-        'Mục đích': formData.posterPurpose.join(', '),
-        'Số phiên bản thiết kế': formData.designVersions,
-        'Nơi sử dụng': formData.usageLocation.join(', '),
-      },
-      'CHI TIẾT KỸ THUẬT': {
-        'Kích thước Poster': formData.posterDimensions,
-        'Social Media Sizes': formData.socialSizes.join(', '),
-        'Định dạng File': formData.fileFormats.join(', '),
-      },
-      'NỘI DUNG POSTER': {
-        'Tiêu đề chính': formData.mainTitle,
-        'Nội dung chi tiết': formData.contentDetail,
-        'Hình ảnh / Visual': formData.visualSource.join(', '),
-        'Loại hình ảnh': formData.visualType.join(', '),
-        'Logo / Branding': formData.brandingLogo.join(', '),
-      },
-      'HƯỚNG ĐI CREATIVE': {
-        'Tone / Cảm xúc': formData.creativeTone.join(', '),
-        'Màu sắc yêu thích': formData.preferredColors,
-        'Màu cần tránh': formData.avoidColors,
-        'Reference / Ví dụ': formData.references,
-        'Điểm cần tránh': formData.avoidPoints,
-      },
-      'TIMELINE & BUDGET': {
-        Deadline: formData.deadline,
-        'Budget dự kiến': formData.estimatedBudget,
-        'Số vòng chỉnh sửa': formData.revisionRounds.join(', '),
-      },
-      'THÔNG TIN THÊM': {
-        'Nguồn biết đến CREU': formData.sourceDiscovery.join(', '),
-        'Ghi chú đặc biệt': formData.specialNotes,
-      },
-    };
+    const formEl = e.currentTarget;
+    const formDataObj = new FormData(formEl);
 
     try {
-      await fetch('https://formsubmit.co/ajax/01e5c9c8caf2bcac68e91025db13bbbf', {
+      const res = await fetch('https://formsubmit.co/ajax/01e5c9c8caf2bcac68e91025db13bbbf', {
         method: 'POST',
+        body: formDataObj,
         headers: {
-          'Content-Type': 'application/json',
           Accept: 'application/json',
         },
-        body: JSON.stringify(payload),
       });
-      setSubmitted(true);
+
+      if (res.ok) {
+        setSubmitted(true);
+      } else {
+        // Fallback to native form submission
+        formEl.submit();
+      }
     } catch {
-      // Fallback
-      try {
-        await fetch('https://formsubmit.co/ajax/lelh2305@gmail.com', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
-          body: JSON.stringify(payload),
-        });
-      } catch {}
-      setSubmitted(true);
+      // Fallback to native form submission
+      formEl.submit();
     } finally {
       setSubmitting(false);
     }
@@ -238,8 +184,23 @@ export default function BriefFormModal({ isOpen, onClose }: BriefFormModalProps)
               onSubmit={handleSubmit}
               className="space-y-10"
             >
-              <input type="hidden" name="_subject" value="CREU Brief Form - Khách hàng mới" />
+              {/* FormSubmit Hidden Controls */}
               <input type="hidden" name="_next" value="https://creu.vn" />
+              <input type="hidden" name="_subject" value="CREU Brief Form - Khách hàng mới" />
+              <input type="hidden" name="_captcha" value="false" />
+
+              {/* Array Hidden Value Sync for HTML Form Submit */}
+              <input type="hidden" name="Mục đích Poster" value={formData.posterPurpose.join(', ')} />
+              <input type="hidden" name="Nơi sử dụng Poster" value={formData.usageLocation.join(', ')} />
+              <input type="hidden" name="Social Sizes" value={formData.socialSizes.join(', ')} />
+              <input type="hidden" name="Định dạng File" value={formData.fileFormats.join(', ')} />
+              <input type="hidden" name="Nguồn hình ảnh" value={formData.visualSource.join(', ')} />
+              <input type="hidden" name="Loại hình ảnh" value={formData.visualType.join(', ')} />
+              <input type="hidden" name="Branding Logo" value={formData.brandingLogo.join(', ')} />
+              <input type="hidden" name="Tone Cảm xúc" value={formData.creativeTone.join(', ')} />
+              <input type="hidden" name="Số vòng chỉnh sửa" value={formData.revisionRounds.join(', ')} />
+              <input type="hidden" name="Nguồn biết đến CREU" value={formData.sourceDiscovery.join(', ')} />
+
               {/* SECTION 1: CLIENT INFO */}
               <div className="space-y-4 p-5 rounded-2xl bg-white/60 dark:bg-white/5 border border-black/5 dark:border-white/10">
                 <h3 className="text-sm font-bold uppercase tracking-wider text-[#a855f7] flex items-center gap-2">
@@ -252,6 +213,7 @@ export default function BriefFormModal({ isOpen, onClose }: BriefFormModalProps)
                     <label className="block text-xs font-bold uppercase mb-1">Tên công ty / Cá nhân</label>
                     <input
                       type="text"
+                      name="Tên công ty cá nhân"
                       required
                       placeholder="VD: CREU Vietnam Co., Ltd"
                       value={formData.companyName}
@@ -264,6 +226,7 @@ export default function BriefFormModal({ isOpen, onClose }: BriefFormModalProps)
                     <label className="block text-xs font-bold uppercase mb-1">Người phụ trách - Tên</label>
                     <input
                       type="text"
+                      name="Người phụ trách"
                       required
                       placeholder="VD: Nguyễn Văn A"
                       value={formData.contactName}
@@ -276,6 +239,7 @@ export default function BriefFormModal({ isOpen, onClose }: BriefFormModalProps)
                     <label className="block text-xs font-bold uppercase mb-1">Số điện thoại</label>
                     <input
                       type="tel"
+                      name="Số điện thoại"
                       required
                       placeholder="VD: 0901234567"
                       value={formData.contactPhone}
@@ -288,6 +252,7 @@ export default function BriefFormModal({ isOpen, onClose }: BriefFormModalProps)
                     <label className="block text-xs font-bold uppercase mb-1">Email</label>
                     <input
                       type="email"
+                      name="Email"
                       required
                       placeholder="VD: hello@brand.com"
                       value={formData.contactEmail}
@@ -300,6 +265,7 @@ export default function BriefFormModal({ isOpen, onClose }: BriefFormModalProps)
                     <label className="block text-xs font-bold uppercase mb-1">Ngành nghề / Lĩnh vực hoạt động</label>
                     <input
                       type="text"
+                      name="Ngành nghề"
                       placeholder="VD: Thời trang, F&B, Bất động sản, Công nghệ..."
                       value={formData.industry}
                       onChange={(e) => handleInputChange('industry', e.target.value)}
@@ -342,6 +308,7 @@ export default function BriefFormModal({ isOpen, onClose }: BriefFormModalProps)
                       <label className="block text-xs font-bold uppercase mb-1">Số phiên bản thiết kế mong muốn</label>
                       <input
                         type="text"
+                        name="Số phiên bản thiết kế"
                         placeholder="VD: 2 option layout khác nhau"
                         value={formData.designVersions}
                         onChange={(e) => handleInputChange('designVersions', e.target.value)}
@@ -384,6 +351,7 @@ export default function BriefFormModal({ isOpen, onClose }: BriefFormModalProps)
                     <label className="block text-xs font-bold uppercase mb-1">Kích thước Poster mong muốn</label>
                     <input
                       type="text"
+                      name="Kích thước Poster"
                       placeholder="VD: A2 (420x594mm), A3, hoặc kích thước tùy chỉnh..."
                       value={formData.posterDimensions}
                       onChange={(e) => handleInputChange('posterDimensions', e.target.value)}
@@ -445,6 +413,7 @@ export default function BriefFormModal({ isOpen, onClose }: BriefFormModalProps)
                     <label className="block text-xs font-bold uppercase mb-1">Tiêu đề chính (Headline)</label>
                     <input
                       type="text"
+                      name="Tiêu đề chính"
                       placeholder="VD: Bứt phá giới hạn sáng tạo 2026..."
                       value={formData.mainTitle}
                       onChange={(e) => handleInputChange('mainTitle', e.target.value)}
@@ -456,6 +425,7 @@ export default function BriefFormModal({ isOpen, onClose }: BriefFormModalProps)
                     <label className="block text-xs font-bold uppercase mb-1">Nội dung chi tiết / Phụ đề / Contact info trên Poster</label>
                     <textarea
                       rows={3}
+                      name="Nội dung chi tiết"
                       placeholder="Nhập toàn bộ chữ, địa điểm, thời gian, CTA muốn đưa lên poster..."
                       value={formData.contentDetail}
                       onChange={(e) => handleInputChange('contentDetail', e.target.value)}
@@ -568,6 +538,7 @@ export default function BriefFormModal({ isOpen, onClose }: BriefFormModalProps)
                       <label className="block text-xs font-bold uppercase mb-1">Màu sắc chủ đạo yêu thích</label>
                       <input
                         type="text"
+                        name="Màu sắc yêu thích"
                         placeholder="VD: Tím pastel, đen nhám, vàng ánh kim..."
                         value={formData.preferredColors}
                         onChange={(e) => handleInputChange('preferredColors', e.target.value)}
@@ -579,6 +550,7 @@ export default function BriefFormModal({ isOpen, onClose }: BriefFormModalProps)
                       <label className="block text-xs font-bold uppercase mb-1">Màu sắc cần tránh</label>
                       <input
                         type="text"
+                        name="Màu sắc cần tránh"
                         placeholder="VD: Tránh màu đỏ chói, tránh xanh lá..."
                         value={formData.avoidColors}
                         onChange={(e) => handleInputChange('avoidColors', e.target.value)}
@@ -590,6 +562,7 @@ export default function BriefFormModal({ isOpen, onClose }: BriefFormModalProps)
                       <label className="block text-xs font-bold uppercase mb-1">Reference / Hình ảnh mẫu yêu thích (Link Pinterest, Behance...)</label>
                       <textarea
                         rows={2}
+                        name="Reference Mẫu yêu thích"
                         placeholder="Dán link các mẫu poster bạn thích..."
                         value={formData.references}
                         onChange={(e) => handleInputChange('references', e.target.value)}
@@ -601,6 +574,7 @@ export default function BriefFormModal({ isOpen, onClose }: BriefFormModalProps)
                       <label className="block text-xs font-bold uppercase mb-1">Những điểm cần TRÁNH trong thiết kế</label>
                       <textarea
                         rows={2}
+                        name="Những điểm cần tránh"
                         placeholder="VD: Tránh rối mắt, không dùng quá 3 font chữ..."
                         value={formData.avoidPoints}
                         onChange={(e) => handleInputChange('avoidPoints', e.target.value)}
@@ -623,6 +597,7 @@ export default function BriefFormModal({ isOpen, onClose }: BriefFormModalProps)
                     <label className="block text-xs font-bold uppercase mb-1">Deadline cần hoàn thành</label>
                     <input
                       type="date"
+                      name="Deadline"
                       value={formData.deadline}
                       onChange={(e) => handleInputChange('deadline', e.target.value)}
                       className="w-full px-3.5 py-2.5 bg-white dark:bg-[#080c16] border border-gray-300 dark:border-white/15 rounded-xl text-xs font-medium outline-none focus:border-[#a855f7]"
@@ -633,6 +608,7 @@ export default function BriefFormModal({ isOpen, onClose }: BriefFormModalProps)
                     <label className="block text-xs font-bold uppercase mb-1">Budget dự kiến (VND / USD)</label>
                     <input
                       type="text"
+                      name="Budget dự kiến"
                       placeholder="VD: 5.000.000 VND hoặc 300$"
                       value={formData.estimatedBudget}
                       onChange={(e) => handleInputChange('estimatedBudget', e.target.value)}
@@ -694,6 +670,7 @@ export default function BriefFormModal({ isOpen, onClose }: BriefFormModalProps)
                     <label className="block text-xs font-bold uppercase mb-1">Ghi chú đặc biệt thêm cho dự án</label>
                     <textarea
                       rows={3}
+                      name="Ghi chú đặc biệt"
                       placeholder="Bất kỳ yêu cầu nào khác bạn muốn lưu ý với đội ngũ CREU Studio..."
                       value={formData.specialNotes}
                       onChange={(e) => handleInputChange('specialNotes', e.target.value)}
