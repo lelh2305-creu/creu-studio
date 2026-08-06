@@ -355,7 +355,7 @@ export default function AdminPage() {
     const newItem: WorkItem = {
       id: Date.now(),
       title: newWork.title,
-      categoryText: newWork.categoryText || 'Project — 2026',
+      categoryText: newWork.categoryText || 'Project · 2026',
       categories: [newWork.category],
       image: newWork.image,
       videoUrl: newWork.videoUrl,

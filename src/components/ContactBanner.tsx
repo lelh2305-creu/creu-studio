@@ -25,8 +25,8 @@ export default function ContactBanner() {
           </h2>
           <p>
             {lang === 'en'
-              ? 'Whether a new campaign or an emerging idea — let CREU bring it to life with striking visual experiences.'
-              : 'Dù là một chiến dịch mới hay một ý tưởng đang ấp ủ — hãy cùng CREU biến nó thành trải nghiệm thị giác ấn tượng.'}
+              ? 'Whether a new campaign or an emerging idea, let CREU bring it to life with striking visual experiences.'
+              : 'Dù là một chiến dịch mới hay một ý tưởng đang ấp ủ, hãy cùng CREU biến nó thành trải nghiệm thị giác ấn tượng.'}
           </p>
           <a className="primary" href="mailto:hello@creu.vn">
             <span>hello@creu.vn</span>

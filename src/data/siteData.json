@@ -1,8 +1,8 @@
 {
   "siteConfig": {
-    "title": "CREU Studio — Creative Studio & Digital Experiences",
+    "title": "CREU Studio: Creative Studio & Digital Experiences tại TP.HCM",
     "heroTitle": "Ideas become visuals.",
-    "heroDesc": "CREU biến chiến lược thương hiệu thành hình ảnh, video và trải nghiệm thị giác giàu cảm xúc — từ ý tưởng đến sản phẩm hoàn chỉnh.",
+    "heroDesc": "CREU Studio: creative studio tại Thủ Đức, TP.HCM. Chuyên Video Production, Photography, Brand Identity, Graphic Design và Marketing Content. Small Prints, Big Waves.",
     "showreelUrl": "https://www.youtube.com/watch?v=3IVmlhOHKCQ&list=RD3IVmlhOHKCQ&start_radio=1",
     "email": "hello@creu.vn",
     "location": "Thủ Đức, TP. Hồ Chí Minh",
@@ -69,7 +69,7 @@
     {
       "id": 5,
       "title": "Atelier Home Brand Identity",
-      "categoryText": "Brand Identity — 2025",
+      "categoryText": "Brand Identity · 2025",
       "categories": [
         "brand",
         "design"
@@ -83,7 +83,7 @@
     {
       "id": 6,
       "title": "Coastal Brand Co.",
-      "categoryText": "Branding — 2025",
+      "categoryText": "Branding · 2025",
       "categories": [
         "brand"
       ],

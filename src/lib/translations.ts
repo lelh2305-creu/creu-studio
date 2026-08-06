@@ -13,7 +13,7 @@ export const translations = {
   hero: {
     eyebrow: { vi: 'CREATIVE STUDIO · THỦ ĐỨC', en: 'CREATIVE STUDIO · THU DUC' },
     title: { vi: 'Ý tưởng\nthành\nhình ảnh.', en: 'Ideas\nbecome\nvisuals.' },
-    desc: { vi: 'CREU biến chiến lược thương hiệu thành hình ảnh, video và trải nghiệm thị giác giàu cảm xúc — từ ý tưởng đến sản phẩm hoàn chỉnh.', en: 'CREU transforms brand strategy into visuals, video, and emotionally rich experiences — from concept to final product.' },
+    desc: { vi: 'CREU Studio: creative studio tại Thủ Đức, TP.HCM. Chuyên Video Production, Photography, Brand Identity, Graphic Design và Marketing Content. Small Prints, Big Waves.', en: 'CREU Studio: creative studio in Thu Duc, HCMC. Specializing in Video Production, Photography, Brand Identity, Graphic Design, and Marketing Content. Small Prints, Big Waves.' },
     showreel: { vi: 'Xem showreel', en: 'Play showreel' },
     explore: { vi: 'Khám phá dự án', en: 'Explore our work' },
   },

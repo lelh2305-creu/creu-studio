@@ -80,8 +80,8 @@ export default function ContactPage({ config: propsConfig }: ContactPageProps) {
             </h1>
             <p className="ct-pgd">
               {lang === 'en'
-                ? 'Whether a small project or a large campaign — we are always ready to listen and find the right solution.'
-                : 'Dù là một dự án nhỏ hay một campaign lớn — chúng tôi luôn sẵn sàng lắng nghe và tìm ra giải pháp phù hợp nhất.'}
+                ? 'Whether a small project or a large campaign, we are always ready to listen and find the right solution.'
+                : 'Dù là một dự án nhỏ hay một campaign lớn, chúng tôi luôn sẵn sàng lắng nghe và tìm ra giải pháp phù hợp nhất.'}
             </p>
 
             <div className="ct-inf">

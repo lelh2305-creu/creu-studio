@@ -5,19 +5,38 @@ import CursorGlow from '@/components/CursorGlow';
 import { LangProvider } from '@/context/LangContext';
 
 export const metadata: Metadata = {
-  title: 'CREU Studio — Creative Studio & Digital Experiences',
-  description: 'Every brand has a story. We shape it through design, motion and digital experiences that leave a lasting impression.',
+  metadataBase: new URL('https://creu.vn'),
+  title: 'CREU Studio: Creative Studio & Digital Experiences tại TP.HCM',
+  description: 'CREU Studio: creative studio tại Thủ Đức, TP.HCM. Chuyên Video Production, Photography, Brand Identity, Graphic Design và Marketing Content. Small Prints, Big Waves.',
+  keywords: ['CREU Studio', 'creu vn', 'creu', 'creative studio tphcm', 'video production thủ đức', 'thiết kế brand identity tphcm', 'nhiếp ảnh doanh nghiệp'],
+  alternates: {
+    canonical: 'https://creu.vn',
+  },
   openGraph: {
-    title: 'CREU Studio — Creative Studio & Digital Experiences',
-    description: 'Every brand has a story. We shape it through design, motion and digital experiences that leave a lasting impression.',
+    title: 'CREU Studio: Creative Studio tại TP.HCM',
+    description: 'CREU Studio: creative studio tại Thủ Đức, TP.HCM. Video Production, Photography, Brand Identity, Graphic Design, Marketing Content.',
     url: 'https://creu.vn',
     siteName: 'CREU Studio',
     type: 'website',
+    locale: 'vi_VN',
+    images: [
+      {
+        url: 'https://creu.vn/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'CREU Studio',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'CREU Studio — Creative Studio & Digital Experiences',
-    description: 'Every brand has a story. We shape it through design, motion and digital experiences that leave a lasting impression.',
+    title: 'CREU Studio: Creative Studio tại TP.HCM',
+    description: 'Video Production, Photography, Brand Identity, Graphic Design, Marketing Content tại Thủ Đức, TP.HCM.',
+    images: ['https://creu.vn/og-image.jpg'],
+  },
+  other: {
+    'geo.region': 'VN-SG',
+    'geo.placename': 'Thủ Đức, TP. Hồ Chí Minh',
   },
 };
 
@@ -26,6 +45,43 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    name: 'CREU Studio',
+    alternateName: 'CREU',
+    description: 'Creative studio tại Thủ Đức, TP.HCM. Chuyên Video Production, Photography, Brand Identity, Graphic Design và Marketing Content.',
+    url: 'https://creu.vn',
+    logo: 'https://creu.vn/creu-logo.png',
+    image: 'https://creu.vn/og-image.jpg',
+    email: 'hello@creu.vn',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Thủ Đức',
+      addressRegion: 'TP. Hồ Chí Minh',
+      addressCountry: 'VN',
+    },
+    areaServed: 'TP. Hồ Chí Minh',
+    slogan: 'Small Prints, Big Waves',
+    foundingDate: '2024',
+    sameAs: [
+      'https://www.facebook.com/CreU.VN/',
+      'https://instagram.com',
+      'https://behance.net',
+    ],
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'Dịch vụ CREU Studio',
+      itemListElement: [
+        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Video Production' } },
+        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Photography' } },
+        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Brand Identity' } },
+        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Graphic Design' } },
+        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Marketing Content' } },
+      ],
+    },
+  };
+
   return (
     <html lang="vi">
       <head>
@@ -34,6 +90,10 @@ export default function RootLayout({
         <link
           href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:ital,wght@0,400..800;1,400..800&display=swap"
           rel="stylesheet"
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
       <body>

@@ -28,24 +28,24 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
       num: '02',
       title: 'Photography',
       desc: lang === 'en'
-        ? 'Product, architectural, portrait, and event photography — every shot tells a story crafted by light.'
-        : 'Chụp ảnh sản phẩm, không gian, chân dung và sự kiện — mỗi bức ảnh là một câu chuyện được kể qua ánh sáng.',
+        ? 'Product, architectural, portrait, and event photography: every shot tells a story crafted by light.'
+        : 'Chụp ảnh sản phẩm, không gian, chân dung và sự kiện: mỗi bức ảnh là một câu chuyện được kể qua ánh sáng.',
       tags: ['Product', 'Architecture', 'Portrait', 'Event'],
     },
     {
       num: '03',
       title: 'Graphic Design',
       desc: lang === 'en'
-        ? 'Designing posters, banners, key visuals, and all required collateral — beautiful, brand-accurate, on deadline.'
-        : 'Thiết kế poster, banner, key visual và tất cả collateral cần thiết — đẹp, đúng brand, và đúng deadline.',
+        ? 'Designing posters, banners, key visuals, and all required collateral: beautiful, brand-accurate, on deadline.'
+        : 'Thiết kế poster, banner, key visual và tất cả collateral cần thiết: đẹp, đúng brand, và đúng deadline.',
       tags: ['Poster', 'Key Visual', 'Infographic'],
     },
     {
       num: '04',
       title: 'Brand Identity',
       desc: lang === 'en'
-        ? 'Building comprehensive brand identity systems: logo, typography, color palettes — unified into a consistent voice.'
-        : 'Xây dựng hệ thống nhận diện thương hiệu toàn diện: logo, typography, màu sắc, voice — tất cả thành một ngôn ngữ nhất quán.',
+        ? 'Building comprehensive brand identity systems: logo, typography, color palettes, unified into a consistent voice.'
+        : 'Xây dựng hệ thống nhận diện thương hiệu toàn diện: logo, typography, màu sắc, voice, tất cả thành một ngôn ngữ nhất quán.',
       tags: ['Logo', 'Brand System', 'Guideline'],
     },
     {
@@ -63,8 +63,8 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
       num: '01',
       title: 'Discovery',
       desc: lang === 'en'
-        ? 'Understanding your brand, objectives, and target audience — before starting anything.'
-        : 'Tìm hiểu thương hiệu, mục tiêu và đối tượng khách hàng — trước khi bắt đầu triển khai.',
+        ? 'Understanding your brand, objectives, and target audience, before starting anything.'
+        : 'Tìm hiểu thương hiệu, mục tiêu và đối tượng khách hàng, trước khi bắt đầu triển khai.',
     },
     {
       num: '02',
@@ -77,8 +77,8 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
       num: '03',
       title: 'Production',
       desc: lang === 'en'
-        ? 'Executing with a dedicated professional team — filming, photography, and design.'
-        : 'Thực hiện với đội ngũ chuyên nghiệp — quay phim, chụp ảnh, thiết kế.',
+        ? 'Executing with a dedicated professional team: filming, photography, and design.'
+        : 'Thực hiện với đội ngũ chuyên nghiệp: quay phim, chụp ảnh, thiết kế.',
     },
     {
       num: '04',
@@ -105,8 +105,8 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
           </h1>
           <p className="pg-s">
             {lang === 'en'
-              ? 'From a single campaign to a full brand ecosystem — we bring the right craft to every touchpoint.'
-              : 'Từ một chiến dịch đơn lẻ đến một hệ sinh thái thương hiệu toàn diện — chúng tôi mang tới giải pháp tinh tế cho từng điểm chạm.'}
+              ? 'From a single campaign to a full brand ecosystem, we bring the right craft to every touchpoint.'
+              : 'Từ một chiến dịch đơn lẻ đến một hệ sinh thái thương hiệu toàn diện, chúng tôi mang tới giải pháp tinh tế cho từng điểm chạm.'}
           </p>
 
           <div className="mt-8">
