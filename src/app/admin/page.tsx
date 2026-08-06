@@ -61,12 +61,15 @@ interface BlogPostItem {
   id: number;
   slug: string;
   title: string;
+  titleEn?: string;
   date: string;
   description: string;
+  descriptionEn?: string;
   thumbnail: string;
   category: string;
   author: string;
   content: string;
+  contentEn?: string;
 }
 
 interface SiteData {
@@ -102,12 +105,15 @@ export default function AdminPage() {
   const [newBlogPost, setNewBlogPost] = useState<Omit<BlogPostItem, 'id'>>({
     slug: '',
     title: '',
+    titleEn: '',
     date: '',
     description: '',
+    descriptionEn: '',
     thumbnail: '',
     category: 'BRAND IDENTITY',
     author: 'CREU Studio',
     content: '',
+    contentEn: '',
   });
 
   useEffect(() => {
@@ -146,12 +152,15 @@ export default function AdminPage() {
                   id: Date.now() + idx,
                   slug: p.slug,
                   title: p.title,
+                  titleEn: p.titleEn || '',
                   date: p.date,
                   description: p.description,
+                  descriptionEn: p.descriptionEn || '',
                   thumbnail: p.thumbnail,
                   category: p.category,
                   author: p.author || 'CREU Studio',
                   content: p.content,
+                  contentEn: p.contentEn || '',
                 });
               }
             });
@@ -386,12 +395,15 @@ export default function AdminPage() {
       id: Date.now(),
       slug,
       title: newBlogPost.title,
+      titleEn: newBlogPost.titleEn,
       date,
       description: newBlogPost.description,
+      descriptionEn: newBlogPost.descriptionEn,
       thumbnail: newBlogPost.thumbnail || '/creu-logo.png',
       category: newBlogPost.category || 'BRAND IDENTITY',
       author: newBlogPost.author || 'CREU Studio',
       content: newBlogPost.content,
+      contentEn: newBlogPost.contentEn,
     };
 
     const currentPosts = data.blogPosts || [];
@@ -401,12 +413,15 @@ export default function AdminPage() {
     setNewBlogPost({
       slug: '',
       title: '',
+      titleEn: '',
       date: '',
       description: '',
+      descriptionEn: '',
       thumbnail: '',
       category: 'BRAND IDENTITY',
       author: 'CREU Studio',
       content: '',
+      contentEn: '',
     });
   };
 
@@ -1034,26 +1049,52 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-xs uppercase font-bold text-gray-400 mb-1">Mô tả ngắn (Description)</label>
-                <textarea
-                  rows={2}
-                  placeholder="Mô tả ngắn gọn về bài viết..."
-                  value={newBlogPost.description}
-                  onChange={(e) => setNewBlogPost({ ...newBlogPost, description: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#141c30] border border-white/15 rounded-lg text-sm text-white focus:border-[#a855f7] outline-none resize-none"
-                />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs uppercase font-bold text-gray-400 mb-1">Mô tả ngắn (VI)</label>
+                  <textarea
+                    rows={2}
+                    placeholder="Mô tả ngắn tiếng Việt..."
+                    value={newBlogPost.description}
+                    onChange={(e) => setNewBlogPost({ ...newBlogPost, description: e.target.value })}
+                    className="w-full px-3 py-2 bg-[#141c30] border border-white/15 rounded-lg text-sm text-white focus:border-[#a855f7] outline-none resize-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs uppercase font-bold text-purple-300 mb-1">🇬🇧 Short Description (EN)</label>
+                  <textarea
+                    rows={2}
+                    placeholder="English short description..."
+                    value={newBlogPost.descriptionEn || ''}
+                    onChange={(e) => setNewBlogPost({ ...newBlogPost, descriptionEn: e.target.value })}
+                    className="w-full px-3 py-2 bg-[#141c30] border border-purple-500/30 rounded-lg text-sm text-purple-200 focus:border-[#a855f7] outline-none resize-none"
+                  />
+                </div>
               </div>
 
-              <div>
-                <label className="block text-xs uppercase font-bold text-purple-300 mb-1">Nội dung bài viết chi tiết (Hỗ trợ định dạng Markdown #, ##, ###, **, &gt;)</label>
-                <textarea
-                  rows={8}
-                  placeholder="Nhập nội dung đầy đủ bài viết..."
-                  value={newBlogPost.content}
-                  onChange={(e) => setNewBlogPost({ ...newBlogPost, content: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#141c30] border border-purple-500/30 rounded-lg text-sm text-white focus:border-[#a855f7] outline-none font-mono"
-                />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs uppercase font-bold text-purple-300 mb-1">🇻🇳 Nội dung bài viết (VI - Markdown)</label>
+                  <textarea
+                    rows={8}
+                    placeholder="Nhập nội dung tiếng Việt..."
+                    value={newBlogPost.content}
+                    onChange={(e) => setNewBlogPost({ ...newBlogPost, content: e.target.value })}
+                    className="w-full px-3 py-2 bg-[#141c30] border border-purple-500/30 rounded-lg text-sm text-white focus:border-[#a855f7] outline-none font-mono"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs uppercase font-bold text-purple-300 mb-1">🇬🇧 Detailed Content (EN - Markdown)</label>
+                  <textarea
+                    rows={8}
+                    placeholder="Enter English markdown content..."
+                    value={newBlogPost.contentEn || ''}
+                    onChange={(e) => setNewBlogPost({ ...newBlogPost, contentEn: e.target.value })}
+                    className="w-full px-3 py-2 bg-[#141c30] border border-purple-500/30 rounded-lg text-sm text-purple-200 focus:border-[#a855f7] outline-none font-mono"
+                  />
+                </div>
               </div>
 
               <div className="pt-2">
@@ -1161,24 +1202,48 @@ export default function AdminPage() {
                           </div>
                         </div>
 
-                        <div className="md:col-span-3">
-                          <label className="block text-[10px] uppercase font-bold text-gray-400 mb-1">Mô tả ngắn</label>
-                          <textarea
-                            rows={2}
-                            value={post.description}
-                            onChange={(e) => handleUpdateBlogPostField(post.id, 'description', e.target.value)}
-                            className="w-full px-3 py-1.5 bg-[#141c30] border border-white/15 rounded-lg text-xs text-white focus:border-[#a855f7] outline-none resize-none"
-                          />
+                        <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-[10px] uppercase font-bold text-gray-400 mb-1">Mô tả ngắn (VI)</label>
+                            <textarea
+                              rows={2}
+                              value={post.description}
+                              onChange={(e) => handleUpdateBlogPostField(post.id, 'description', e.target.value)}
+                              className="w-full px-3 py-1.5 bg-[#141c30] border border-white/15 rounded-lg text-xs text-white focus:border-[#a855f7] outline-none resize-none"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-[10px] uppercase font-bold text-purple-300 mb-1">🇬🇧 Short Description (EN)</label>
+                            <textarea
+                              rows={2}
+                              value={post.descriptionEn || ''}
+                              onChange={(e) => handleUpdateBlogPostField(post.id, 'descriptionEn', e.target.value)}
+                              className="w-full px-3 py-1.5 bg-[#141c30] border border-purple-500/30 rounded-lg text-xs text-purple-200 focus:border-[#a855f7] outline-none resize-none"
+                            />
+                          </div>
                         </div>
 
-                        <div className="md:col-span-3">
-                          <label className="block text-[10px] uppercase font-bold text-purple-300 mb-1">Nội dung chi tiết (Markdown)</label>
-                          <textarea
-                            rows={6}
-                            value={post.content}
-                            onChange={(e) => handleUpdateBlogPostField(post.id, 'content', e.target.value)}
-                            className="w-full px-3 py-1.5 bg-[#141c30] border border-purple-500/30 rounded-lg text-xs text-white focus:border-[#a855f7] outline-none font-mono resize-none"
-                          />
+                        <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-[10px] uppercase font-bold text-purple-300 mb-1">🇻🇳 Nội dung (VI - Markdown)</label>
+                            <textarea
+                              rows={6}
+                              value={post.content}
+                              onChange={(e) => handleUpdateBlogPostField(post.id, 'content', e.target.value)}
+                              className="w-full px-3 py-1.5 bg-[#141c30] border border-purple-500/30 rounded-lg text-xs text-white focus:border-[#a855f7] outline-none font-mono resize-none"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-[10px] uppercase font-bold text-purple-300 mb-1">🇬🇧 Content (EN - Markdown)</label>
+                            <textarea
+                              rows={6}
+                              value={post.contentEn || ''}
+                              onChange={(e) => handleUpdateBlogPostField(post.id, 'contentEn', e.target.value)}
+                              className="w-full px-3 py-1.5 bg-[#141c30] border border-purple-500/30 rounded-lg text-xs text-purple-200 focus:border-[#a855f7] outline-none font-mono resize-none"
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
