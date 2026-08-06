@@ -140,8 +140,12 @@ function parseInlineFormatting(text: string): React.ReactNode {
     }
     const linkMatch = part.match(/^\[(.*?)\]\((.*?)\)$/);
     if (linkMatch) {
+      let href = linkMatch[2];
+      if (href === '/lien-he' || href === '/contact') {
+        href = '/?tab=services';
+      }
       return (
-        <Link key={i} href={linkMatch[2]} className="text-[#a855f7] dark:text-[#c499f5] font-bold underline hover:opacity-80">
+        <Link key={i} href={href} className="text-[#a855f7] dark:text-[#c499f5] font-bold underline hover:opacity-80">
           {linkMatch[1]}
         </Link>
       );
