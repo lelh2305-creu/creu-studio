@@ -136,7 +136,19 @@ export default function AdminPage() {
       .then((res) => res.json())
       .then((d) => {
         if (d && !d.error && d.siteConfig) {
-          setData(d);
+          setData((prev) => {
+            const mergedMap = new Map();
+            (prev.blogPosts || []).forEach((p) => mergedMap.set(p.slug, p));
+            if (Array.isArray(d.blogPosts)) {
+              d.blogPosts.forEach((p: any) => {
+                if (p && p.slug) mergedMap.set(p.slug, p);
+              });
+            }
+            return {
+              ...d,
+              blogPosts: Array.from(mergedMap.values()),
+            };
+          });
           localStorage.setItem('creu_site_data', JSON.stringify(d));
         }
       })
@@ -149,22 +161,24 @@ export default function AdminPage() {
           setData((prev) => {
             const existingMap = new Map((prev.blogPosts || []).map((p) => [p.slug, p]));
             posts.forEach((p: any, idx: number) => {
-              if (!existingMap.has(p.slug)) {
-                existingMap.set(p.slug, {
-                  id: Date.now() + idx,
-                  slug: p.slug,
-                  title: p.title,
-                  titleEn: p.titleEn || '',
-                  date: p.date,
-                  description: p.description,
-                  descriptionEn: p.descriptionEn || '',
-                  thumbnail: p.thumbnail,
-                  category: p.category,
-                  author: p.author || 'CREU Studio',
-                  content: p.content,
-                  contentEn: p.contentEn || '',
-                });
-              }
+              const slug = p.slug;
+              const existing = existingMap.get(slug);
+              existingMap.set(slug, {
+                id: existing?.id || p.id || (Date.now() + idx),
+                slug: p.slug,
+                title: existing?.title || p.title || 'Untitled Post',
+                titleEn: existing?.titleEn || p.titleEn || p.title_en || '',
+                date: existing?.date || p.date || '',
+                description: existing?.description || p.description || '',
+                descriptionEn: existing?.descriptionEn || p.descriptionEn || p.description_en || '',
+                thumbnail: existing?.thumbnail || p.thumbnail || '/creu-logo.png',
+                category: existing?.category || p.category || 'GENERAL',
+                author: existing?.author || p.author || 'CREU Studio',
+                content: existing?.content || p.content_vi || p.content || '',
+                content_vi: existing?.content_vi || p.content_vi || p.content || '',
+                content_en: existing?.content_en || p.content_en || p.contentEn || '',
+                contentEn: existing?.contentEn || p.content_en || p.contentEn || '',
+              });
             });
             return { ...prev, blogPosts: Array.from(existingMap.values()) };
           });
