@@ -12,7 +12,8 @@ export interface Post {
   category: string;
   author?: string;
   content: string;
-  contentEn?: string;
+  content_vi: string;
+  content_en?: string;
 }
 
 const postsDirectory = path.join(process.cwd(), 'src/content/posts');
@@ -60,19 +61,22 @@ export function getAllPosts(): Post[] {
           const { data, content } = parseFrontmatter(fileContent);
 
           const slug = data.slug || file.replace(/\.mdx?$/, '');
+          const contentVi = content.trim();
+          const contentEn = (data.content_en || data.contentEn || '').trim();
 
           postsMap.set(slug, {
             slug,
             title: data.title || 'Untitled Post',
-            titleEn: data.titleEn || data.title_en || '',
+            titleEn: data.title_en || data.titleEn || '',
             date: data.date || '',
             description: data.description || '',
-            descriptionEn: data.descriptionEn || data.description_en || '',
+            descriptionEn: data.description_en || data.descriptionEn || '',
             thumbnail: data.thumbnail || '/creu-logo.png',
             category: data.category || 'General',
             author: data.author || 'CREU Studio',
-            content: content,
-            contentEn: data.contentEn || data.content_en || '',
+            content: contentVi,
+            content_vi: contentVi,
+            content_en: contentEn,
           });
         } catch {}
       });
@@ -86,18 +90,22 @@ export function getAllPosts(): Post[] {
       if (Array.isArray(siteData.blogPosts)) {
         siteData.blogPosts.forEach((post: any) => {
           if (post && post.slug) {
+            const contentVi = (post.content_vi || post.content || '').trim();
+            const contentEn = (post.content_en || post.contentEn || '').trim();
+
             postsMap.set(post.slug, {
               slug: post.slug,
               title: post.title || 'Untitled Post',
-              titleEn: post.titleEn || post.title_en || '',
+              titleEn: post.title_en || post.titleEn || '',
               date: post.date || new Date().toISOString().split('T')[0],
               description: post.description || '',
-              descriptionEn: post.descriptionEn || post.description_en || '',
+              descriptionEn: post.description_en || post.descriptionEn || '',
               thumbnail: post.thumbnail || '/creu-logo.png',
               category: post.category || 'GENERAL',
               author: post.author || 'CREU Studio',
-              content: post.content || post.content_vi || '',
-              contentEn: post.contentEn || post.content_en || '',
+              content: contentVi,
+              content_vi: contentVi,
+              content_en: contentEn,
             });
           }
         });

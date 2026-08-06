@@ -69,6 +69,8 @@ interface BlogPostItem {
   category: string;
   author: string;
   content: string;
+  content_vi?: string;
+  content_en?: string;
   contentEn?: string;
 }
 
@@ -402,8 +404,9 @@ export default function AdminPage() {
       thumbnail: newBlogPost.thumbnail || '/creu-logo.png',
       category: newBlogPost.category || 'BRAND IDENTITY',
       author: newBlogPost.author || 'CREU Studio',
-      content: newBlogPost.content,
-      contentEn: newBlogPost.contentEn,
+      content_vi: newBlogPost.content_vi || newBlogPost.content || '',
+      content_en: newBlogPost.content_en || newBlogPost.contentEn || '',
+      content: newBlogPost.content_vi || newBlogPost.content || '',
     };
 
     const currentPosts = data.blogPosts || [];

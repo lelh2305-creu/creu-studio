@@ -186,8 +186,12 @@ export default function BlogPostDetailClient({ post }: BlogPostDetailClientProps
     }
   };
 
-  const activeTitle = (lang === 'en' && post.titleEn) ? post.titleEn : post.title;
-  const activeContent = (lang === 'en' && post.contentEn) ? post.contentEn : post.content;
+  // Language selection with clean fallback to content_vi
+  const activeContent = lang === 'en'
+    ? (post.content_en && post.content_en.trim().length > 0 ? post.content_en : (post.content_vi || post.content))
+    : (post.content_vi || post.content);
+
+  const activeTitle = (lang === 'en' && post.titleEn && post.titleEn.trim().length > 0) ? post.titleEn : post.title;
 
   return (
     <main className="relative min-h-screen text-gray-900 dark:text-white">
