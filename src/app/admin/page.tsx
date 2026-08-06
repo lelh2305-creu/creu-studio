@@ -133,6 +133,33 @@ export default function AdminPage() {
         }
       })
       .catch(() => {});
+
+    fetch('/api/blog-posts')
+      .then((res) => res.json())
+      .then((posts) => {
+        if (Array.isArray(posts) && posts.length > 0) {
+          setData((prev) => {
+            const existingMap = new Map((prev.blogPosts || []).map((p) => [p.slug, p]));
+            posts.forEach((p: any, idx: number) => {
+              if (!existingMap.has(p.slug)) {
+                existingMap.set(p.slug, {
+                  id: Date.now() + idx,
+                  slug: p.slug,
+                  title: p.title,
+                  date: p.date,
+                  description: p.description,
+                  thumbnail: p.thumbnail,
+                  category: p.category,
+                  author: p.author || 'CREU Studio',
+                  content: p.content,
+                });
+              }
+            });
+            return { ...prev, blogPosts: Array.from(existingMap.values()) };
+          });
+        }
+      })
+      .catch(() => {});
   }, []);
 
   const handleLogin = (e: React.FormEvent) => {

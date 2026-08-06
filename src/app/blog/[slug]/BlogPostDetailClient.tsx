@@ -13,7 +13,7 @@ interface BlogPostDetailClientProps {
   post: Post;
 }
 
-// Simple & clean Markdown renderer for blog posts
+// Rich & high-contrast Markdown renderer
 function renderMarkdownContent(content: string) {
   const lines = content.split('\n');
   const elements: React.ReactNode[] = [];
@@ -23,7 +23,7 @@ function renderMarkdownContent(content: string) {
   const flushList = (keyPrefix: number) => {
     if (inList && listItems.length > 0) {
       elements.push(
-        <ul key={`ul-${keyPrefix}`} className="list-disc list-inside space-y-2 my-4 text-gray-700 dark:text-gray-300">
+        <ul key={`ul-${keyPrefix}`} className="list-disc list-inside space-y-2 my-5 text-gray-900 dark:text-gray-200">
           {listItems}
         </ul>
       );
@@ -71,12 +71,21 @@ function renderMarkdownContent(content: string) {
       return;
     }
 
+    // Horizontal Rule
+    if (trimmed === '---') {
+      flushList(idx);
+      elements.push(
+        <hr key={idx} className="my-8 border-gray-300 dark:border-white/15" />
+      );
+      return;
+    }
+
     // Blockquote
     if (trimmed.startsWith('> ')) {
       flushList(idx);
       const quoteText = trimmed.replace('> ', '').replace(/^"|"$/g, '');
       elements.push(
-        <blockquote key={idx} className="my-6 p-5 rounded-2xl bg-[#a855f7]/10 border-l-4 border-[#a855f7] italic text-gray-800 dark:text-gray-200 text-base sm:text-lg font-medium leading-relaxed">
+        <blockquote key={idx} className="my-6 p-5 rounded-2xl bg-[#a855f7]/10 dark:bg-[#a855f7]/20 border-l-4 border-[#a855f7] italic text-gray-900 dark:text-gray-100 text-base sm:text-lg font-medium leading-relaxed shadow-sm">
           "{quoteText}"
         </blockquote>
       );
@@ -88,9 +97,21 @@ function renderMarkdownContent(content: string) {
       inList = true;
       const itemText = trimmed.substring(2);
       listItems.push(
-        <li key={idx} className="text-base sm:text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+        <li key={idx} className="text-base sm:text-lg text-gray-900 dark:text-gray-200 leading-relaxed">
           {parseInlineFormatting(itemText)}
         </li>
+      );
+      return;
+    }
+
+    // Numbered List
+    if (/^\d+\.\s+/.test(trimmed)) {
+      flushList(idx);
+      const itemText = trimmed.replace(/^\d+\.\s+/, '');
+      elements.push(
+        <p key={idx} className="text-base sm:text-lg text-gray-900 dark:text-gray-200 leading-relaxed my-3 font-medium">
+          {parseInlineFormatting(trimmed)}
+        </p>
       );
       return;
     }
@@ -98,7 +119,7 @@ function renderMarkdownContent(content: string) {
     // Paragraph
     flushList(idx);
     elements.push(
-      <p key={idx} className="text-base sm:text-lg text-gray-700 dark:text-gray-300 leading-relaxed my-4">
+      <p key={idx} className="text-base sm:text-lg text-gray-900 dark:text-gray-200 leading-relaxed my-4">
         {parseInlineFormatting(trimmed)}
       </p>
     );
@@ -110,11 +131,15 @@ function renderMarkdownContent(content: string) {
 }
 
 function parseInlineFormatting(text: string): React.ReactNode {
-  // Simple bold formatting **text**
+  // Bold **text**
   const parts = text.split(/(\*\*.*?\*\*)/g);
   return parts.map((part, i) => {
     if (part.startsWith('**') && part.endsWith('**')) {
       return <strong key={i} className="font-bold text-gray-900 dark:text-white">{part.slice(2, -2)}</strong>;
+    }
+    // Italic *text*
+    if (part.startsWith('*') && part.endsWith('*')) {
+      return <em key={i} className="italic text-gray-900 dark:text-white">{part.slice(1, -1)}</em>;
     }
     return part;
   });
@@ -163,10 +188,10 @@ export default function BlogPostDetailClient({ post }: BlogPostDetailClientProps
         onToggleTheme={handleToggleTheme}
       />
 
-      <article className="pt-28 pb-20">
+      <article className="pt-28 pb-20 text-gray-900 dark:text-white">
         <div className="shell max-w-4xl mx-auto px-4">
           {/* Breadcrumbs */}
-          <nav className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-500 dark:text-gray-400 mb-8">
+          <nav className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300 mb-8">
             <Link href="/" className="hover:text-[#a855f7] transition-colors">
               {lang === 'en' ? 'Home' : 'Trang chủ'}
             </Link>
@@ -175,7 +200,7 @@ export default function BlogPostDetailClient({ post }: BlogPostDetailClientProps
               Blog
             </Link>
             <span>/</span>
-            <span className="text-gray-900 dark:text-gray-200 truncate max-w-[200px] sm:max-w-md">
+            <span className="text-gray-900 dark:text-gray-100 font-bold truncate max-w-[200px] sm:max-w-md">
               {post.title}
             </span>
           </nav>
@@ -190,16 +215,16 @@ export default function BlogPostDetailClient({ post }: BlogPostDetailClientProps
               {post.title}
             </h1>
 
-            <div className="flex items-center gap-4 text-xs sm:text-sm text-gray-500 dark:text-gray-400 pt-2 border-b border-gray-200 dark:border-white/10 pb-6">
-              <span>{lang === 'en' ? 'Published on' : 'Đăng ngày'}: <strong>{post.date}</strong></span>
+            <div className="flex items-center gap-4 text-xs sm:text-sm text-gray-700 dark:text-gray-300 pt-2 border-b border-gray-200 dark:border-white/10 pb-6">
+              <span>{lang === 'en' ? 'Published on' : 'Đăng ngày'}: <strong className="text-gray-900 dark:text-white">{post.date}</strong></span>
               <span>·</span>
-              <span>{lang === 'en' ? 'Author' : 'Tác giả'}: <strong>{post.author || 'CREU Studio'}</strong></span>
+              <span>{lang === 'en' ? 'Author' : 'Tác giả'}: <strong className="text-gray-900 dark:text-white">{post.author || 'CREU Studio'}</strong></span>
             </div>
           </div>
 
           {/* Featured Thumbnail */}
           {post.thumbnail && (
-            <div className="relative w-full aspect-[16/9] rounded-3xl overflow-hidden shadow-2xl mb-12 border border-white/10 bg-black/20">
+            <div className="relative w-full aspect-[16/9] rounded-3xl overflow-hidden shadow-2xl mb-12 border border-black/10 dark:border-white/10 bg-black/10">
               <img
                 src={post.thumbnail}
                 alt={post.title}
@@ -217,7 +242,7 @@ export default function BlogPostDetailClient({ post }: BlogPostDetailClientProps
           <div className="mt-16 pt-8 border-t border-gray-200 dark:border-white/10 flex items-center justify-between">
             <Link
               href="/blog"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/60 dark:bg-white/10 border border-gray-300 dark:border-white/20 text-xs font-bold uppercase tracking-wider text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-white/20 transition-all shadow-md"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/80 dark:bg-white/10 border border-gray-300 dark:border-white/20 text-xs font-bold uppercase tracking-wider text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-white/20 transition-all shadow-md"
             >
               {lang === 'en' ? '← Back to Blog' : '← Quay lại Blog'}
             </Link>

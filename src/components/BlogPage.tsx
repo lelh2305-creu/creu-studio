@@ -16,7 +16,7 @@ export default function BlogPage({ posts }: BlogPageProps) {
   const { lang } = useLang();
 
   return (
-    <div className="min-h-screen pt-12">
+    <div className="min-h-screen pt-12 text-gray-900 dark:text-white">
       {/* Header Section */}
       <div className="pg-h">
         <span className="ey" style={{ position: 'relative', zIndex: 1 }}>
@@ -29,7 +29,7 @@ export default function BlogPage({ posts }: BlogPageProps) {
             <>Góc nhìn<br /><span className="pk">Sáng tạo Xu hướng.</span></>
           )}
         </h1>
-        <p className="pg-s">
+        <p className="pg-s text-gray-800 dark:text-gray-200">
           {t('blog.subtitle', lang)}
         </p>
       </div>
@@ -40,7 +40,7 @@ export default function BlogPage({ posts }: BlogPageProps) {
           {posts.map((post, idx) => (
             <motion.div
               key={post.slug}
-              className="group bg-white/70 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between"
+              className="group bg-white/90 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -61,19 +61,19 @@ export default function BlogPage({ posts }: BlogPageProps) {
 
                 {/* Card Content */}
                 <div className="p-6 space-y-3">
-                  <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400 font-medium">
+                  <div className="flex items-center gap-3 text-xs text-gray-600 dark:text-gray-400 font-semibold">
                     <span>{post.date}</span>
                     <span>·</span>
                     <span>{post.author || 'CREU Studio'}</span>
                   </div>
 
                   <Link href={`/blog/${post.slug}`}>
-                    <h2 className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-[#a855f7] transition-colors leading-snug line-clamp-2" style={{ fontFamily: 'var(--font-title)' }}>
+                    <h2 className="text-xl font-extrabold text-gray-900 dark:text-white group-hover:text-[#a855f7] transition-colors leading-snug line-clamp-2" style={{ fontFamily: 'var(--font-title)' }}>
                       {post.title}
                     </h2>
                   </Link>
 
-                  <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed line-clamp-3">
+                  <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed line-clamp-3">
                     {post.description}
                   </p>
                 </div>
