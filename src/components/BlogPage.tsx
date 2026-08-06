@@ -24,9 +24,9 @@ export default function BlogPage({ posts }: BlogPageProps) {
         </span>
         <h1 className="serif pg-t">
           {lang === 'en' ? (
-            <>Creative<br /><span className="pk">Insights</span><br />& Stories.</>
+            <>Creative<br /><span className="pk">Insights & Trends.</span></>
           ) : (
-            <>Góc nhìn<br /><span className="pk">Sáng tạo</span><br />& Xu hướng.</>
+            <>Góc nhìn<br /><span className="pk">Sáng tạo Xu hướng.</span></>
           )}
         </h1>
         <p className="pg-s">
