@@ -57,11 +57,24 @@ interface SiteConfig {
   facebook: string;
 }
 
+interface BlogPostItem {
+  id: number;
+  slug: string;
+  title: string;
+  date: string;
+  description: string;
+  thumbnail: string;
+  category: string;
+  author: string;
+  content: string;
+}
+
 interface SiteData {
   siteConfig: SiteConfig;
   works: WorkItem[];
   pricing: PricingItem[];
   team: TeamMember[];
+  blogPosts?: BlogPostItem[];
 }
 
 export default function AdminPage() {
@@ -71,7 +84,7 @@ export default function AdminPage() {
   const [loginError, setLoginError] = useState('');
 
   const [data, setData] = useState<SiteData>(defaultSiteData as any);
-  const [activeTab, setActiveTab] = useState<'works' | 'team' | 'pricing' | 'config'>('works');
+  const [activeTab, setActiveTab] = useState<'works' | 'team' | 'pricing' | 'config' | 'blog'>('works');
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
 
@@ -83,6 +96,18 @@ export default function AdminPage() {
     description: '',
     image: '',
     videoUrl: '',
+  });
+
+  // New Blog Post Form state
+  const [newBlogPost, setNewBlogPost] = useState<Omit<BlogPostItem, 'id'>>({
+    slug: '',
+    title: '',
+    date: '',
+    description: '',
+    thumbnail: '',
+    category: 'BRAND IDENTITY',
+    author: 'CREU Studio',
+    content: '',
   });
 
   useEffect(() => {
@@ -324,6 +349,58 @@ export default function AdminPage() {
     setData(updated);
   };
 
+  // Blog Post Actions
+  const handleAddBlogPost = () => {
+    if (!newBlogPost.title) return alert('Vui lòng nhập tiêu đề bài viết');
+    const slug = newBlogPost.slug.trim() || newBlogPost.title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+    const date = newBlogPost.date || new Date().toISOString().split('T')[0];
+
+    const newItem: BlogPostItem = {
+      id: Date.now(),
+      slug,
+      title: newBlogPost.title,
+      date,
+      description: newBlogPost.description,
+      thumbnail: newBlogPost.thumbnail || '/creu-logo.png',
+      category: newBlogPost.category || 'BRAND IDENTITY',
+      author: newBlogPost.author || 'CREU Studio',
+      content: newBlogPost.content,
+    };
+
+    const currentPosts = data.blogPosts || [];
+    const updated = { ...data, blogPosts: [newItem, ...currentPosts] };
+    setData(updated);
+    handleSave(updated);
+    setNewBlogPost({
+      slug: '',
+      title: '',
+      date: '',
+      description: '',
+      thumbnail: '',
+      category: 'BRAND IDENTITY',
+      author: 'CREU Studio',
+      content: '',
+    });
+  };
+
+  const handleUpdateBlogPostField = (id: number, field: keyof BlogPostItem, value: any) => {
+    const currentPosts = data.blogPosts || [];
+    const updatedPosts = currentPosts.map((post) => (post.id === id ? { ...post, [field]: value } : post));
+    const updated = { ...data, blogPosts: updatedPosts };
+    setData(updated);
+    if (field === 'thumbnail') {
+      handleSave(updated);
+    }
+  };
+
+  const handleDeleteBlogPost = (id: number) => {
+    if (!confirm('Bạn có chắc muốn xóa bài viết blog này?')) return;
+    const currentPosts = data.blogPosts || [];
+    const updated = { ...data, blogPosts: currentPosts.filter((p) => p.id !== id) };
+    setData(updated);
+    handleSave(updated);
+  };
+
   return (
     <div className="min-h-screen bg-[#080c16] text-white font-sans pb-20">
       {/* Top Header */}
@@ -371,6 +448,7 @@ export default function AdminPage() {
         <div className="flex gap-3 border-b border-white/10 pb-4 mb-8 overflow-x-auto">
           {[
             { id: 'works', label: '📂 Quản lý Dự án & Video' },
+            { id: 'blog', label: '📝 Quản lý Bài viết Blog' },
             { id: 'team', label: '👥 Thành viên Team' },
             { id: 'pricing', label: '💳 Gói giá Partnership' },
             { id: 'config', label: '⚙️ Showreel Video & Link Mạng Xã Hội' },
@@ -834,6 +912,252 @@ export default function AdminPage() {
                   className="w-full px-3 py-2 bg-[#141c30] border border-white/15 rounded-lg text-sm text-white focus:border-[#a855f7] outline-none resize-none"
                 />
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 5: BLOG POSTS */}
+        {activeTab === 'blog' && (
+          <div className="space-y-8">
+            {/* Create New Blog Post Box */}
+            <div className="p-6 bg-[#0e1424] border border-[#a855f7]/30 rounded-2xl shadow-xl space-y-4">
+              <h2 className="text-sm font-bold uppercase tracking-wider text-purple-300 flex items-center gap-2">
+                <span>➕ Thêm Bài Viết Blog Mới</span>
+              </h2>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="md:col-span-2">
+                  <label className="block text-xs uppercase font-bold text-gray-400 mb-1">Tiêu đề bài viết (*)</label>
+                  <input
+                    type="text"
+                    placeholder="VD: Bí Quyết Thiết Kế Nhận Diện Thương Hiệu 2026..."
+                    value={newBlogPost.title}
+                    onChange={(e) => setNewBlogPost({ ...newBlogPost, title: e.target.value })}
+                    className="w-full px-3 py-2 bg-[#141c30] border border-white/15 rounded-lg text-sm text-white focus:border-[#a855f7] outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs uppercase font-bold text-gray-400 mb-1">Phân loại (Category)</label>
+                  <input
+                    type="text"
+                    placeholder="VD: BRAND IDENTITY, VIDEO PRODUCTION..."
+                    value={newBlogPost.category}
+                    onChange={(e) => setNewBlogPost({ ...newBlogPost, category: e.target.value })}
+                    className="w-full px-3 py-2 bg-[#141c30] border border-white/15 rounded-lg text-sm text-white focus:border-[#a855f7] outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs uppercase font-bold text-gray-400 mb-1">Slug URL (Tùy chỉnh hoặc tự động)</label>
+                  <input
+                    type="text"
+                    placeholder="VD: thiet-ke-brand-identity-2026"
+                    value={newBlogPost.slug}
+                    onChange={(e) => setNewBlogPost({ ...newBlogPost, slug: e.target.value })}
+                    className="w-full px-3 py-2 bg-[#141c30] border border-white/15 rounded-lg text-sm text-white focus:border-[#a855f7] outline-none font-mono text-xs"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs uppercase font-bold text-gray-400 mb-1">Ngày đăng</label>
+                  <input
+                    type="date"
+                    value={newBlogPost.date}
+                    onChange={(e) => setNewBlogPost({ ...newBlogPost, date: e.target.value })}
+                    className="w-full px-3 py-2 bg-[#141c30] border border-white/15 rounded-lg text-sm text-white focus:border-[#a855f7] outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs uppercase font-bold text-gray-400 mb-1">Tác giả</label>
+                  <input
+                    type="text"
+                    placeholder="VD: CREU Studio"
+                    value={newBlogPost.author}
+                    onChange={(e) => setNewBlogPost({ ...newBlogPost, author: e.target.value })}
+                    className="w-full px-3 py-2 bg-[#141c30] border border-white/15 rounded-lg text-sm text-white focus:border-[#a855f7] outline-none"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs uppercase font-bold text-gray-400 mb-1">Hình ảnh đại diện (Thumbnail URL / File Upload)</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="VD: https://images.unsplash.com/... hoặc chọn upload bên cạnh"
+                    value={newBlogPost.thumbnail}
+                    onChange={(e) => setNewBlogPost({ ...newBlogPost, thumbnail: e.target.value })}
+                    className="w-full px-3 py-2 bg-[#141c30] border border-white/15 rounded-lg text-sm text-white focus:border-[#a855f7] outline-none"
+                  />
+                  <label className="px-4 py-2 bg-white/10 border border-white/20 rounded-lg hover:bg-white/20 text-xs font-semibold cursor-pointer whitespace-nowrap flex items-center">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        if (e.target.files?.[0]) {
+                          handleImageUpload(e.target.files[0], (url) => setNewBlogPost((prev) => ({ ...prev, thumbnail: url })));
+                        }
+                      }}
+                      className="hidden"
+                    />
+                    Upload Ảnh 📷
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs uppercase font-bold text-gray-400 mb-1">Mô tả ngắn (Description)</label>
+                <textarea
+                  rows={2}
+                  placeholder="Mô tả ngắn gọn về bài viết..."
+                  value={newBlogPost.description}
+                  onChange={(e) => setNewBlogPost({ ...newBlogPost, description: e.target.value })}
+                  className="w-full px-3 py-2 bg-[#141c30] border border-white/15 rounded-lg text-sm text-white focus:border-[#a855f7] outline-none resize-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs uppercase font-bold text-purple-300 mb-1">Nội dung bài viết chi tiết (Hỗ trợ định dạng Markdown #, ##, ###, **, &gt;)</label>
+                <textarea
+                  rows={8}
+                  placeholder="Nhập nội dung đầy đủ bài viết..."
+                  value={newBlogPost.content}
+                  onChange={(e) => setNewBlogPost({ ...newBlogPost, content: e.target.value })}
+                  className="w-full px-3 py-2 bg-[#141c30] border border-purple-500/30 rounded-lg text-sm text-white focus:border-[#a855f7] outline-none font-mono"
+                />
+              </div>
+
+              <div className="pt-2">
+                <button
+                  onClick={handleAddBlogPost}
+                  className="px-6 py-2.5 bg-[#a855f7] hover:bg-[#9333ea] text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-lg"
+                >
+                  Thêm Bài Viết Mới 🚀
+                </button>
+              </div>
+            </div>
+
+            {/* List of Existing Blog Posts */}
+            <div className="space-y-4">
+              <h2 className="text-sm font-bold uppercase tracking-wider text-gray-300">
+                📝 Danh Sách Bài Viết Blog ({data.blogPosts?.length || 0})
+              </h2>
+
+              {(!data.blogPosts || data.blogPosts.length === 0) ? (
+                <div className="p-8 text-center bg-[#0e1424] border border-white/10 rounded-2xl text-gray-400 text-xs">
+                  Chưa có bài viết blog nào được tạo từ Admin Panel.
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {data.blogPosts.map((post) => (
+                    <div key={post.id} className="p-5 bg-[#0e1424] border border-white/10 rounded-2xl space-y-4">
+                      <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                        <div className="flex items-center gap-3">
+                          <span className="px-2.5 py-0.5 rounded-full bg-[#a855f7]/20 border border-[#a855f7]/40 text-[#c499f5] text-[10px] font-bold uppercase">
+                            {post.category}
+                          </span>
+                          <span className="text-xs text-gray-400">Slug: /{post.slug}</span>
+                        </div>
+                        <button
+                          onClick={() => handleDeleteBlogPost(post.id)}
+                          className="px-3 py-1 bg-rose-500/20 text-rose-300 border border-rose-500/30 hover:bg-rose-500/30 text-xs font-bold rounded-lg transition-all cursor-pointer"
+                        >
+                          Xóa Bài 🗑️
+                        </button>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div className="md:col-span-2">
+                          <label className="block text-[10px] uppercase font-bold text-gray-400 mb-1">Tiêu đề</label>
+                          <input
+                            type="text"
+                            value={post.title}
+                            onChange={(e) => handleUpdateBlogPostField(post.id, 'title', e.target.value)}
+                            className="w-full px-3 py-1.5 bg-[#141c30] border border-white/15 rounded-lg text-xs text-white focus:border-[#a855f7] outline-none"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-[10px] uppercase font-bold text-gray-400 mb-1">Phân loại</label>
+                          <input
+                            type="text"
+                            value={post.category}
+                            onChange={(e) => handleUpdateBlogPostField(post.id, 'category', e.target.value)}
+                            className="w-full px-3 py-1.5 bg-[#141c30] border border-white/15 rounded-lg text-xs text-white focus:border-[#a855f7] outline-none"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-[10px] uppercase font-bold text-gray-400 mb-1">Ngày đăng</label>
+                          <input
+                            type="date"
+                            value={post.date}
+                            onChange={(e) => handleUpdateBlogPostField(post.id, 'date', e.target.value)}
+                            className="w-full px-3 py-1.5 bg-[#141c30] border border-white/15 rounded-lg text-xs text-white focus:border-[#a855f7] outline-none"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-[10px] uppercase font-bold text-gray-400 mb-1">Tác giả</label>
+                          <input
+                            type="text"
+                            value={post.author}
+                            onChange={(e) => handleUpdateBlogPostField(post.id, 'author', e.target.value)}
+                            className="w-full px-3 py-1.5 bg-[#141c30] border border-white/15 rounded-lg text-xs text-white focus:border-[#a855f7] outline-none"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-[10px] uppercase font-bold text-gray-400 mb-1">Ảnh đại diện (Thumbnail)</label>
+                          <div className="flex gap-2">
+                            <input
+                              type="text"
+                              value={post.thumbnail}
+                              onChange={(e) => handleUpdateBlogPostField(post.id, 'thumbnail', e.target.value)}
+                              className="w-full px-3 py-1.5 bg-[#141c30] border border-white/15 rounded-lg text-xs text-white focus:border-[#a855f7] outline-none"
+                            />
+                            <label className="px-2.5 py-1 bg-white/10 border border-white/20 rounded-lg hover:bg-white/20 text-[11px] font-semibold cursor-pointer whitespace-nowrap flex items-center">
+                              <input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => {
+                                  if (e.target.files?.[0]) {
+                                    handleImageUpload(e.target.files[0], (url) => handleUpdateBlogPostField(post.id, 'thumbnail', url));
+                                  }
+                                }}
+                                className="hidden"
+                              />
+                              📷 Sửa
+                            </label>
+                          </div>
+                        </div>
+
+                        <div className="md:col-span-3">
+                          <label className="block text-[10px] uppercase font-bold text-gray-400 mb-1">Mô tả ngắn</label>
+                          <textarea
+                            rows={2}
+                            value={post.description}
+                            onChange={(e) => handleUpdateBlogPostField(post.id, 'description', e.target.value)}
+                            className="w-full px-3 py-1.5 bg-[#141c30] border border-white/15 rounded-lg text-xs text-white focus:border-[#a855f7] outline-none resize-none"
+                          />
+                        </div>
+
+                        <div className="md:col-span-3">
+                          <label className="block text-[10px] uppercase font-bold text-purple-300 mb-1">Nội dung chi tiết (Markdown)</label>
+                          <textarea
+                            rows={6}
+                            value={post.content}
+                            onChange={(e) => handleUpdateBlogPostField(post.id, 'content', e.target.value)}
+                            className="w-full px-3 py-1.5 bg-[#141c30] border border-purple-500/30 rounded-lg text-xs text-white focus:border-[#a855f7] outline-none font-mono resize-none"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         )}
