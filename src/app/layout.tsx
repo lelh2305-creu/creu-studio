@@ -83,7 +83,7 @@ export default function RootLayout({
     },
   };
 
-  const fbPageId = process.env.NEXT_PUBLIC_FB_PAGE_ID || 'CreU.VN';
+  const fbPageId = process.env.NEXT_PUBLIC_FB_PAGE_ID || '101197947900494';
 
   return (
     <html lang="vi">
