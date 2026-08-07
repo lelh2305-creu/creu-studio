@@ -65,9 +65,9 @@ export default function RootLayout({
     slogan: 'Small Prints, Big Waves',
     foundingDate: '2024',
     sameAs: [
-      'https://www.facebook.com/CreU.VN/',
-      'https://instagram.com',
-      'https://behance.net',
+      'https://www.facebook.com/CreU.VN',
+      'https://www.instagram.com/creu.studio',
+      'https://www.behance.net/creustudio',
     ],
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
