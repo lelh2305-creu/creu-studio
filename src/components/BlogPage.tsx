@@ -24,6 +24,14 @@ export default function BlogPage({ posts }: BlogPageProps) {
     }
   }, []);
 
+  const POSTS_PER_PAGE = 10;
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
+  const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
+  const endIndex = startIndex + POSTS_PER_PAGE;
+  const currentPosts = posts.slice(startIndex, endIndex);
+
   return (
     <div className="min-h-screen pt-12 text-gray-900 dark:text-white">
       {/* Header Section */}
@@ -46,7 +54,7 @@ export default function BlogPage({ posts }: BlogPageProps) {
       {/* Blog Cards Grid */}
       <div className="shell mt-12 mb-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {posts.map((post, idx) => {
+          {currentPosts.map((post, idx) => {
             const activeTitle = (lang === 'en' && post.titleEn) ? post.titleEn : post.title;
             const activeDesc = (lang === 'en' && post.descriptionEn) ? post.descriptionEn : post.description;
 
@@ -119,6 +127,86 @@ export default function BlogPage({ posts }: BlogPageProps) {
             );
           })}
         </div>
+
+        {/* Pagination UI */}
+        {totalPages > 1 && (
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '8px',
+            marginTop: '48px',
+            paddingBottom: '48px'
+          }}>
+            {/* Nút Previous */}
+            <button
+              onClick={() => {
+                setCurrentPage(prev => prev - 1);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              disabled={currentPage === 1}
+              style={{
+                padding: '8px 16px',
+                borderRadius: '8px',
+                border: '1px solid #e5e7eb',
+                background: currentPage === 1 ? 'transparent' : 'white',
+                cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
+                opacity: currentPage === 1 ? 0.4 : 1,
+                fontSize: '14px',
+                color: '#111827'
+              }}
+            >
+              ← {lang === 'en' ? 'Prev' : 'Trước'}
+            </button>
+
+            {/* Số trang */}
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+              <button
+                key={page}
+                onClick={() => {
+                  setCurrentPage(page);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '8px',
+                  border: page === currentPage 
+                    ? '2px solid #7C3AED' 
+                    : '1px solid #e5e7eb',
+                  background: page === currentPage ? '#7C3AED' : 'white',
+                  color: page === currentPage ? 'white' : '#111827',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: page === currentPage ? '600' : '400'
+                }}
+              >
+                {page}
+              </button>
+            ))}
+
+            {/* Nút Next */}
+            <button
+              onClick={() => {
+                setCurrentPage(prev => prev + 1);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              disabled={currentPage === totalPages}
+              style={{
+                padding: '8px 16px',
+                borderRadius: '8px',
+                border: '1px solid #e5e7eb',
+                background: currentPage === totalPages ? 'transparent' : 'white',
+                cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
+                opacity: currentPage === totalPages ? 0.4 : 1,
+                fontSize: '14px',
+                color: '#111827'
+              }}
+            >
+              {lang === 'en' ? 'Next' : 'Tiếp'} →
+            </button>
+          </div>
+        )}
       </div>
 
       <Footer />
