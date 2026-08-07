@@ -3,6 +3,7 @@ import Script from 'next/script';
 import './globals.css';
 import LenisScroll from '@/components/LenisScroll';
 import CursorGlow from '@/components/CursorGlow';
+import MessengerWidget from '@/components/MessengerWidget';
 import { LangProvider } from '@/context/LangContext';
 
 export const metadata: Metadata = {
@@ -105,9 +106,10 @@ export default function RootLayout({
           <CursorGlow />
           <LenisScroll />
           {children}
+          <MessengerWidget />
         </LangProvider>
 
-        {/* Facebook Messenger Chat Bubble */}
+        {/* Facebook Messenger Chat SDK */}
         <div id="fb-root"></div>
         <div
           className="fb-customerchat"
