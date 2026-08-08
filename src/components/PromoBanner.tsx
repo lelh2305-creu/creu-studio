@@ -47,11 +47,21 @@ export default function PromoBanner({ config: initialConfig }: PromoBannerProps)
         background: b.bgGradient || 'linear-gradient(135deg, #7C3AED 0%, #EC4899 100%)',
       };
 
+  const handleCtaClick = () => {
+    if (typeof window !== 'undefined') {
+      const targetTab = ctaLink.includes('tab=') ? (ctaLink.split('tab=')[1] || 'contact') : 'contact';
+      if (window.location.pathname === '/' || window.location.pathname === '') {
+        window.history.pushState({}, '', `/?tab=${targetTab}`);
+        window.dispatchEvent(new Event('popstate'));
+      }
+    }
+  };
+
   // Image mode (Full Image Banner wrapped in link)
   if (hasBgImage) {
     return (
       <div className="shell my-12">
-        <Link href={ctaLink} className="block cursor-pointer overflow-hidden rounded-3xl shadow-2xl transition-transform duration-300 hover:scale-[1.01]">
+        <Link href={ctaLink} onClick={handleCtaClick} className="block cursor-pointer overflow-hidden rounded-3xl shadow-2xl transition-transform duration-300 hover:scale-[1.01]">
           <div
             style={{
               ...backgroundStyle,
@@ -164,6 +174,7 @@ export default function PromoBanner({ config: initialConfig }: PromoBannerProps)
         {ctaText && (
           <Link
             href={ctaLink}
+            onClick={handleCtaClick}
             style={{
               background: 'white',
               color: '#7C3AED',

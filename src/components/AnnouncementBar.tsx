@@ -40,11 +40,21 @@ export default function AnnouncementBar() {
   const ctaLink = config.ctaLink || '/?tab=contact';
   const hasBgImage = Boolean(config.backgroundImage && config.backgroundImage.trim());
 
+  const handleCtaClick = () => {
+    if (typeof window !== 'undefined') {
+      const targetTab = ctaLink.includes('tab=') ? (ctaLink.split('tab=')[1] || 'contact') : 'contact';
+      if (window.location.pathname === '/' || window.location.pathname === '') {
+        window.history.pushState({}, '', `/?tab=${targetTab}`);
+        window.dispatchEvent(new Event('popstate'));
+      }
+    }
+  };
+
   // Image mode (Full banner image wrapper)
   if (hasBgImage) {
     return (
       <div className="relative w-full overflow-hidden z-[100] transition-all">
-        <Link href={ctaLink} className="block w-full cursor-pointer">
+        <Link href={ctaLink} onClick={handleCtaClick} className="block w-full cursor-pointer">
           <div
             style={{
               backgroundImage: `url(${config.backgroundImage})`,
@@ -119,6 +129,7 @@ export default function AnnouncementBar() {
       {ctaText && (
         <Link
           href={ctaLink}
+          onClick={handleCtaClick}
           style={{
             background: 'rgba(255,255,255,0.2)',
             border: '1px solid rgba(255,255,255,0.5)',

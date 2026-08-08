@@ -66,14 +66,18 @@ export default function Home() {
   useEffect(() => {
     loadSiteData();
 
-    // Check query params for tab
-    if (typeof window !== 'undefined') {
-      const urlParams = new URLSearchParams(window.location.search);
-      const tabParam = urlParams.get('tab');
-      if (tabParam && ['home', 'work', 'services', 'about', 'contact'].includes(tabParam)) {
-        setCurrentTab(tabParam);
+    const handleUrlChange = () => {
+      if (typeof window !== 'undefined') {
+        const urlParams = new URLSearchParams(window.location.search);
+        const tabParam = urlParams.get('tab');
+        if (tabParam && ['home', 'work', 'services', 'about', 'contact'].includes(tabParam)) {
+          setCurrentTab(tabParam);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
       }
-    }
+    };
+
+    handleUrlChange();
 
     const savedTheme = localStorage.getItem('creu_theme');
     if (savedTheme === 'dark') {
@@ -84,8 +88,12 @@ export default function Home() {
       loadSiteData();
     };
 
+    window.addEventListener('popstate', handleUrlChange);
     window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    return () => {
+      window.removeEventListener('popstate', handleUrlChange);
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, []);
 
   useEffect(() => {
