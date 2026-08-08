@@ -976,6 +976,30 @@ export default function AdminPage() {
                       />
                       Upload 📷
                     </label>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setPromotionConfig((prev: any) => ({
+                          ...prev,
+                          announcementBar: {
+                            ...prev.announcementBar,
+                            backgroundImage: '',
+                          },
+                        }))
+                      }
+                      style={{
+                        padding: '8px 12px',
+                        background: 'rgba(255,0,0,0.15)',
+                        border: '1px solid rgba(255,0,0,0.3)',
+                        color: '#ff6b6b',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        fontSize: '12px',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      Xóa ảnh 🗑️
+                    </button>
                   </div>
                 </div>
               </div>
@@ -1210,6 +1234,30 @@ export default function AdminPage() {
                       />
                       Upload 📷
                     </label>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setPromotionConfig((prev: any) => ({
+                          ...prev,
+                          heroBanner: {
+                            ...prev.heroBanner,
+                            backgroundImage: '',
+                          },
+                        }))
+                      }
+                      style={{
+                        padding: '8px 12px',
+                        background: 'rgba(255,0,0,0.15)',
+                        border: '1px solid rgba(255,0,0,0.3)',
+                        color: '#ff6b6b',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        fontSize: '12px',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      Xóa ảnh 🗑️
+                    </button>
                   </div>
                 </div>
               </div>

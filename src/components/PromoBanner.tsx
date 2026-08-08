@@ -35,7 +35,17 @@ export default function PromoBanner({ config: initialConfig }: PromoBannerProps)
   const tag = lang === 'en' ? b.tagEn || b.tag : b.tag;
   const ctaText = lang === 'en' ? b.ctaTextEn || b.ctaText : b.ctaText;
   const ctaLink = b.ctaLink || '/?tab=contact';
-  const hasBgImage = Boolean(b.backgroundImage && b.backgroundImage.trim());
+  const hasBgImage = Boolean(b.backgroundImage && b.backgroundImage.trim() !== '');
+
+  const backgroundStyle = hasBgImage
+    ? {
+        backgroundImage: `url(${b.backgroundImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }
+    : {
+        background: b.bgGradient || 'linear-gradient(135deg, #7C3AED 0%, #EC4899 100%)',
+      };
 
   // Image mode (Full Image Banner wrapped in link)
   if (hasBgImage) {
@@ -44,9 +54,7 @@ export default function PromoBanner({ config: initialConfig }: PromoBannerProps)
         <Link href={ctaLink} className="block cursor-pointer overflow-hidden rounded-3xl shadow-2xl transition-transform duration-300 hover:scale-[1.01]">
           <div
             style={{
-              backgroundImage: `url(${b.backgroundImage})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center left',
+              ...backgroundStyle,
               minHeight: '480px',
               width: '100%',
               borderRadius: '24px',
@@ -60,15 +68,16 @@ export default function PromoBanner({ config: initialConfig }: PromoBannerProps)
   // Styled Content / Gradient Banner Mode
   const bgStyle = b.thumbnail
     ? `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(${b.thumbnail})`
-    : b.bgGradient || 'linear-gradient(135deg, #7C3AED 0%, #EC4899 100%)';
+    : undefined;
 
   return (
     <div className="shell my-12">
       <section
         style={{
+          ...backgroundStyle,
+          ...(bgStyle ? { background: bgStyle } : {}),
           borderRadius: '28px',
           overflow: 'hidden',
-          background: bgStyle,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           padding: '60px 40px',

@@ -110,6 +110,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, message: 'Invalid payload' }, { status: 400, headers: noCacheHeaders });
     }
 
+    const payload = {
+      ...body,
+      announcementBar: {
+        ...(body.announcementBar || {}),
+        backgroundImage: body.announcementBar?.backgroundImage || '',
+      },
+      heroBanner: {
+        ...(body.heroBanner || {}),
+        backgroundImage: body.heroBanner?.backgroundImage || '',
+      },
+    };
+
     // 1. Upstash Redis
     if (UPSTASH_URL && UPSTASH_TOKEN) {
       const res = await fetch(`${UPSTASH_URL.replace(/\/$/, '')}/set/promotion_config`, {
@@ -118,7 +130,7 @@ export async function POST(request: NextRequest) {
           Authorization: `Bearer ${UPSTASH_TOKEN}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(body),
+        body: JSON.stringify(payload),
         cache: 'no-store',
       });
       if (res.ok) {
@@ -129,7 +141,7 @@ export async function POST(request: NextRequest) {
     // 2. Cloudflare KV
     const kv = getKV(request);
     if (kv) {
-      await kv.put('promotion_config', JSON.stringify(body));
+      await kv.put('promotion_config', JSON.stringify(payload));
       return NextResponse.json({ success: true, provider: 'Cloudflare KV' }, { headers: noCacheHeaders });
     }
 
