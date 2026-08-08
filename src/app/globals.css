@@ -36,6 +36,11 @@ body.dark {
   color: #f0f6fc;
 }
 
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 

@@ -18,6 +18,9 @@ import AboutPage from '@/components/AboutPage';
 import ContactPage from '@/components/ContactPage';
 import defaultSiteData from '@/data/siteData.json';
 
+import AnnouncementBar from '@/components/AnnouncementBar';
+import PromoBanner from '@/components/PromoBanner';
+
 export default function Home() {
   const [currentTab, setCurrentTab] = useState('home');
   const [isDark, setIsDark] = useState(false);
@@ -114,6 +117,9 @@ export default function Home() {
 
   return (
     <main className="relative min-h-screen">
+      {/* Top Announcement Bar */}
+      <AnnouncementBar />
+
       {/* 3D Interactive Scroll Watermark Logo */}
       <WatermarkLogo3D />
 
@@ -143,6 +149,9 @@ export default function Home() {
             <div className="shell">
               <ServicesBar />
             </div>
+
+            {/* Hero Promotion Banner */}
+            <PromoBanner />
 
             <SelectedWorks
               onNavigate={handleTabChange}

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import BlogPage from '@/components/BlogPage';
 import WatermarkLogo3D from '@/components/WatermarkLogo3D';
+import AnnouncementBar from '@/components/AnnouncementBar';
 import { Post } from '@/lib/posts';
 import { useRouter } from 'next/navigation';
 
@@ -41,6 +42,7 @@ export default function BlogPageClient({ initialPosts }: BlogPageClientProps) {
 
   return (
     <main className="relative min-h-screen">
+      <AnnouncementBar />
       <WatermarkLogo3D />
       <Navbar
         currentTab="blog"

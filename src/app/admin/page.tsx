@@ -89,9 +89,40 @@ export default function AdminPage() {
   const [loginError, setLoginError] = useState('');
 
   const [data, setData] = useState<SiteData>(defaultSiteData as any);
-  const [activeTab, setActiveTab] = useState<'works' | 'team' | 'pricing' | 'config' | 'blog'>('works');
+  const [activeTab, setActiveTab] = useState<'works' | 'team' | 'pricing' | 'config' | 'blog' | 'promotion'>('works');
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
+
+  const [promotionConfig, setPromotionConfig] = useState<any>({
+    announcementBar: {
+      enabled: true,
+      text: '🎉 MIỄN PHÍ 2 tháng thiết kế Poster & Banner — Ưu đãi đến hết tháng 9/2026',
+      textEn: '🎉 FREE 2 months of Poster & Banner design — Offer ends September 2026',
+      bgColor: '#7C3AED',
+      textColor: '#ffffff',
+      ctaText: 'Đăng ký ngay',
+      ctaTextEn: 'Register now',
+      ctaLink: '/?tab=contact',
+      backgroundImage: '',
+      height: '80px',
+    },
+    heroBanner: {
+      enabled: true,
+      tag: 'KHUYẾN MÃI ĐẶC BIỆT',
+      tagEn: 'SPECIAL OFFER',
+      title: 'Miễn Phí 2 Tháng Thiết Kế Poster & Banner',
+      titleEn: '2 Months Free Poster & Banner Design',
+      description: 'Dành cho doanh nghiệp, startup, và đơn vị nhỏ tại TP.HCM. Không giới hạn số lượng. Ưu đãi kết thúc 30/09/2026.',
+      descriptionEn: 'For businesses, startups, and small organizations in HCMC. No quantity limit. Offer ends 30/09/2026.',
+      ctaText: 'Nhận ưu đãi ngay',
+      ctaTextEn: 'Claim offer now',
+      ctaLink: '/?tab=contact',
+      deadline: '30/09/2026',
+      bgGradient: 'linear-gradient(135deg, #7C3AED 0%, #EC4899 100%)',
+      thumbnail: '',
+      backgroundImage: '',
+    },
+  });
 
   // New Work Form state
   const [newWork, setNewWork] = useState<{ title: string; categoryText: string; category: string; description: string; image: string; videoUrl: string }>({
@@ -131,6 +162,15 @@ export default function AdminPage() {
         if (parsed?.siteConfig) setData(parsed);
       } catch {}
     }
+
+    fetch('/api/promotion-config')
+      .then((res) => res.json())
+      .then((pData) => {
+        if (pData && pData.announcementBar && pData.heroBanner) {
+          setPromotionConfig(pData);
+        }
+      })
+      .catch(() => {});
 
     fetch('/api/data')
       .then((res) => res.json())
@@ -243,6 +283,28 @@ export default function AdminPage() {
       }
     } catch (err) {
       setMessage('❌ Không thể kết nối máy chủ để lưu thay đổi.');
+    } finally {
+      setSaving(false);
+      setTimeout(() => setMessage(''), 4000);
+    }
+  };
+
+  const handleSavePromotion = async () => {
+    setSaving(true);
+    setMessage('');
+    try {
+      const res = await fetch('/api/promotion-config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(promotionConfig),
+      });
+      if (res.ok) {
+        setMessage('✓ Đã lưu cấu hình Promotion & Banner thành công!');
+      } else {
+        setMessage('❌ Lỗi khi lưu cấu hình Promotion.');
+      }
+    } catch (e) {
+      setMessage('❌ Lỗi kết nối khi lưu Promotion.');
     } finally {
       setSaving(false);
       setTimeout(() => setMessage(''), 4000);
@@ -508,6 +570,7 @@ export default function AdminPage() {
           {[
             { id: 'works', label: '📂 Quản lý Dự án & Video' },
             { id: 'blog', label: '📝 Quản lý Bài viết Blog' },
+            { id: 'promotion', label: '🎯 Promotion & Banner' },
             { id: 'team', label: '👥 Thành viên Team' },
             { id: 'pricing', label: '💳 Gói giá Partnership' },
             { id: 'config', label: '⚙️ Showreel Video & Link Mạng Xã Hội' },
@@ -714,6 +777,451 @@ export default function AdminPage() {
                     </div>
                   </div>
                 ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB PROMOTION & BANNER */}
+        {activeTab === 'promotion' && (
+          <div className="space-y-8">
+            {/* Announcement Bar Form Box */}
+            <div className="bg-[#0e1424] p-6 rounded-2xl border border-white/15 shadow-xl space-y-6">
+              <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                <div>
+                  <h3 className="text-base font-bold text-[#c499f5] flex items-center gap-2">
+                    <span>📢</span> Announcement Bar (Thanh thông báo nổi đầu trang)
+                  </h3>
+                  <p className="text-xs text-gray-400 mt-1">Hiển thị thanh ngang trên cùng của website</p>
+                </div>
+                <label className="flex items-center gap-2 cursor-pointer bg-[#141c30] px-4 py-2 rounded-xl border border-white/15">
+                  <input
+                    type="checkbox"
+                    checked={promotionConfig.announcementBar.enabled}
+                    onChange={(e) =>
+                      setPromotionConfig({
+                        ...promotionConfig,
+                        announcementBar: { ...promotionConfig.announcementBar, enabled: e.target.checked },
+                      })
+                    }
+                    className="w-4 h-4 accent-[#a855f7] cursor-pointer"
+                  />
+                  <span className="text-xs font-bold text-white">Bật Announcement Bar</span>
+                </label>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs uppercase font-bold text-gray-400 mb-1">Nội dung Text (VI)</label>
+                  <input
+                    type="text"
+                    value={promotionConfig.announcementBar.text}
+                    onChange={(e) =>
+                      setPromotionConfig({
+                        ...promotionConfig,
+                        announcementBar: { ...promotionConfig.announcementBar, text: e.target.value },
+                      })
+                    }
+                    className="w-full px-3 py-2 bg-[#141c30] border border-white/15 rounded-lg text-sm text-white focus:border-[#a855f7] outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs uppercase font-bold text-purple-300 mb-1">🇬🇧 Text Content (EN)</label>
+                  <input
+                    type="text"
+                    value={promotionConfig.announcementBar.textEn}
+                    onChange={(e) =>
+                      setPromotionConfig({
+                        ...promotionConfig,
+                        announcementBar: { ...promotionConfig.announcementBar, textEn: e.target.value },
+                      })
+                    }
+                    className="w-full px-3 py-2 bg-[#141c30] border border-purple-500/30 rounded-lg text-sm text-purple-200 focus:border-[#a855f7] outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs uppercase font-bold text-gray-400 mb-1">Màu Nền (Background Color)</label>
+                  <div className="flex gap-2">
+                    <input
+                      type="color"
+                      value={promotionConfig.announcementBar.bgColor || '#7C3AED'}
+                      onChange={(e) =>
+                        setPromotionConfig({
+                          ...promotionConfig,
+                          announcementBar: { ...promotionConfig.announcementBar, bgColor: e.target.value },
+                        })
+                      }
+                      className="w-10 h-9 bg-transparent border-0 cursor-pointer"
+                    />
+                    <input
+                      type="text"
+                      value={promotionConfig.announcementBar.bgColor}
+                      onChange={(e) =>
+                        setPromotionConfig({
+                          ...promotionConfig,
+                          announcementBar: { ...promotionConfig.announcementBar, bgColor: e.target.value },
+                        })
+                      }
+                      className="w-full px-3 py-2 bg-[#141c30] border border-white/15 rounded-lg text-sm text-white focus:border-[#a855f7] outline-none font-mono"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs uppercase font-bold text-gray-400 mb-1">Màu Chữ (Text Color)</label>
+                  <div className="flex gap-2">
+                    <input
+                      type="color"
+                      value={promotionConfig.announcementBar.textColor || '#ffffff'}
+                      onChange={(e) =>
+                        setPromotionConfig({
+                          ...promotionConfig,
+                          announcementBar: { ...promotionConfig.announcementBar, textColor: e.target.value },
+                        })
+                      }
+                      className="w-10 h-9 bg-transparent border-0 cursor-pointer"
+                    />
+                    <input
+                      type="text"
+                      value={promotionConfig.announcementBar.textColor}
+                      onChange={(e) =>
+                        setPromotionConfig({
+                          ...promotionConfig,
+                          announcementBar: { ...promotionConfig.announcementBar, textColor: e.target.value },
+                        })
+                      }
+                      className="w-full px-3 py-2 bg-[#141c30] border border-white/15 rounded-lg text-sm text-white focus:border-[#a855f7] outline-none font-mono"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs uppercase font-bold text-gray-400 mb-1">Nút CTA Text (VI)</label>
+                  <input
+                    type="text"
+                    value={promotionConfig.announcementBar.ctaText}
+                    onChange={(e) =>
+                      setPromotionConfig({
+                        ...promotionConfig,
+                        announcementBar: { ...promotionConfig.announcementBar, ctaText: e.target.value },
+                      })
+                    }
+                    className="w-full px-3 py-2 bg-[#141c30] border border-white/15 rounded-lg text-sm text-white focus:border-[#a855f7] outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs uppercase font-bold text-purple-300 mb-1">🇬🇧 CTA Text (EN)</label>
+                  <input
+                    type="text"
+                    value={promotionConfig.announcementBar.ctaTextEn}
+                    onChange={(e) =>
+                      setPromotionConfig({
+                        ...promotionConfig,
+                        announcementBar: { ...promotionConfig.announcementBar, ctaTextEn: e.target.value },
+                      })
+                    }
+                    className="w-full px-3 py-2 bg-[#141c30] border border-purple-500/30 rounded-lg text-sm text-purple-200 focus:border-[#a855f7] outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs uppercase font-bold text-gray-400 mb-1">Link Nút CTA (Link khi click)</label>
+                  <input
+                    type="text"
+                    value={promotionConfig.announcementBar.ctaLink}
+                    onChange={(e) =>
+                      setPromotionConfig({
+                        ...promotionConfig,
+                        announcementBar: { ...promotionConfig.announcementBar, ctaLink: e.target.value },
+                      })
+                    }
+                    placeholder="/?tab=contact"
+                    className="w-full px-3 py-2 bg-[#141c30] border border-white/15 rounded-lg text-sm text-white focus:border-[#a855f7] outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs uppercase font-bold text-purple-300 mb-1">🖼️ Background Image URL (bar.png)</label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      placeholder="VD: https://res.cloudinary.com/.../bar.png"
+                      value={promotionConfig.announcementBar.backgroundImage || ''}
+                      onChange={(e) =>
+                        setPromotionConfig({
+                          ...promotionConfig,
+                          announcementBar: { ...promotionConfig.announcementBar, backgroundImage: e.target.value },
+                        })
+                      }
+                      className="w-full px-3 py-2 bg-[#141c30] border border-white/15 rounded-lg text-sm text-white focus:border-[#a855f7] outline-none"
+                    />
+                    <label className="px-4 py-2 bg-white/10 border border-white/20 rounded-lg hover:bg-white/20 text-xs font-semibold cursor-pointer whitespace-nowrap flex items-center">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          if (e.target.files?.[0]) {
+                            handleImageUpload(e.target.files[0], (url) =>
+                              setPromotionConfig({
+                                ...promotionConfig,
+                                announcementBar: { ...promotionConfig.announcementBar, backgroundImage: url },
+                              })
+                            );
+                          }
+                        }}
+                        className="hidden"
+                      />
+                      Upload 📷
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Hero Banner Form Box */}
+            <div className="bg-[#0e1424] p-6 rounded-2xl border border-white/15 shadow-xl space-y-6">
+              <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                <div>
+                  <h3 className="text-base font-bold text-[#c499f5] flex items-center gap-2">
+                    <span>🖼️</span> Hero Banner Section (Banner lớn trang chủ)
+                  </h3>
+                  <p className="text-xs text-gray-400 mt-1">Hiển thị section Banner khuyến mãi trên trang chủ</p>
+                </div>
+                <label className="flex items-center gap-2 cursor-pointer bg-[#141c30] px-4 py-2 rounded-xl border border-white/15">
+                  <input
+                    type="checkbox"
+                    checked={promotionConfig.heroBanner.enabled}
+                    onChange={(e) =>
+                      setPromotionConfig({
+                        ...promotionConfig,
+                        heroBanner: { ...promotionConfig.heroBanner, enabled: e.target.checked },
+                      })
+                    }
+                    className="w-4 h-4 accent-[#a855f7] cursor-pointer"
+                  />
+                  <span className="text-xs font-bold text-white">Bật Hero Banner</span>
+                </label>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs uppercase font-bold text-gray-400 mb-1">Tag Nhỏ (VI)</label>
+                  <input
+                    type="text"
+                    value={promotionConfig.heroBanner.tag}
+                    onChange={(e) =>
+                      setPromotionConfig({
+                        ...promotionConfig,
+                        heroBanner: { ...promotionConfig.heroBanner, tag: e.target.value },
+                      })
+                    }
+                    placeholder="KHUYẾN MÃI ĐẶC BIỆT"
+                    className="w-full px-3 py-2 bg-[#141c30] border border-white/15 rounded-lg text-sm text-white focus:border-[#a855f7] outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs uppercase font-bold text-purple-300 mb-1">🇬🇧 Tag (EN)</label>
+                  <input
+                    type="text"
+                    value={promotionConfig.heroBanner.tagEn}
+                    onChange={(e) =>
+                      setPromotionConfig({
+                        ...promotionConfig,
+                        heroBanner: { ...promotionConfig.heroBanner, tagEn: e.target.value },
+                      })
+                    }
+                    placeholder="SPECIAL OFFER"
+                    className="w-full px-3 py-2 bg-[#141c30] border border-purple-500/30 rounded-lg text-sm text-purple-200 focus:border-[#a855f7] outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs uppercase font-bold text-gray-400 mb-1">Tiêu Đề Lớn (VI)</label>
+                  <input
+                    type="text"
+                    value={promotionConfig.heroBanner.title}
+                    onChange={(e) =>
+                      setPromotionConfig({
+                        ...promotionConfig,
+                        heroBanner: { ...promotionConfig.heroBanner, title: e.target.value },
+                      })
+                    }
+                    className="w-full px-3 py-2 bg-[#141c30] border border-white/15 rounded-lg text-sm text-white focus:border-[#a855f7] outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs uppercase font-bold text-purple-300 mb-1">🇬🇧 Title (EN)</label>
+                  <input
+                    type="text"
+                    value={promotionConfig.heroBanner.titleEn}
+                    onChange={(e) =>
+                      setPromotionConfig({
+                        ...promotionConfig,
+                        heroBanner: { ...promotionConfig.heroBanner, titleEn: e.target.value },
+                      })
+                    }
+                    className="w-full px-3 py-2 bg-[#141c30] border border-purple-500/30 rounded-lg text-sm text-purple-200 focus:border-[#a855f7] outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs uppercase font-bold text-gray-400 mb-1">Mô Tả (VI)</label>
+                  <textarea
+                    rows={3}
+                    value={promotionConfig.heroBanner.description}
+                    onChange={(e) =>
+                      setPromotionConfig({
+                        ...promotionConfig,
+                        heroBanner: { ...promotionConfig.heroBanner, description: e.target.value },
+                      })
+                    }
+                    className="w-full px-3 py-2 bg-[#141c30] border border-white/15 rounded-lg text-sm text-white focus:border-[#a855f7] outline-none resize-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs uppercase font-bold text-purple-300 mb-1">🇬🇧 Description (EN)</label>
+                  <textarea
+                    rows={3}
+                    value={promotionConfig.heroBanner.descriptionEn}
+                    onChange={(e) =>
+                      setPromotionConfig({
+                        ...promotionConfig,
+                        heroBanner: { ...promotionConfig.heroBanner, descriptionEn: e.target.value },
+                      })
+                    }
+                    className="w-full px-3 py-2 bg-[#141c30] border border-purple-500/30 rounded-lg text-sm text-purple-200 focus:border-[#a855f7] outline-none resize-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs uppercase font-bold text-gray-400 mb-1">Hạn Ưu Đãi (Deadline)</label>
+                  <input
+                    type="text"
+                    value={promotionConfig.heroBanner.deadline}
+                    onChange={(e) =>
+                      setPromotionConfig({
+                        ...promotionConfig,
+                        heroBanner: { ...promotionConfig.heroBanner, deadline: e.target.value },
+                      })
+                    }
+                    placeholder="30/09/2026"
+                    className="w-full px-3 py-2 bg-[#141c30] border border-white/15 rounded-lg text-sm text-white focus:border-[#a855f7] outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs uppercase font-bold text-gray-400 mb-1">Link Nút CTA</label>
+                  <input
+                    type="text"
+                    value={promotionConfig.heroBanner.ctaLink}
+                    onChange={(e) =>
+                      setPromotionConfig({
+                        ...promotionConfig,
+                        heroBanner: { ...promotionConfig.heroBanner, ctaLink: e.target.value },
+                      })
+                    }
+                    placeholder="/?tab=contact"
+                    className="w-full px-3 py-2 bg-[#141c30] border border-white/15 rounded-lg text-sm text-white focus:border-[#a855f7] outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs uppercase font-bold text-gray-400 mb-1">Nút CTA Text (VI)</label>
+                  <input
+                    type="text"
+                    value={promotionConfig.heroBanner.ctaText}
+                    onChange={(e) =>
+                      setPromotionConfig({
+                        ...promotionConfig,
+                        heroBanner: { ...promotionConfig.heroBanner, ctaText: e.target.value },
+                      })
+                    }
+                    className="w-full px-3 py-2 bg-[#141c30] border border-white/15 rounded-lg text-sm text-white focus:border-[#a855f7] outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs uppercase font-bold text-purple-300 mb-1">🇬🇧 CTA Text (EN)</label>
+                  <input
+                    type="text"
+                    value={promotionConfig.heroBanner.ctaTextEn}
+                    onChange={(e) =>
+                      setPromotionConfig({
+                        ...promotionConfig,
+                        heroBanner: { ...promotionConfig.heroBanner, ctaTextEn: e.target.value },
+                      })
+                    }
+                    className="w-full px-3 py-2 bg-[#141c30] border border-purple-500/30 rounded-lg text-sm text-purple-200 focus:border-[#a855f7] outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs uppercase font-bold text-gray-400 mb-1">Màu Nền Gradient (bgGradient)</label>
+                  <input
+                    type="text"
+                    value={promotionConfig.heroBanner.bgGradient}
+                    onChange={(e) =>
+                      setPromotionConfig({
+                        ...promotionConfig,
+                        heroBanner: { ...promotionConfig.heroBanner, bgGradient: e.target.value },
+                      })
+                    }
+                    placeholder="linear-gradient(135deg, #7C3AED 0%, #EC4899 100%)"
+                    className="w-full px-3 py-2 bg-[#141c30] border border-white/15 rounded-lg text-sm text-white focus:border-[#a855f7] outline-none font-mono"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs uppercase font-bold text-purple-300 mb-1">🖼️ Background Image Banner URL (banner.png)</label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      placeholder="VD: https://res.cloudinary.com/.../banner.png"
+                      value={promotionConfig.heroBanner.backgroundImage || ''}
+                      onChange={(e) =>
+                        setPromotionConfig({
+                          ...promotionConfig,
+                          heroBanner: { ...promotionConfig.heroBanner, backgroundImage: e.target.value },
+                        })
+                      }
+                      className="w-full px-3 py-2 bg-[#141c30] border border-white/15 rounded-lg text-sm text-white focus:border-[#a855f7] outline-none"
+                    />
+                    <label className="px-4 py-2 bg-white/10 border border-white/20 rounded-lg hover:bg-white/20 text-xs font-semibold cursor-pointer whitespace-nowrap flex items-center">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          if (e.target.files?.[0]) {
+                            handleImageUpload(e.target.files[0], (url) =>
+                              setPromotionConfig({
+                                ...promotionConfig,
+                                heroBanner: { ...promotionConfig.heroBanner, backgroundImage: url },
+                              })
+                            );
+                          }
+                        }}
+                        className="hidden"
+                      />
+                      Upload 📷
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-white/10 flex justify-end">
+                <button
+                  onClick={handleSavePromotion}
+                  disabled={saving}
+                  className="px-8 py-3 bg-[#a855f7] hover:bg-[#9333ea] text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-lg"
+                >
+                  {saving ? 'Đang lưu...' : 'Lưu Cấu Hình Promotion & Banner 🚀'}
+                </button>
               </div>
             </div>
           </div>
