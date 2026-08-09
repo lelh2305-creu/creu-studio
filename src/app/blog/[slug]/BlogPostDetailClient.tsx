@@ -40,6 +40,28 @@ function renderMarkdownContent(content: string, isDark: boolean) {
       return;
     }
 
+    // Image Markdown: ![alt](src)
+    const imgMatch = trimmed.match(/^!\[(.*?)\]\((.*?)\)$/);
+    if (imgMatch) {
+      flushList(idx);
+      elements.push(
+        <div key={idx} className="my-8 rounded-2xl overflow-hidden shadow-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5">
+          <img
+            src={imgMatch[2]}
+            alt={imgMatch[1] || 'Blog image'}
+            className="w-full h-auto object-cover max-h-[600px]"
+            loading="lazy"
+          />
+          {imgMatch[1] && (
+            <div className="text-center text-xs sm:text-sm py-2 px-4 italic text-gray-500 dark:text-gray-400 border-t border-black/5 dark:border-white/5">
+              {imgMatch[1]}
+            </div>
+          )}
+        </div>
+      );
+      return;
+    }
+
     // Headings
     if (trimmed.startsWith('### ')) {
       flushList(idx);
@@ -130,8 +152,23 @@ function renderMarkdownContent(content: string, isDark: boolean) {
 }
 
 function parseInlineFormatting(text: string, isDark: boolean): React.ReactNode {
-  const parts = text.split(/(\*\*.*?\*\*|\*.*?\*|\[.*?\]\(.*?\))/g);
+  const parts = text.split(/(!\[.*?\]\(.*?\)\s*|\*\*.*?\*\*|\*.*?\*|\[.*?\]\(.*?\))/g);
   return parts.map((part, i) => {
+    if (part.startsWith('![') && part.includes('](')) {
+      const imgMatch = part.match(/^!\[(.*?)\]\((.*?)\)$/);
+      if (imgMatch) {
+        return (
+          <span key={i} className="block my-6 rounded-2xl overflow-hidden shadow-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5">
+            <img src={imgMatch[2]} alt={imgMatch[1] || 'Blog image'} className="w-full h-auto object-cover max-h-[600px]" loading="lazy" />
+            {imgMatch[1] && (
+              <span className="block text-center text-xs sm:text-sm py-2 px-4 italic text-gray-500 dark:text-gray-400 border-t border-black/5 dark:border-white/5">
+                {imgMatch[1]}
+              </span>
+            )}
+          </span>
+        );
+      }
+    }
     if (part.startsWith('**') && part.endsWith('**')) {
       return <strong key={i} className="font-bold" style={{ color: isDark ? '#ffffff' : '#111827' }}>{part.slice(2, -2)}</strong>;
     }
