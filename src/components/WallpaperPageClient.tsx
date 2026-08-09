@@ -74,7 +74,7 @@ export default function WallpaperPageClient() {
         onToggleTheme={() => setIsDark(!isDark)}
       />
 
-      {/* Hero Section Banner with Glowing Animated Orbs & Grid Pattern */}
+      {/* Hero Section Banner with Custom Image Background & Dot Grid */}
       <section
         style={{
           position: 'relative',
@@ -84,55 +84,13 @@ export default function WallpaperPageClient() {
           alignItems: 'center',
           justifyContent: 'center',
           overflow: 'hidden',
-          background: '#0a0a0f',
+          background: `linear-gradient(to bottom, rgba(10,10,20,0.6) 0%, rgba(10,10,20,0.3) 50%, rgba(10,10,20,0.7) 100%), url(/wallpaper-hero-bg.png)`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center bottom',
           paddingTop: '100px',
           paddingBottom: '60px',
         }}
       >
-        {/* Floating Glowing Orbs */}
-        <div
-          style={{
-            position: 'absolute',
-            width: '600px',
-            height: '600px',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(124,58,237,0.4) 0%, transparent 70%)',
-            top: '-100px',
-            left: '-100px',
-            filter: 'blur(80px)',
-            animation: 'float 8s ease-in-out infinite',
-            pointerEvents: 'none',
-          }}
-        />
-        <div
-          style={{
-            position: 'absolute',
-            width: '500px',
-            height: '500px',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(236,72,153,0.3) 0%, transparent 70%)',
-            bottom: '-100px',
-            right: '-50px',
-            filter: 'blur(80px)',
-            animation: 'float 10s ease-in-out infinite reverse',
-            pointerEvents: 'none',
-          }}
-        />
-        <div
-          style={{
-            position: 'absolute',
-            width: '300px',
-            height: '300px',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(59,130,246,0.25) 0%, transparent 70%)',
-            top: '40%',
-            left: '60%',
-            filter: 'blur(60px)',
-            animation: 'float 12s ease-in-out infinite',
-            pointerEvents: 'none',
-          }}
-        />
-
         {/* Particle Dots Background Pattern */}
         <div
           style={{
