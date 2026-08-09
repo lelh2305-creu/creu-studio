@@ -4,6 +4,8 @@
   --font-main: 'Be Vietnam Pro', system-ui, -apple-system, sans-serif;
   --font-title: 'Be Vietnam Pro', system-ui, sans-serif;
   --font-hero: 'Playfair Display', Georgia, serif;
+  --font-playfair: 'Playfair Display', Georgia, serif;
+  --font-be-vietnam: 'Be Vietnam Pro', system-ui, sans-serif;
   
   --ink: #18233b;
   --muted: #657087;
@@ -39,6 +41,12 @@ body.dark {
 @keyframes marquee {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) scale(1); }
+  33% { transform: translateY(-30px) scale(1.05); }
+  66% { transform: translateY(15px) scale(0.95); }
 }
 
 * { box-sizing: border-box; }

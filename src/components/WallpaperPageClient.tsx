@@ -73,43 +73,163 @@ export default function WallpaperPageClient() {
         onToggleTheme={() => setIsDark(!isDark)}
       />
 
-      {/* Hero Section Banner */}
-      <section className="relative pt-32 pb-16 px-6 text-center max-w-5xl mx-auto space-y-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#a855f7]/20 border border-[#a855f7]/40 text-[#c499f5] text-xs font-bold uppercase tracking-widest backdrop-blur-md shadow-lg shadow-purple-500/10"
-        >
-          <span>📱 CREU WALLPAPER VAULT 2026</span>
-        </motion.div>
+      {/* Hero Section Banner with Glowing Animated Orbs & Grid Pattern */}
+      <section
+        style={{
+          position: 'relative',
+          minHeight: '75vh',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          overflow: 'hidden',
+          background: '#0a0a0f',
+          paddingTop: '100px',
+          paddingBottom: '60px',
+        }}
+      >
+        {/* Floating Glowing Orbs */}
+        <div
+          style={{
+            position: 'absolute',
+            width: '600px',
+            height: '600px',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(124,58,237,0.4) 0%, transparent 70%)',
+            top: '-100px',
+            left: '-100px',
+            filter: 'blur(80px)',
+            animation: 'float 8s ease-in-out infinite',
+            pointerEvents: 'none',
+          }}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            width: '500px',
+            height: '500px',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(236,72,153,0.3) 0%, transparent 70%)',
+            bottom: '-100px',
+            right: '-50px',
+            filter: 'blur(80px)',
+            animation: 'float 10s ease-in-out infinite reverse',
+            pointerEvents: 'none',
+          }}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            width: '300px',
+            height: '300px',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(59,130,246,0.25) 0%, transparent 70%)',
+            top: '40%',
+            left: '60%',
+            filter: 'blur(60px)',
+            animation: 'float 12s ease-in-out infinite',
+            pointerEvents: 'none',
+          }}
+        />
 
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-tight font-title"
-        >
-          {lang === 'en' ? (
-            <>
-              Free HD 4K <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#c499f5] via-[#a855f7] to-[#ec4899]">Phone Wallpapers</span>
-            </>
-          ) : (
-            <>
-              Kho <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#c499f5] via-[#a855f7] to-[#ec4899]">Hình Nền Điện Thoại</span> Đẹp 4K Miễn Phí
-            </>
-          )}
-        </motion.h1>
+        {/* Particle Dots Background Pattern */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: `radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px)`,
+            backgroundSize: '40px 40px',
+            pointerEvents: 'none',
+          }}
+        />
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="text-gray-300 text-sm md:text-base max-w-2xl mx-auto leading-relaxed font-light"
-        >
-          {lang === 'en'
-            ? 'High-resolution aesthetic 4K phone wallpapers by CREU Studio. Categorized by color tones. Instant preview & direct 4K download.'
-            : 'Tuyển tập hình nền điện thoại chuẩn 4K chất lượng cao được thiết kế & tuyển chọn bởi CREU Studio. Lọc theo tone màu, preview cực nhanh và tải file gốc 100% miễn phí.'}
-        </motion.p>
+        {/* Hero Content */}
+        <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', padding: '0 20px', maxWidth: '900px', margin: '0 auto' }}>
+          {/* Badge */}
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              background: 'rgba(124,58,237,0.2)',
+              border: '1px solid rgba(124,58,237,0.4)',
+              borderRadius: '20px',
+              padding: '6px 16px',
+              marginBottom: '24px',
+              fontSize: '13px',
+              color: '#a78bfa',
+              fontWeight: '600',
+              letterSpacing: '0.05em',
+            }}
+          >
+            ✦ CREU WALLPAPER VAULT 2026
+          </div>
+
+          {/* Heading with Playfair Display Italic */}
+          <h1
+            style={{
+              fontFamily: "var(--font-playfair), 'Playfair Display', Georgia, serif",
+              fontStyle: 'italic',
+              fontWeight: '700',
+              fontSize: 'clamp(32px, 5.5vw, 64px)',
+              lineHeight: 1.15,
+              color: '#ffffff',
+              marginBottom: '20px',
+            }}
+          >
+            {lang === 'en' ? (
+              <>
+                Free <span style={{ color: '#7C3AED' }}>Phone Wallpapers</span> HD 4K
+              </>
+            ) : (
+              <>
+                Kho <span style={{ color: '#7C3AED' }}>Hình Nền</span> Điện Thoại Đẹp 4K Miễn Phí
+              </>
+            )}
+          </h1>
+
+          {/* Subtext with Be Vietnam Pro */}
+          <p
+            style={{
+              fontFamily: "var(--font-be-vietnam), 'Be Vietnam Pro', system-ui, sans-serif",
+              fontWeight: '400',
+              fontSize: '16px',
+              color: 'rgba(255,255,255,0.7)',
+              maxWidth: '650px',
+              margin: '0 auto 32px auto',
+              lineHeight: 1.6,
+            }}
+          >
+            {lang === 'en'
+              ? 'High-resolution aesthetic 4K phone wallpapers by CREU Studio. Categorized by color tones. Instant preview & direct 4K download.'
+              : 'Tuyển tập hình nền điện thoại chuẩn 4K chất lượng cao được thiết kế & tuyển chọn bởi CREU Studio. Lọc theo tone màu, preview cực nhanh và tải file gốc 100% miễn phí.'}
+          </p>
+
+          {/* Stats Row */}
+          <div
+            style={{
+              display: 'flex',
+              gap: '40px',
+              justifyContent: 'center',
+              marginTop: '32px',
+            }}
+          >
+            {[
+              { number: '4K', label: lang === 'en' ? 'Quality' : 'Chất lượng' },
+              { number: '100%', label: lang === 'en' ? 'Free' : 'Miễn phí' },
+              { number: '8', label: lang === 'en' ? 'Color Tones' : 'Tone màu' },
+            ].map((stat) => (
+              <div key={stat.label} style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '28px', fontWeight: '700', color: '#a78bfa' }}>
+                  {stat.number}
+                </div>
+                <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.5)' }}>
+                  {stat.label}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* Tone Category Filter Pills */}
