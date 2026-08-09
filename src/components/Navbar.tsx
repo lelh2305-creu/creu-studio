@@ -28,13 +28,26 @@ export default function Navbar({ currentTab, onTabChange, isDark, onToggleTheme 
     { id: 'work', label: t('nav.work', lang) },
     { id: 'services', label: t('nav.services', lang) },
     { id: 'blog', label: t('nav.blog', lang) },
+    { id: 'wallpaper', label: 'Wallpaper 📱' },
     { id: 'about', label: t('nav.about', lang) },
     { id: 'contact', label: t('nav.contact', lang) },
   ];
 
-  const handleMobileNav = (id: string) => {
+  const handleNavClick = (id: string) => {
+    if (id === 'wallpaper') {
+      window.location.href = '/wallpaper';
+      return;
+    }
     onTabChange(id);
+  };
+
+  const handleMobileNav = (id: string) => {
     setMobileMenuOpen(false);
+    if (id === 'wallpaper') {
+      window.location.href = '/wallpaper';
+      return;
+    }
+    onTabChange(id);
   };
 
   return (
@@ -51,7 +64,7 @@ export default function Navbar({ currentTab, onTabChange, isDark, onToggleTheme 
             return (
               <a
                 key={item.id}
-                onClick={() => onTabChange(item.id)}
+                onClick={() => handleNavClick(item.id)}
                 className={`cursor-pointer ${isActive ? 'on' : ''}`}
               >
                 {item.label}
