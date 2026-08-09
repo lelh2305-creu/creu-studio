@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
@@ -28,6 +28,7 @@ export default function WallpaperPageClient() {
   const [activeModalItem, setActiveModalItem] = useState<WallpaperItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [isDark, setIsDark] = useState(true);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetch('/api/wallpapers?t=' + Date.now())
@@ -165,16 +166,16 @@ export default function WallpaperPageClient() {
             ✦ CREU WALLPAPER VAULT 2026
           </div>
 
-          {/* Heading with Playfair Display Italic */}
+          {/* Heading with Be Vietnam Pro (Sans-Serif) */}
           <h1
             style={{
-              fontFamily: "var(--font-playfair), 'Playfair Display', Georgia, serif",
-              fontStyle: 'italic',
-              fontWeight: '700',
-              fontSize: 'clamp(32px, 5.5vw, 64px)',
-              lineHeight: 1.15,
+              fontFamily: "var(--font-be-vietnam), 'Be Vietnam Pro', system-ui, sans-serif",
+              fontStyle: 'normal',
+              fontWeight: '800',
+              fontSize: 'clamp(36px, 6vw, 72px)',
+              lineHeight: '1.1',
               color: '#ffffff',
-              marginBottom: '20px',
+              marginBottom: '16px',
             }}
           >
             {lang === 'en' ? (
@@ -188,21 +189,38 @@ export default function WallpaperPageClient() {
             )}
           </h1>
 
-          {/* Subtext with Be Vietnam Pro */}
+          {/* Subtext formatted in 2 clean lines */}
           <p
             style={{
               fontFamily: "var(--font-be-vietnam), 'Be Vietnam Pro', system-ui, sans-serif",
               fontWeight: '400',
               fontSize: '16px',
-              color: 'rgba(255,255,255,0.7)',
-              maxWidth: '650px',
-              margin: '0 auto 32px auto',
-              lineHeight: 1.6,
+              lineHeight: '1.6',
+              color: 'rgba(255,255,255,0.6)',
+              maxWidth: '600px',
+              margin: '16px auto 0',
+              textAlign: 'center',
+              whiteSpace: 'normal',
+              padding: '0 20px',
             }}
           >
-            {lang === 'en'
-              ? 'High-resolution aesthetic 4K phone wallpapers by CREU Studio. Categorized by color tones. Instant preview & direct 4K download.'
-              : 'Tuyển tập hình nền điện thoại chuẩn 4K chất lượng cao được thiết kế & tuyển chọn bởi CREU Studio. Lọc theo tone màu, preview cực nhanh và tải file gốc 100% miễn phí.'}
+            {lang === 'en' ? (
+              <>
+                High-resolution 4K phone wallpapers by CREU Studio.
+                <br />
+                <span style={{ opacity: 0.7 }}>
+                  Filter by color tones · Instant preview · Free 4K download.
+                </span>
+              </>
+            ) : (
+              <>
+                Tuyển tập hình nền 4K được thiết kế & tuyển chọn bởi CREU Studio.
+                <br />
+                <span style={{ opacity: 0.7 }}>
+                  Lọc theo tone màu · Preview nhanh · Tải file gốc miễn phí.
+                </span>
+              </>
+            )}
           </p>
 
           {/* Stats Row */}
@@ -232,26 +250,158 @@ export default function WallpaperPageClient() {
         </div>
       </section>
 
-      {/* Tone Category Filter Pills */}
-      <section className="max-w-7xl mx-auto px-6 mb-12">
-        <div className="flex gap-2.5 overflow-x-auto pb-4 scrollbar-none justify-start md:justify-center">
-          {CATEGORIES.map((cat) => {
-            const isActive = selectedCategory === cat.id;
-            return (
-              <button
-                key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
-                className={`px-4 py-2.5 rounded-2xl text-xs font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer flex items-center gap-2 whitespace-nowrap ${
-                  isActive
-                    ? 'bg-[#a855f7] text-white shadow-xl shadow-purple-500/30 scale-105 border border-purple-300/40'
-                    : 'bg-[#0e1424] text-gray-400 border border-white/10 hover:bg-white/10 hover:text-white'
-                }`}
-              >
-                <span>{cat.icon}</span>
-                <span>{lang === 'en' ? cat.nameEn : cat.nameVi}</span>
-              </button>
-            );
-          })}
+      {/* Tone Category Filter Pills with Left/Right Scroll Buttons & Fade Gradients */}
+      <section className="max-w-7xl mx-auto px-4 md:px-6 mb-12">
+        <div
+          style={{
+            position: 'relative',
+            width: '100%',
+            padding: '0 48px',
+          }}
+        >
+          {/* Nút LEFT */}
+          <button
+            onClick={() => scrollRef.current?.scrollBy({ left: -200, behavior: 'smooth' })}
+            aria-label="Scroll left"
+            style={{
+              position: 'absolute',
+              left: '0',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              width: '40px',
+              height: '40px',
+              borderRadius: '50%',
+              background: 'rgba(255,255,255,0.1)',
+              border: '1px solid rgba(255,255,255,0.2)',
+              color: 'white',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 10,
+              backdropFilter: 'blur(8px)',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            ←
+          </button>
+
+          {/* Filter scroll container */}
+          <div
+            ref={scrollRef}
+            style={{
+              display: 'flex',
+              gap: '10px',
+              overflowX: 'auto',
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
+              padding: '8px 4px',
+              scrollSnapType: 'x mandatory',
+            }}
+          >
+            <style>{`div::-webkit-scrollbar { display: none; }`}</style>
+
+            {CATEGORIES.map((cat) => {
+              const isActive = selectedCategory === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => setSelectedCategory(cat.id)}
+                  style={{
+                    position: 'relative',
+                    flexShrink: 0,
+                    scrollSnapAlign: 'start',
+                    whiteSpace: 'nowrap',
+                    padding: '8px 18px',
+                    borderRadius: '20px',
+                    border: isActive ? '1px solid #7C3AED' : '1px solid rgba(255,255,255,0.15)',
+                    background: isActive ? 'rgba(124,58,237,0.3)' : 'rgba(255,255,255,0.05)',
+                    color: isActive ? '#a78bfa' : 'rgba(255,255,255,0.7)',
+                    cursor: 'pointer',
+                    fontSize: '13px',
+                    fontWeight: '600',
+                    letterSpacing: '0.05em',
+                    transition: 'all 0.2s ease',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                  }}
+                >
+                  <span>{cat.icon}</span>
+                  <span>{lang === 'en' ? cat.nameEn : cat.nameVi}</span>
+
+                  {/* Active Indicator Dot */}
+                  {isActive && (
+                    <div
+                      style={{
+                        position: 'absolute',
+                        bottom: '-4px',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        width: '4px',
+                        height: '4px',
+                        borderRadius: '50%',
+                        background: '#7C3AED',
+                      }}
+                    />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Nút RIGHT */}
+          <button
+            onClick={() => scrollRef.current?.scrollBy({ left: 200, behavior: 'smooth' })}
+            aria-label="Scroll right"
+            style={{
+              position: 'absolute',
+              right: '0',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              width: '40px',
+              height: '40px',
+              borderRadius: '50%',
+              background: 'rgba(255,255,255,0.1)',
+              border: '1px solid rgba(255,255,255,0.2)',
+              color: 'white',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 10,
+              backdropFilter: 'blur(8px)',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            →
+          </button>
+
+          {/* Fade gradient 2 đầu */}
+          <div
+            style={{
+              position: 'absolute',
+              left: '40px',
+              top: 0,
+              bottom: 0,
+              width: '40px',
+              background: 'linear-gradient(to right, #080c16, transparent)',
+              pointerEvents: 'none',
+              zIndex: 5,
+            }}
+          />
+          <div
+            style={{
+              position: 'absolute',
+              right: '40px',
+              top: 0,
+              bottom: 0,
+              width: '40px',
+              background: 'linear-gradient(to left, #080c16, transparent)',
+              pointerEvents: 'none',
+              zIndex: 5,
+            }}
+          />
         </div>
       </section>
 
