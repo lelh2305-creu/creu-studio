@@ -14,12 +14,21 @@ interface BlogPageClientProps {
 
 export default function BlogPageClient({ initialPosts }: BlogPageClientProps) {
   const [isDark, setIsDark] = useState(false);
-  const [posts, setPosts] = useState<Post[]>(initialPosts);
+  const [posts, setPosts] = useState<Post[]>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('creu_site_data');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed.blogPosts) && parsed.blogPosts.length > 0) {
+            return parsed.blogPosts;
+          }
+        }
+      } catch (e) {}
+    }
+    return initialPosts;
+  });
   const router = useRouter();
-
-  useEffect(() => {
-    setPosts(initialPosts);
-  }, [initialPosts]);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('creu_theme');

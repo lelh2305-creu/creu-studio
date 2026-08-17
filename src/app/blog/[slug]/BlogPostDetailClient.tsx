@@ -194,12 +194,22 @@ function parseInlineFormatting(text: string, isDark: boolean): React.ReactNode {
 export default function BlogPostDetailClient({ post }: BlogPostDetailClientProps) {
   const { lang, setLang } = useLang();
   const [isDark, setIsDark] = useState(false);
-  const [currentPost, setCurrentPost] = useState<Post>(post);
+  const [currentPost, setCurrentPost] = useState<Post>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('creu_site_data');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed.blogPosts)) {
+            const found = parsed.blogPosts.find((p: any) => p && p.slug === post.slug);
+            if (found) return found;
+          }
+        }
+      } catch (e) {}
+    }
+    return post;
+  });
   const router = useRouter();
-
-  useEffect(() => {
-    setCurrentPost(post);
-  }, [post]);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('creu_theme');
