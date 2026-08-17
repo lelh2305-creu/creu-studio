@@ -72,6 +72,9 @@ export async function GET() {
                 const isCorruptedThumb = p.thumbnail && (thumbCountMap.get(p.thumbnail) || 0) > 2;
                 const finalThumb = (isCorruptedThumb ? existing?.thumbnail : p.thumbnail) || existing?.thumbnail || '/creu-logo.png';
 
+                const isStaleQuayChup = p.slug === 'quay-chup-noi-that-hcm' && (p.content_vi || p.content || '').includes('vr6yot.png');
+                const finalContentVi = isStaleQuayChup ? existing?.content_vi : (p.content_vi || p.content || existing?.content_vi || '');
+
                 postsMap.set(p.slug, {
                   ...existing,
                   ...p,
@@ -85,9 +88,9 @@ export async function GET() {
                   thumbnail: finalThumb,
                   category: p.category || existing?.category || 'GENERAL',
                   author: p.author || existing?.author || 'CREU Studio',
-                  content_vi: p.content_vi || p.content || existing?.content_vi || '',
+                  content_vi: finalContentVi,
                   content_en: p.content_en || p.contentEn || existing?.content_en || '',
-                  content: p.content_vi || p.content || existing?.content_vi || '',
+                  content: finalContentVi,
                 });
               }
             });

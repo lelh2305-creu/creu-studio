@@ -44,10 +44,14 @@ function mergeStaticPosts(parsed: any) {
       if (!p || !p.slug) return p;
       const staticP = staticMap.get(p.slug);
       const isCorruptedThumb = p.thumbnail && (thumbCountMap.get(p.thumbnail) || 0) > 2;
+      const isStaleQuayChup = p.slug === 'quay-chup-noi-that-hcm' && (p.content_vi || p.content || '').includes('vr6yot.png');
+
       return {
         ...staticP,
         ...p,
         thumbnail: (isCorruptedThumb ? staticP?.thumbnail : p.thumbnail) || staticP?.thumbnail || '/creu-logo.png',
+        content_vi: isStaleQuayChup ? staticP?.content_vi : (p.content_vi || staticP?.content_vi),
+        content: isStaleQuayChup ? staticP?.content : (p.content || staticP?.content),
       };
     });
 

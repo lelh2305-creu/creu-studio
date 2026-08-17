@@ -202,7 +202,10 @@ export default function BlogPostDetailClient({ post }: BlogPostDetailClientProps
           const parsed = JSON.parse(saved);
           if (Array.isArray(parsed.blogPosts)) {
             const found = parsed.blogPosts.find((p: any) => p && p.slug === post.slug);
-            if (found) return found;
+            if (found) {
+              const hasStaleVr6yot = post.slug === 'quay-chup-noi-that-hcm' && (found.content_vi || found.content || '').includes('vr6yot.png');
+              if (!hasStaleVr6yot) return found;
+            }
           }
         }
       } catch (e) {}
