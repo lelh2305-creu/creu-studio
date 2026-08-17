@@ -36,57 +36,64 @@ export async function GET() {
       });
     });
 
-    // 2. Fetch from Upstash Redis if credentials exist (check blog:posts, site_data, posts keys)
+    // 2. Fetch from Upstash Redis if credentials exist (only check site_data key)
     if (UPSTASH_URL && UPSTASH_TOKEN) {
-      const keysToTry = ['blog:posts', 'posts', 'site_data'];
-      for (const key of keysToTry) {
-        try {
-          const res = await fetch(`${UPSTASH_URL.replace(/\/$/, '')}/get/${key}`, {
-            headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` },
-            cache: 'no-store',
-          });
-          if (res.ok) {
-            const json = await res.json();
-            if (json.result) {
-              let parsed = json.result;
-              if (typeof parsed === 'string') {
-                try {
-                  parsed = JSON.parse(parsed);
-                  if (typeof parsed === 'string') parsed = JSON.parse(parsed);
-                } catch (e) {}
-              }
-              
-              const blogList = Array.isArray(parsed)
-                ? parsed
-                : (parsed && Array.isArray(parsed.blogPosts) ? parsed.blogPosts : []);
-
-              blogList.forEach((p: any, idx: number) => {
-                if (p && p.slug) {
-                  const existing = postsMap.get(p.slug);
-
-                  postsMap.set(p.slug, {
-                    ...existing,
-                    ...p,
-                    id: p.id || existing?.id || (2000 + idx),
-                    slug: p.slug,
-                    title: p.title || existing?.title || 'Untitled Post',
-                    titleEn: p.titleEn || p.title_en || existing?.titleEn || '',
-                    date: p.date || existing?.date || new Date().toISOString().split('T')[0],
-                    description: p.description || existing?.description || '',
-                    descriptionEn: p.descriptionEn || p.description_en || existing?.descriptionEn || '',
-                    thumbnail: p.thumbnail || existing?.thumbnail || '/creu-logo.png',
-                    category: p.category || existing?.category || 'GENERAL',
-                    author: p.author || existing?.author || 'CREU Studio',
-                    content_vi: p.content_vi || p.content || existing?.content_vi || '',
-                    content_en: p.content_en || p.contentEn || existing?.content_en || '',
-                    content: p.content_vi || p.content || existing?.content_vi || '',
-                  });
-                }
-              });
+      try {
+        const res = await fetch(`${UPSTASH_URL.replace(/\/$/, '')}/get/site_data`, {
+          headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` },
+          cache: 'no-store',
+        });
+        if (res.ok) {
+          const json = await res.json();
+          if (json.result) {
+            let parsed = json.result;
+            if (typeof parsed === 'string') {
+              try {
+                parsed = JSON.parse(parsed);
+                if (typeof parsed === 'string') parsed = JSON.parse(parsed);
+              } catch (e) {}
             }
+            
+            const blogList = Array.isArray(parsed)
+              ? parsed
+              : (parsed && Array.isArray(parsed.blogPosts) ? parsed.blogPosts : []);
+
+            // Count occurrences of each thumbnail URL in Redis payload to detect corrupted duplicates
+            const thumbCountMap = new Map<string, number>();
+            blogList.forEach((p: any) => {
+              if (p && p.thumbnail) {
+                thumbCountMap.set(p.thumbnail, (thumbCountMap.get(p.thumbnail) || 0) + 1);
+              }
+            });
+
+            blogList.forEach((p: any, idx: number) => {
+              if (p && p.slug) {
+                const existing = postsMap.get(p.slug);
+                const isCorruptedThumb = p.thumbnail && (thumbCountMap.get(p.thumbnail) || 0) > 2;
+                const finalThumb = (isCorruptedThumb ? existing?.thumbnail : p.thumbnail) || existing?.thumbnail || '/creu-logo.png';
+
+                postsMap.set(p.slug, {
+                  ...existing,
+                  ...p,
+                  id: p.id || existing?.id || (2000 + idx),
+                  slug: p.slug,
+                  title: p.title || existing?.title || 'Untitled Post',
+                  titleEn: p.titleEn || p.title_en || existing?.titleEn || '',
+                  date: p.date || existing?.date || new Date().toISOString().split('T')[0],
+                  description: p.description || existing?.description || '',
+                  descriptionEn: p.descriptionEn || p.description_en || existing?.descriptionEn || '',
+                  thumbnail: finalThumb,
+                  category: p.category || existing?.category || 'GENERAL',
+                  author: p.author || existing?.author || 'CREU Studio',
+                  content_vi: p.content_vi || p.content || existing?.content_vi || '',
+                  content_en: p.content_en || p.contentEn || existing?.content_en || '',
+                  content: p.content_vi || p.content || existing?.content_vi || '',
+                });
+              }
+            });
           }
-        } catch (e) {}
-      }
+        }
+      } catch (e) {}
     }
 
     const allPosts = Array.from(postsMap.values()).sort((a, b) => (a.date < b.date ? 1 : -1));
