@@ -101,22 +101,26 @@ export function getAllPosts(): Post[] {
       if (Array.isArray(siteData.blogPosts)) {
         siteData.blogPosts.forEach((post: any) => {
           if (post && post.slug) {
+            const existing = postsMap.get(post.slug);
             const contentVi = (post.content_vi || post.content || '').trim();
             const contentEn = (post.content_en || post.contentEn || '').trim();
 
+            const useSiteDataThumb = post.thumbnail && post.thumbnail.startsWith('/images/');
+            const useSiteDataContent = contentVi && contentVi.includes('![');
+
             postsMap.set(post.slug, {
               slug: post.slug,
-              title: post.title || 'Untitled Post',
-              titleEn: post.title_en || post.titleEn || '',
-              date: post.date || new Date().toISOString().split('T')[0],
-              description: post.description || '',
-              descriptionEn: post.description_en || post.descriptionEn || '',
-              thumbnail: post.thumbnail || '/creu-logo.png',
-              category: post.category || 'GENERAL',
-              author: post.author || 'CREU Studio',
-              content: contentVi,
-              content_vi: contentVi,
-              content_en: contentEn,
+              title: post.title || existing?.title || 'Untitled Post',
+              titleEn: post.title_en || post.titleEn || existing?.titleEn || '',
+              date: post.date || existing?.date || new Date().toISOString().split('T')[0],
+              description: post.description || existing?.description || '',
+              descriptionEn: post.description_en || post.descriptionEn || existing?.descriptionEn || '',
+              thumbnail: useSiteDataThumb ? post.thumbnail : (existing?.thumbnail || post.thumbnail || '/creu-logo.png'),
+              category: post.category || existing?.category || 'GENERAL',
+              author: post.author || existing?.author || 'CREU Studio',
+              content: useSiteDataContent ? contentVi : (existing?.content_vi || contentVi),
+              content_vi: useSiteDataContent ? contentVi : (existing?.content_vi || contentVi),
+              content_en: contentEn || existing?.content_en || '',
             });
           }
         });

@@ -62,20 +62,27 @@ export async function GET() {
 
               blogList.forEach((p: any, idx: number) => {
                 if (p && p.slug) {
+                  const existing = postsMap.get(p.slug);
+                  const staticThumbnail = existing?.thumbnail;
+                  const staticContentVi = existing?.content_vi || existing?.content;
+
+                  const useStaticThumb = staticThumbnail && (staticThumbnail.startsWith('/images/') || !p.thumbnail);
+                  const useStaticContent = staticContentVi && (staticContentVi.includes('![') || !p.content_vi);
+
                   postsMap.set(p.slug, {
-                    id: p.id || (2000 + idx),
+                    id: p.id || existing?.id || (2000 + idx),
                     slug: p.slug,
-                    title: p.title || 'Untitled Post',
-                    titleEn: p.titleEn || p.title_en || '',
-                    date: p.date || new Date().toISOString().split('T')[0],
-                    description: p.description || '',
-                    descriptionEn: p.descriptionEn || p.description_en || '',
-                    thumbnail: p.thumbnail || '/creu-logo.png',
-                    category: p.category || 'GENERAL',
-                    author: p.author || 'CREU Studio',
-                    content_vi: p.content_vi || p.content || '',
-                    content_en: p.content_en || p.contentEn || '',
-                    content: p.content_vi || p.content || '',
+                    title: p.title || existing?.title || 'Untitled Post',
+                    titleEn: p.titleEn || p.title_en || existing?.titleEn || '',
+                    date: p.date || existing?.date || new Date().toISOString().split('T')[0],
+                    description: p.description || existing?.description || '',
+                    descriptionEn: p.descriptionEn || p.description_en || existing?.descriptionEn || '',
+                    thumbnail: useStaticThumb ? staticThumbnail : (p.thumbnail || staticThumbnail || '/creu-logo.png'),
+                    category: p.category || existing?.category || 'GENERAL',
+                    author: p.author || existing?.author || 'CREU Studio',
+                    content_vi: useStaticContent ? staticContentVi : (p.content_vi || p.content || staticContentVi || ''),
+                    content_en: p.content_en || p.contentEn || existing?.content_en || '',
+                    content: useStaticContent ? staticContentVi : (p.content_vi || p.content || staticContentVi || ''),
                   });
                 }
               });

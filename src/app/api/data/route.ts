@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import siteDataFallback from '@/data/siteData.json';
+import { getAllPosts } from '@/lib/posts';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
@@ -26,6 +27,37 @@ function getKV(req?: any): any {
   );
 }
 
+function mergeStaticPosts(parsed: any) {
+  if (!parsed || typeof parsed !== 'object' || !Array.isArray(parsed.blogPosts)) return parsed;
+  try {
+    const staticPosts = getAllPosts();
+    const staticMap = new Map(staticPosts.map((p) => [p.slug, p]));
+
+    parsed.blogPosts = parsed.blogPosts.map((p: any) => {
+      if (!p || !p.slug) return p;
+      const staticP = staticMap.get(p.slug);
+      if (staticP) {
+        const hasLocalThumb = staticP.thumbnail && (staticP.thumbnail.startsWith('/images/') || !p.thumbnail);
+        const hasMdImages = staticP.content_vi && (staticP.content_vi.includes('![') || !p.content_vi);
+        return {
+          ...p,
+          thumbnail: hasLocalThumb ? staticP.thumbnail : (p.thumbnail || staticP.thumbnail),
+          content_vi: hasMdImages ? staticP.content_vi : (p.content_vi || staticP.content_vi),
+          content: hasMdImages ? staticP.content : (p.content || staticP.content),
+        };
+      }
+      return p;
+    });
+
+    staticPosts.forEach((sp) => {
+      if (!parsed.blogPosts.some((bp: any) => bp && bp.slug === sp.slug)) {
+        parsed.blogPosts.push(sp);
+      }
+    });
+  } catch (e) {}
+  return parsed;
+}
+
 export async function GET(request: NextRequest) {
   try {
     // 1. Try Upstash Redis if REST URL and Token exist
@@ -47,7 +79,8 @@ export async function GET(request: NextRequest) {
             } catch (e) {}
           }
           if (parsed && typeof parsed === 'object' && parsed.siteConfig) {
-            return NextResponse.json(parsed, { headers: noCacheHeaders });
+            const merged = mergeStaticPosts(parsed);
+            return NextResponse.json(merged, { headers: noCacheHeaders });
           }
         }
       }
@@ -68,14 +101,17 @@ export async function GET(request: NextRequest) {
           } catch (e) {}
         }
         if (parsed && typeof parsed === 'object' && parsed.siteConfig) {
-          return NextResponse.json(parsed, { headers: noCacheHeaders });
+          const merged = mergeStaticPosts(parsed);
+          return NextResponse.json(merged, { headers: noCacheHeaders });
         }
       }
     }
 
-    return NextResponse.json(siteDataFallback, { headers: noCacheHeaders });
+    const mergedFallback = mergeStaticPosts(siteDataFallback);
+    return NextResponse.json(mergedFallback, { headers: noCacheHeaders });
   } catch (error) {
-    return NextResponse.json(siteDataFallback, { headers: noCacheHeaders });
+    const mergedFallback = mergeStaticPosts(siteDataFallback);
+    return NextResponse.json(mergedFallback, { headers: noCacheHeaders });
   }
 }
 
