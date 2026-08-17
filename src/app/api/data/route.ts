@@ -31,27 +31,20 @@ function mergeStaticPosts(parsed: any) {
   if (!parsed || typeof parsed !== 'object' || !Array.isArray(parsed.blogPosts)) return parsed;
   try {
     const staticPosts = getAllPosts();
-    const staticMap = new Map(staticPosts.map((p) => [p.slug, p]));
-
-    parsed.blogPosts = parsed.blogPosts.map((p: any) => {
-      if (!p || !p.slug) return p;
-      const staticP = staticMap.get(p.slug);
-      if (staticP) {
-        const hasLocalThumb = staticP.thumbnail && (staticP.thumbnail.startsWith('/images/') || staticP.thumbnail.startsWith('http') || !p.thumbnail);
-        const hasMdImages = staticP.content_vi && (staticP.content_vi.includes('![') || !p.content_vi);
-        return {
-          ...p,
-          thumbnail: hasLocalThumb ? staticP.thumbnail : (p.thumbnail || staticP.thumbnail),
-          content_vi: hasMdImages ? staticP.content_vi : (p.content_vi || staticP.content_vi),
-          content: hasMdImages ? staticP.content : (p.content || staticP.content),
-        };
-      }
-      return p;
-    });
 
     staticPosts.forEach((sp) => {
-      if (!parsed.blogPosts.some((bp: any) => bp && bp.slug === sp.slug)) {
+      const idx = parsed.blogPosts.findIndex((bp: any) => bp && bp.slug === sp.slug);
+      if (idx === -1) {
         parsed.blogPosts.push(sp);
+      } else {
+        const existing = parsed.blogPosts[idx];
+        parsed.blogPosts[idx] = {
+          ...sp,
+          ...existing,
+          thumbnail: existing.thumbnail || sp.thumbnail,
+          content_vi: existing.content_vi || existing.content || sp.content_vi,
+          content: existing.content || existing.content_vi || sp.content,
+        };
       }
     });
   } catch (e) {}

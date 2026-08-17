@@ -63,13 +63,10 @@ export async function GET() {
               blogList.forEach((p: any, idx: number) => {
                 if (p && p.slug) {
                   const existing = postsMap.get(p.slug);
-                  const staticThumbnail = existing?.thumbnail;
-                  const staticContentVi = existing?.content_vi || existing?.content;
-
-                  const useStaticThumb = staticThumbnail && (staticThumbnail.startsWith('/images/') || staticThumbnail.startsWith('http') || !p.thumbnail);
-                  const useStaticContent = staticContentVi && (staticContentVi.includes('![') || !p.content_vi);
 
                   postsMap.set(p.slug, {
+                    ...existing,
+                    ...p,
                     id: p.id || existing?.id || (2000 + idx),
                     slug: p.slug,
                     title: p.title || existing?.title || 'Untitled Post',
@@ -77,12 +74,12 @@ export async function GET() {
                     date: p.date || existing?.date || new Date().toISOString().split('T')[0],
                     description: p.description || existing?.description || '',
                     descriptionEn: p.descriptionEn || p.description_en || existing?.descriptionEn || '',
-                    thumbnail: useStaticThumb ? staticThumbnail : (p.thumbnail || staticThumbnail || '/creu-logo.png'),
+                    thumbnail: p.thumbnail || existing?.thumbnail || '/creu-logo.png',
                     category: p.category || existing?.category || 'GENERAL',
                     author: p.author || existing?.author || 'CREU Studio',
-                    content_vi: useStaticContent ? staticContentVi : (p.content_vi || p.content || staticContentVi || ''),
+                    content_vi: p.content_vi || p.content || existing?.content_vi || '',
                     content_en: p.content_en || p.contentEn || existing?.content_en || '',
-                    content: useStaticContent ? staticContentVi : (p.content_vi || p.content || staticContentVi || ''),
+                    content: p.content_vi || p.content || existing?.content_vi || '',
                   });
                 }
               });

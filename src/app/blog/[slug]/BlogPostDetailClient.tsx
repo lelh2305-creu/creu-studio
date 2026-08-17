@@ -194,7 +194,12 @@ function parseInlineFormatting(text: string, isDark: boolean): React.ReactNode {
 export default function BlogPostDetailClient({ post }: BlogPostDetailClientProps) {
   const { lang, setLang } = useLang();
   const [isDark, setIsDark] = useState(false);
+  const [currentPost, setCurrentPost] = useState<Post>(post);
   const router = useRouter();
+
+  useEffect(() => {
+    setCurrentPost(post);
+  }, [post]);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('creu_theme');
@@ -202,7 +207,20 @@ export default function BlogPostDetailClient({ post }: BlogPostDetailClientProps
       setIsDark(true);
       document.body.classList.add('dark');
     }
-  }, []);
+
+    // Dynamic live fetch from /api/blog-posts so Admin edits display instantly!
+    fetch('/api/blog-posts')
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          const live = data.find((item: any) => item.slug === post.slug);
+          if (live) {
+            setCurrentPost(live);
+          }
+        }
+      })
+      .catch(() => {});
+  }, [post.slug]);
 
   const handleToggleTheme = () => {
     setIsDark(!isDark);
@@ -227,12 +245,12 @@ export default function BlogPostDetailClient({ post }: BlogPostDetailClientProps
   const isEn = lang === 'en';
 
   const activeContent = isEn
-    ? (post.content_en && post.content_en.trim().length > 0 ? post.content_en : post.content_vi)
-    : post.content_vi;
+    ? (currentPost.content_en && currentPost.content_en.trim().length > 0 ? currentPost.content_en : (currentPost.content_vi || currentPost.content))
+    : (currentPost.content_vi || currentPost.content);
 
   const activeTitle = isEn
-    ? (post.titleEn && post.titleEn.trim().length > 0 ? post.titleEn : ((post as any).title_en && (post as any).title_en.trim().length > 0 ? (post as any).title_en : post.title))
-    : post.title;
+    ? (currentPost.titleEn && currentPost.titleEn.trim().length > 0 ? currentPost.titleEn : ((currentPost as any).title_en && (currentPost as any).title_en.trim().length > 0 ? (currentPost as any).title_en : currentPost.title))
+    : currentPost.title;
 
   return (
     <main className="relative min-h-screen text-gray-900 dark:text-white">
@@ -292,7 +310,7 @@ export default function BlogPostDetailClient({ post }: BlogPostDetailClientProps
           {/* Category & Title Header */}
           <div className="space-y-4 mb-8">
             <span className="inline-block px-4 py-1.5 rounded-full bg-[#a855f7]/15 border border-[#a855f7]/30 text-[#a855f7] dark:text-[#c499f5] text-xs font-bold uppercase tracking-wider">
-              {post.category}
+              {currentPost.category}
             </span>
 
             <h1
@@ -303,17 +321,17 @@ export default function BlogPostDetailClient({ post }: BlogPostDetailClientProps
             </h1>
 
             <div className="flex items-center gap-4 text-xs sm:text-sm pt-2 border-b border-gray-200 dark:border-white/10 pb-6" style={{ color: isDark ? '#cbd5e1' : '#4b5563' }}>
-              <span>{t('blog.publishedOn', lang)}: <strong style={{ color: isDark ? '#ffffff' : '#111827' }}>{post.date}</strong></span>
+              <span>{t('blog.publishedOn', lang)}: <strong style={{ color: isDark ? '#ffffff' : '#111827' }}>{currentPost.date}</strong></span>
               <span>·</span>
-              <span>{t('blog.author', lang)}: <strong style={{ color: isDark ? '#ffffff' : '#111827' }}>{post.author || 'CREU Studio'}</strong></span>
+              <span>{t('blog.author', lang)}: <strong style={{ color: isDark ? '#ffffff' : '#111827' }}>{currentPost.author || 'CREU Studio'}</strong></span>
             </div>
           </div>
 
           {/* Featured Thumbnail */}
-          {post.thumbnail && (
+          {currentPost.thumbnail && (
             <div className="relative w-full aspect-[16/9] rounded-3xl overflow-hidden shadow-2xl mb-10 border border-black/10 dark:border-white/10 bg-black/10">
               <img
-                src={post.thumbnail}
+                src={currentPost.thumbnail}
                 alt={activeTitle}
                 className="w-full h-full object-cover"
               />

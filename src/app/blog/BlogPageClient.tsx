@@ -14,7 +14,12 @@ interface BlogPageClientProps {
 
 export default function BlogPageClient({ initialPosts }: BlogPageClientProps) {
   const [isDark, setIsDark] = useState(false);
+  const [posts, setPosts] = useState<Post[]>(initialPosts);
   const router = useRouter();
+
+  useEffect(() => {
+    setPosts(initialPosts);
+  }, [initialPosts]);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('creu_theme');
@@ -22,6 +27,16 @@ export default function BlogPageClient({ initialPosts }: BlogPageClientProps) {
       setIsDark(true);
       document.body.classList.add('dark');
     }
+
+    // Dynamic live fetch from /api/blog-posts so Admin edits display instantly!
+    fetch('/api/blog-posts')
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setPosts(data);
+        }
+      })
+      .catch(() => {});
   }, []);
 
   const handleToggleTheme = () => {
@@ -50,7 +65,7 @@ export default function BlogPageClient({ initialPosts }: BlogPageClientProps) {
         isDark={isDark}
         onToggleTheme={handleToggleTheme}
       />
-      <BlogPage posts={initialPosts} />
+      <BlogPage posts={posts} />
     </main>
   );
 }
