@@ -37,7 +37,7 @@ function mergeStaticPosts(parsed: any) {
       if (!p || !p.slug) return p;
       const staticP = staticMap.get(p.slug);
       if (staticP) {
-        const hasLocalThumb = staticP.thumbnail && (staticP.thumbnail.startsWith('/images/') || !p.thumbnail);
+        const hasLocalThumb = staticP.thumbnail && (staticP.thumbnail.startsWith('/images/') || staticP.thumbnail.startsWith('http') || !p.thumbnail);
         const hasMdImages = staticP.content_vi && (staticP.content_vi.includes('![') || !p.content_vi);
         return {
           ...p,

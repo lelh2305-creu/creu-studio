@@ -66,7 +66,7 @@ export async function GET() {
                   const staticThumbnail = existing?.thumbnail;
                   const staticContentVi = existing?.content_vi || existing?.content;
 
-                  const useStaticThumb = staticThumbnail && (staticThumbnail.startsWith('/images/') || !p.thumbnail);
+                  const useStaticThumb = staticThumbnail && (staticThumbnail.startsWith('/images/') || staticThumbnail.startsWith('http') || !p.thumbnail);
                   const useStaticContent = staticContentVi && (staticContentVi.includes('![') || !p.content_vi);
 
                   postsMap.set(p.slug, {

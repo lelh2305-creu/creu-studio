@@ -105,7 +105,7 @@ export function getAllPosts(): Post[] {
             const contentVi = (post.content_vi || post.content || '').trim();
             const contentEn = (post.content_en || post.contentEn || '').trim();
 
-            const useSiteDataThumb = post.thumbnail && post.thumbnail.startsWith('/images/');
+            const useSiteDataThumb = post.thumbnail && (post.thumbnail.startsWith('/images/') || post.thumbnail.startsWith('http'));
             const useSiteDataContent = contentVi && contentVi.includes('![');
 
             postsMap.set(post.slug, {
