@@ -72,6 +72,7 @@ interface BlogPostItem {
   content_vi?: string;
   content_en?: string;
   contentEn?: string;
+  images?: string[]; // Hình ảnh trong bài (img1, img2, img3...)
 }
 
 interface SiteData {
@@ -147,6 +148,7 @@ export default function AdminPage() {
     author: 'CREU Studio',
     content: '',
     contentEn: '',
+    images: [],
   });
 
   useEffect(() => {
@@ -218,6 +220,7 @@ export default function AdminPage() {
                 content_vi: existing?.content_vi || p.content_vi || p.content || '',
                 content_en: existing?.content_en || p.content_en || p.contentEn || '',
                 contentEn: existing?.contentEn || p.content_en || p.contentEn || '',
+                images: existing?.images || p.images || [],
               });
             });
             return { ...prev, blogPosts: Array.from(existingMap.values()) };
@@ -483,6 +486,7 @@ export default function AdminPage() {
       content_vi: newBlogPost.content_vi || newBlogPost.content || '',
       content_en: newBlogPost.content_en || newBlogPost.contentEn || '',
       content: newBlogPost.content_vi || newBlogPost.content || '',
+      images: newBlogPost.images || [],
     };
 
     const currentPosts = data.blogPosts || [];
@@ -501,6 +505,7 @@ export default function AdminPage() {
       author: 'CREU Studio',
       content: '',
       contentEn: '',
+      images: [],
     });
   };
 
@@ -509,7 +514,7 @@ export default function AdminPage() {
     const updatedPosts = currentPosts.map((post) => (post.id === id ? { ...post, [field]: value } : post));
     const updated = { ...data, blogPosts: updatedPosts };
     setData(updated);
-    if (field === 'thumbnail') {
+    if (field === 'thumbnail' || field === 'images') {
       handleSave(updated);
     }
   };
@@ -1622,6 +1627,66 @@ export default function AdminPage() {
                 </div>
               </div>
 
+              {/* 📸 Image Gallery Manager for New Post */}
+              <div className="p-4 bg-[#1a2332] border border-[#a855f7]/20 rounded-xl space-y-3">
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs uppercase font-bold text-[#c499f5]">📸 Hình Trong Bài (img1, img2, img3...)</label>
+                  <span className="text-[10px] text-gray-400">({newBlogPost.images?.length || 0}/5)</span>
+                </div>
+
+                {/* Upload Button */}
+                <label className="block px-3 py-2 bg-[#a855f7]/20 border border-[#a855f7]/40 hover:bg-[#a855f7]/30 text-[#c499f5] text-xs font-semibold cursor-pointer rounded-lg text-center transition-all">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      if (e.target.files?.[0]) {
+                        handleImageUpload(e.target.files[0], (url) => {
+                          const currentImages = newBlogPost.images || [];
+                          if (currentImages.length < 5) {
+                            const newImages = [...currentImages, url];
+                            setNewBlogPost({ ...newBlogPost, images: newImages });
+                          } else {
+                            alert('Tối đa 5 hình trên bài viết!');
+                          }
+                        });
+                      }
+                    }}
+                    className="hidden"
+                  />
+                  + Thêm Hình
+                </label>
+
+                {/* Image Preview Gallery */}
+                {newBlogPost.images && newBlogPost.images.length > 0 ? (
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                    {newBlogPost.images.map((imgUrl, idx) => (
+                      <div key={idx} className="relative group">
+                        <img
+                          src={imgUrl}
+                          alt={`img${idx + 1}`}
+                          className="w-full h-24 object-cover rounded-lg border border-white/10"
+                        />
+                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center gap-2 rounded-lg transition-all">
+                          <button
+                            onClick={() => {
+                              const newImages = newBlogPost.images?.filter((_, i) => i !== idx);
+                              setNewBlogPost({ ...newBlogPost, images: newImages });
+                            }}
+                            className="px-2 py-1 bg-rose-500 text-white text-[10px] font-bold rounded hover:bg-rose-600"
+                          >
+                            Xóa
+                          </button>
+                          <span className="text-white text-[10px] font-semibold">img{idx + 1}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-4 text-gray-500 text-xs">Chưa có hình nào. Bấm thêm hình để upload.</div>
+                )}
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs uppercase font-bold text-gray-400 mb-1">Mô tả ngắn (VI)</label>
@@ -1773,6 +1838,78 @@ export default function AdminPage() {
                               📷 Sửa
                             </label>
                           </div>
+                        </div>
+
+                        {/* 📸 Image Gallery Manager - Quản lý hình trong bài viết */}
+                        <div className="md:col-span-3 p-4 bg-[#1a2332] border border-[#a855f7]/20 rounded-xl space-y-3">
+                          <div className="flex items-center justify-between">
+                            <label className="block text-xs uppercase font-bold text-[#c499f5]">📸 Hình Trong Bài (img1, img2, img3...)</label>
+                            <span className="text-[10px] text-gray-400">({post.images?.length || 0}/5)</span>
+                          </div>
+
+                          {/* Upload Button */}
+                          <label className="block px-3 py-2 bg-[#a855f7]/20 border border-[#a855f7]/40 hover:bg-[#a855f7]/30 text-[#c499f5] text-xs font-semibold cursor-pointer rounded-lg text-center transition-all">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => {
+                                if (e.target.files?.[0]) {
+                                  handleImageUpload(e.target.files[0], (url) => {
+                                    const currentImages = post.images || [];
+                                    if (currentImages.length < 5) {
+                                      const newImages = [...currentImages, url];
+                                      handleUpdateBlogPostField(post.id, 'images', newImages);
+                                    } else {
+                                      alert('Tối đa 5 hình trên bài viết!');
+                                    }
+                                  });
+                                }
+                              }}
+                              className="hidden"
+                            />
+                            + Thêm Hình
+                          </label>
+
+                          {/* Image Preview Gallery */}
+                          {post.images && post.images.length > 0 ? (
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                              {post.images.map((imgUrl, idx) => (
+                                <div key={idx} className="relative group">
+                                  <img
+                                    src={imgUrl}
+                                    alt={`img${idx + 1}`}
+                                    className="w-full h-24 object-cover rounded-lg border border-white/10"
+                                  />
+                                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center gap-2 rounded-lg transition-all">
+                                    <button
+                                      onClick={() => {
+                                        const newImages = post.images?.filter((_, i) => i !== idx);
+                                        handleUpdateBlogPostField(post.id, 'images', newImages);
+                                      }}
+                                      className="px-2 py-1 bg-rose-500 text-white text-[10px] font-bold rounded hover:bg-rose-600"
+                                    >
+                                      Xóa
+                                    </button>
+                                    <span className="text-white text-[10px] font-semibold">img{idx + 1}</span>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <div className="text-center py-4 text-gray-500 text-xs">Chưa có hình nào. Bấm thêm hình để upload.</div>
+                          )}
+
+                          {/* Markdown Helper */}
+                          {post.images && post.images.length > 0 && (
+                            <div className="p-2 bg-[#0e1424] rounded-lg border border-white/10">
+                              <p className="text-[10px] text-gray-400 mb-1">Dùng markdown để chèn:</p>
+                              <div className="space-y-1 font-mono text-[9px] text-gray-300">
+                                {post.images.map((_, idx) => (
+                                  <div key={idx}>![mô tả hình](data:image/jpeg;base64,...) {`// img${idx + 1}`}</div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
                         </div>
 
                         <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-3">
