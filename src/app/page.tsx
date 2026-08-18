@@ -152,6 +152,7 @@ export default function Home() {
               onNavigate={handleTabChange}
               heroTitle={siteData?.siteConfig?.heroTitle}
               heroDesc={siteData?.siteConfig?.heroDesc}
+              isDark={isDark}
             />
 
             <div className="shell">
