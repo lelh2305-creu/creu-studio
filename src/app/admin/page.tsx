@@ -1472,14 +1472,14 @@ export default function AdminPage() {
                 <div className="flex gap-2">
                   <input
                     type="text"
-                    placeholder="VD: /images/hero-29.png hoặc https://res.cloudinary.com/..."
+                    placeholder="VD: /images/hero-29.webp hoặc https://res.cloudinary.com/..."
                     value={data.siteConfig.heroBgImage || ''}
                     onChange={(e) => handleUpdateConfig('heroBgImage', e.target.value)}
                     className="flex-1 px-4 py-2.5 bg-[#0e1424] border border-white/15 rounded-xl text-xs font-semibold text-white focus:border-[#a855f7] outline-none"
                   />
                   <button
                     type="button"
-                    onClick={() => handleUpdateConfig('heroBgImage', '/images/hero-29.png')}
+                    onClick={() => handleUpdateConfig('heroBgImage', '/images/hero-29.webp')}
                     className="px-3.5 py-2.5 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/50 text-amber-200 text-xs font-bold rounded-xl transition-all cursor-pointer"
                     title="Đặt lại hình 2/9"
                   >

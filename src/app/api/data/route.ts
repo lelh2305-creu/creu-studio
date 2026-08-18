@@ -60,6 +60,12 @@ function mergeStaticPosts(parsed: any) {
         parsed.blogPosts.push(sp);
       }
     });
+
+    if (parsed.siteConfig) {
+      if (!parsed.siteConfig.heroBgImage || parsed.siteConfig.heroBgImage === '/images/hero-29.png') {
+        parsed.siteConfig.heroBgImage = '/images/hero-29.webp';
+      }
+    }
   } catch (e) {}
   return parsed;
 }

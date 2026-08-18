@@ -23,7 +23,8 @@ export default function Hero({
 }: HeroProps) {
   const { lang } = useLang();
 
-  const hasBgImage = Boolean(heroBgImage && heroBgImage.trim() !== '');
+  const activeBgImage = (heroBgImage || '').replace('/images/hero-29.png', '/images/hero-29.webp');
+  const hasBgImage = Boolean(activeBgImage && activeBgImage.trim() !== '');
 
   const containerVars: Variants = {
     hidden: { opacity: 1 },
@@ -60,7 +61,7 @@ export default function Hero({
             isDark ? 'brightness-[0.72] contrast-[1.08]' : 'brightness-[1.02] contrast-[1.02]'
           }`}
           style={{
-            backgroundImage: `url(${heroBgImage})`,
+            backgroundImage: `url(${activeBgImage})`,
             backgroundPosition: 'center 45%',
           }}
         />
