@@ -50,6 +50,7 @@ interface SiteConfig {
   heroTitle: string;
   heroDesc: string;
   showreelUrl?: string;
+  heroBgImage?: string;
   email: string;
   location: string;
   workingHours: string;
@@ -1453,6 +1454,50 @@ export default function AdminPage() {
                   onChange={(e) => handleUpdateConfig('showreelUrl', e.target.value)}
                   className="w-full px-4 py-3 bg-[#141c30] border border-[#a855f7]/60 rounded-xl text-sm font-semibold text-white focus:border-[#a855f7] outline-none shadow-inner"
                 />
+              </div>
+
+              {/* HERO EVENT BACKGROUND IMAGE CONTROL BOX */}
+              <div className="md:col-span-2 p-5 rounded-xl bg-[#141c30] border border-amber-500/40 space-y-3">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs uppercase font-bold text-amber-300 flex items-center gap-2">
+                    <span>🖼️ Ảnh Nền Hero Sự Kiện / Lễ (Ví dụ 2/9, Tết, Giáng Sinh...)</span>
+                  </h4>
+                  <span className={`text-[11px] font-bold px-3 py-1 rounded-full ${
+                    data.siteConfig.heroBgImage ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'bg-gray-700/50 text-gray-400'
+                  }`}>
+                    {data.siteConfig.heroBgImage ? '✨ Đang bật: Ảnh nền Full-bleed (Ẩn box video)' : '🎬 Đang dùng: Giao diện gốc (Có Box Video)'}
+                  </span>
+                </div>
+
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="VD: /images/hero-29.png hoặc https://res.cloudinary.com/..."
+                    value={data.siteConfig.heroBgImage || ''}
+                    onChange={(e) => handleUpdateConfig('heroBgImage', e.target.value)}
+                    className="flex-1 px-4 py-2.5 bg-[#0e1424] border border-white/15 rounded-xl text-xs font-semibold text-white focus:border-[#a855f7] outline-none"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleUpdateConfig('heroBgImage', '/images/hero-29.png')}
+                    className="px-3.5 py-2.5 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/50 text-amber-200 text-xs font-bold rounded-xl transition-all cursor-pointer"
+                    title="Đặt lại hình 2/9"
+                  >
+                    🚩 Đặt hình 2/9
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleUpdateConfig('heroBgImage', '')}
+                    className="px-3.5 py-2.5 bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/50 text-rose-300 text-xs font-bold rounded-xl transition-all cursor-pointer"
+                    title="Xóa hình để quay về giao diện gốc có Box Video"
+                  >
+                    🗑️ Xóa (Về giao diện gốc)
+                  </button>
+                </div>
+
+                <p className="text-[11px] text-gray-400 leading-relaxed">
+                  💡 <b>Cách hoạt động:</b> Khi ô này chứa đường dẫn/URL hình ảnh, giao diện Hero sẽ tự động chuyển sang <b>Full-bleed Image Mode</b> và ẩn box video. Khi <b>xóa rỗng</b> ô này, Hero sẽ tự động quay trở lại <b>Giao diện gốc có Box Video Showreel</b>.
+                </p>
               </div>
 
               {/* SOCIAL MEDIA LINKS EDIT BOX */}

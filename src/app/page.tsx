@@ -153,6 +153,7 @@ export default function Home() {
               heroTitle={siteData?.siteConfig?.heroTitle}
               heroDesc={siteData?.siteConfig?.heroDesc}
               isDark={isDark}
+              heroBgImage={siteData?.siteConfig?.heroBgImage}
             />
 
             <div className="shell">
