@@ -86,11 +86,23 @@ export default function Hero({
 
           {/* Main Heading */}
           <motion.h1 variants={itemVars}>
-            Ý tưởng
-            <br />
-            thành
-            <br />
-            <em>hình ảnh.</em>
+            {lang === 'en' ? (
+              <>
+                Ideas
+                <br />
+                become
+                <br />
+                <em>visuals.</em>
+              </>
+            ) : (
+              <>
+                Ý tưởng
+                <br />
+                thành
+                <br />
+                <em>hình ảnh.</em>
+              </>
+            )}
           </motion.h1>
 
           {/* Description */}
