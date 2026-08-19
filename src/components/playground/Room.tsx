@@ -4,23 +4,32 @@ import React from 'react';
 import { useTexture } from '@react-three/drei';
 import * as THREE from 'three';
 
+interface RoomProps {
+  isMobile?: boolean;
+}
+
 /**
- * High-Res 12.6MB Living Room Background Loader (16:9 Aspect Ratio Alignment)
- * Matches reference framing exactly with zero over-scaling
+ * Photorealistic Living Room Background (Optimized 319KB WebP)
+ * Art-directed responsive framing for desktop and mobile viewports
  */
-export default function Room() {
-  const texture = useTexture('/images/living-room-bg.jpg');
+export default function Room({ isMobile = false }: RoomProps) {
+  const texture = useTexture('/images/living-room-bg.webp');
   texture.colorSpace = THREE.SRGBColorSpace;
+
+  // Responsive plane sizing matching 16:9 aspect ratio
+  const planeWidth = isMobile ? 12.8 : 15.02;
+  const planeHeight = isMobile ? 7.2 : 8.45;
+  const planePosY = isMobile ? -0.2 : 0.0;
 
   return (
     <group>
-      {/* ========== PHOTOREALISTIC 16:9 LIVING ROOM BACKDROP PLANE ========== */}
-      <mesh position={[0.0, 0.0, -5.0]}>
-        <planeGeometry args={[15.02, 8.45]} />
+      {/* ========== PHOTOREALISTIC RESPONSIVE LIVING ROOM BACKDROP PLANE ========== */}
+      <mesh position={[0.0, planePosY, -5.0]}>
+        <planeGeometry args={[planeWidth, planeHeight]} />
         <meshBasicMaterial map={texture} toneMapped={false} />
       </mesh>
 
-      {/* ========== AMBIENT & SUNLIGHT LIGHTING MATCHING HIGH-RES IMAGE ========== */}
+      {/* ========== SOFT NATURAL AMBIENT & SUNLIGHT MATCHING IMAGE ========== */}
       <ambientLight intensity={1.8} color="#fffcf5" />
 
       {/* Warm Golden Key Sunlight */}
@@ -29,8 +38,8 @@ export default function Room() {
         intensity={2.4}
         color="#fffaee"
         castShadow
-        shadow-mapSize-width={2048}
-        shadow-mapSize-height={2048}
+        shadow-mapSize-width={1024}
+        shadow-mapSize-height={1024}
         shadow-camera-far={25}
         shadow-camera-left={-8}
         shadow-camera-right={8}
@@ -42,7 +51,7 @@ export default function Room() {
       {/* Soft Contact Shadow Catching Floor Plane for 3D Cats */}
       <mesh
         rotation={[-Math.PI / 2, 0, 0]}
-        position={[0.0, -1.35, 0.5]}
+        position={[0.0, isMobile ? -1.55 : -1.35, 0.5]}
         receiveShadow
       >
         <planeGeometry args={[20, 12]} />
@@ -52,4 +61,4 @@ export default function Room() {
   );
 }
 
-useTexture.preload('/images/living-room-bg.jpg');
+useTexture.preload('/images/living-room-bg.webp');

@@ -23,7 +23,7 @@ import PromoBanner from '@/components/PromoBanner';
 
 export default function Home() {
   const [currentTab, setCurrentTab] = useState('home');
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(true);
   const router = useRouter();
 
   // Video Modal State

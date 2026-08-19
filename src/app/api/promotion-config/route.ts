@@ -76,7 +76,14 @@ export async function GET(request: NextRequest) {
             } catch (e) {}
           }
           if (parsed && typeof parsed === 'object') {
-            return NextResponse.json(parsed, { headers: noCacheHeaders });
+            const merged = {
+              ...defaultPromotionConfig,
+              ...parsed,
+              catPlayground: {
+                enabled: true,
+              },
+            };
+            return NextResponse.json(merged, { headers: noCacheHeaders });
           }
         }
       }
