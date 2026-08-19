@@ -1012,6 +1012,34 @@ export default function AdminPage() {
               </div>
             </div>
 
+            {/* 3D Cat Playground Toggle Box */}
+            <div className="bg-[#0e1424] p-6 rounded-2xl border border-amber-500/30 shadow-xl space-y-4">
+              <div className="flex items-center justify-between flex-wrap gap-4">
+                <div>
+                  <h3 className="text-base font-bold text-amber-300 flex items-center gap-2">
+                    <span>🐱</span> Giao diện Mèo 3D (3D Cat Playground Hero)
+                  </h3>
+                  <p className="text-xs text-gray-300 mt-1">
+                    Bật/Tắt giao diện phòng 3D với 2 chú mèo tương tác tự chủ trên trang chủ. Khi TẮT, trang chủ sẽ dùng Giao diện 2/9 / Hình ảnh Hero / Video Box.
+                  </p>
+                </div>
+                <label className="flex items-center gap-2 cursor-pointer bg-[#141c30] px-4 py-2 rounded-xl border border-amber-500/40 hover:bg-amber-500/10 transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={promotionConfig.catPlayground?.enabled !== false}
+                    onChange={(e) =>
+                      setPromotionConfig({
+                        ...promotionConfig,
+                        catPlayground: { enabled: e.target.checked },
+                      })
+                    }
+                    className="w-5 h-5 accent-amber-500 cursor-pointer"
+                  />
+                  <span className="text-xs font-bold text-amber-200">Bật Giao diện Mèo 3D 🐈</span>
+                </label>
+              </div>
+            </div>
+
             {/* Hero Banner Form Box */}
             <div className="bg-[#0e1424] p-6 rounded-2xl border border-white/15 shadow-xl space-y-6">
               <div className="flex items-center justify-between border-b border-white/10 pb-4">

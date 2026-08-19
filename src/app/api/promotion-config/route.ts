@@ -52,6 +52,9 @@ export const defaultPromotionConfig = {
     thumbnail: '',
     backgroundImage: '',
   },
+  catPlayground: {
+    enabled: true,
+  },
 };
 
 export async function GET(request: NextRequest) {
@@ -119,6 +122,9 @@ export async function POST(request: NextRequest) {
       heroBanner: {
         ...(body.heroBanner || {}),
         backgroundImage: body.heroBanner?.backgroundImage || '',
+      },
+      catPlayground: {
+        enabled: body.catPlayground?.enabled !== false,
       },
     };
 
